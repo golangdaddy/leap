@@ -26,7 +26,8 @@ func parseStack() (*Stack, error) {
 
 func main() {
 
-	if err := os.RemoveAll("./build/"); err != nil {
+	os.RemoveAll("./build/")
+	if err := os.Mkdir("./build/"); err != nil {
 		panic(err)
 	}
 
