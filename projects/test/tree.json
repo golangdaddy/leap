@@ -1,0 +1,50 @@
+{
+	"objects": [
+		{
+			"root": true,
+			"name": "project",
+			"fields": [
+				{
+					"name": "ProjectName",
+					"type": "string",
+					"meta": {}
+				},
+				{
+					"name": "ProjectDescription",
+					"type": "string",
+					"meta": {}
+				}
+			],
+			"children": {
+				"colletion": {
+					"priority": 0
+				}
+			}
+		},
+		{
+			"root": true,
+			"name": "collection",
+			"parentName": "project",
+			"fields": [
+				{
+					"name": "CollectionName",
+					"type": "string",
+					"meta": {}
+				},
+				{
+					"name": "CollectionDescription",
+					"type": "string",
+					"meta": {}
+				}
+			],
+			"children": {
+				"layer": {
+					"priority": 0
+				},
+				"attributes": {
+					"priority": 0
+				}
+			}
+		}
+	]
+}

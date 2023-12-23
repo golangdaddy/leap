@@ -12,7 +12,7 @@ func getTime() int64 {
 	return time.Now().UTC().Unix()
 }
 
-func AssertKeyValueSTRING(w http.ResponseWriter, m map[string]interface{}, key string) (string, bool) {
+func AssertSTRING(w http.ResponseWriter, m map[string]interface{}, key string) (string, bool) {
 	s, ok := m[key].(string)
 	if !ok {
 		err := fmt.Errorf("'%s' is required for this request", key)
@@ -22,7 +22,7 @@ func AssertKeyValueSTRING(w http.ResponseWriter, m map[string]interface{}, key s
 	return s, true
 }
 
-func AssertKeyValueSTRINGS(w http.ResponseWriter, m map[string]interface{}, key string) ([]string, bool) {
+func AssertSTRINGS(w http.ResponseWriter, m map[string]interface{}, key string) ([]string, bool) {
 	a, ok := m[key].([]interface{})
 	if !ok {
 		err := fmt.Errorf("'%s' is required for this request", key)
@@ -42,7 +42,7 @@ func AssertKeyValueSTRINGS(w http.ResponseWriter, m map[string]interface{}, key 
 	return b, true
 }
 
-func AssertKeyValueFLOAT64(w http.ResponseWriter, m map[string]interface{}, key string) (float64, bool) {
+func AssertFLOAT64(w http.ResponseWriter, m map[string]interface{}, key string) (float64, bool) {
 	f, ok := m[key].(float64)
 	if !ok {
 		err := fmt.Errorf("'%s' is required for this request", key)
@@ -52,7 +52,7 @@ func AssertKeyValueFLOAT64(w http.ResponseWriter, m map[string]interface{}, key 
 	return f, true
 }
 
-func AssertKeyValueBOOL(w http.ResponseWriter, m map[string]interface{}, key string) (bool, bool) {
+func AssertBOOL(w http.ResponseWriter, m map[string]interface{}, key string) (bool, bool) {
 	v, ok := m[key].(bool)
 	if !ok {
 		err := fmt.Errorf("'%s' is required for this request", key)
@@ -62,7 +62,7 @@ func AssertKeyValueBOOL(w http.ResponseWriter, m map[string]interface{}, key str
 	return v, true
 }
 
-func AssertKeyValueINT(w http.ResponseWriter, m map[string]interface{}, key string) (int, bool) {
+func AssertINT(w http.ResponseWriter, m map[string]interface{}, key string) (int, bool) {
 	v, ok := m[key].(float64)
 	if !ok {
 		err := fmt.Errorf("'%s' is required for this request", key)
