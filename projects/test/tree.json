@@ -1,25 +1,29 @@
 {
+	"projectID": "ninja-punk-girls",
 	"objects": [
 		{
 			"root": true,
 			"name": "project",
 			"fields": [
 				{
-					"name": "ProjectName",
+					"name": "Name",
 					"type": "string",
-					"meta": {}
+					"required": true,
+					"input": "text"
 				},
 				{
-					"name": "ProjectDescription",
+					"name": "Description",
 					"type": "string",
-					"meta": {}
+					"required": true,
+					"input": "text"
 				}
 			],
-			"children": {
-				"colletion": {
+			"children": [
+				{
+					"name": "collection",
 					"priority": 0
 				}
-			}
+			]
 		},
 		{
 			"root": true,
@@ -27,24 +31,117 @@
 			"parentName": "project",
 			"fields": [
 				{
-					"name": "CollectionName",
+					"name": "Name",
 					"type": "string",
-					"meta": {}
+					"required": true,
+					"input": "text"
 				},
 				{
-					"name": "CollectionDescription",
+					"name": "Description",
 					"type": "string",
-					"meta": {}
+					"required": true,
+					"input": "text"
 				}
 			],
-			"children": {
-				"layer": {
+			"children": [
+				{
+					"name": "layer",
 					"priority": 0
 				},
-				"attributes": {
+				{
+					"name": "attribute",
 					"priority": 0
 				}
-			}
+			]
+		},
+		{
+			"root": true,
+			"name": "font",
+			"parentName": "project",
+			"fields": [
+				{
+					"name": "Name",
+					"type": "string",
+					"required": true,
+					"input": "text"
+				},
+				{
+					"name": "Description",
+					"type": "string",
+					"required": true,
+					"input": "text"
+				}
+			],
+			"children": [
+			]
+		},
+		{
+			"root": true,
+			"name": "attribute",
+			"parentName": "collection",
+			"fields": [
+				{
+					"name": "Name",
+					"type": "string",
+					"required": true,
+					"input": "text"
+				},
+				{
+					"name": "Description",
+					"type": "string",
+					"required": true,
+					"input": "text"
+				}
+			],
+			"children": [
+			]
+		}
+		,
+		{
+			"root": true,
+			"name": "layer",
+			"parentName": "collection",
+			"fields": [
+				{
+					"name": "Name",
+					"type": "string",
+					"required": true,
+					"input": "text"
+				},
+				{
+					"name": "Description",
+					"type": "string",
+					"required": true,
+					"input": "text"
+				}
+			],
+			"children": [
+				{
+					"name": "layer",
+					"priority": 0
+				}
+			]
+		},
+		{
+			"root": true,
+			"name": "element",
+			"parentName": "layer",
+			"fields": [
+				{
+					"name": "Name",
+					"type": "string",
+					"required": true,
+					"input": "text"
+				},
+				{
+					"name": "Description",
+					"type": "string",
+					"required": true,
+					"input": "text"
+				}
+			],
+			"children": [
+			]
 		}
 	]
 }
