@@ -24,6 +24,13 @@ var funcMap = template.FuncMap{
 	"titlecase": titlecase,
 }
 
+type Container struct {
+	ProjectID  string
+	DatabaseID string
+	Object     *models.Object
+	Inputs     []string
+}
+
 func main() {
 
 	os.RemoveAll("./build/")
@@ -56,16 +63,15 @@ func main() {
 		return
 	}
 
-	type Container struct {
-		ProjectID string
-		Object    *Object
-		Inputs    []string
+	if stack.DatabaseID == "" {
+		panic("set a databaseID")
 	}
 
 	for _, object := range stack.Objects {
 
 		container := Container{
 			stack.ProjectID,
+			stack.DatabaseID,
 			object,
 			[]string{},
 		}
@@ -435,7 +441,7 @@ func copyFile(sourcePath, destinationPath string) error {
 	return nil
 }
 
-func getInputs(object *Object, field *Field) (string, error) {
+func getInputs(object *models.Object, field *models.Field) (string, error) {
 
 	var err error
 	var tmp *template.Template

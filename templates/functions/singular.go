@@ -22,13 +22,14 @@ func Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request
 
 	app := common.NewApp()
 	app.UseGCP("{{.ProjectID}}")
-	/*
-		user, err := utils.GetSessionUser(app, r)
-		if err != nil {
-			cloudfunc.HttpError(w, err, http.StatusUnauthorized)
-			return
-		}
-	*/
+	app.UseGCPFirestore("{{.DatabaseID}}")
+
+
+	_, err := utils.GetSessionUser(app, r)
+	if err != nil {
+		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
+		return
+	}
 
 	// get {{lowercase .Object.Name}}
 	id, err := cloudfunc.QueryParam(r, "id")

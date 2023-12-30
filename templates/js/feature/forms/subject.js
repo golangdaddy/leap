@@ -24,14 +24,10 @@ export function {{titlecase .Object.Name}}Form(props) {
 
 	return (
 		<div className='flex flex-col'>
-			{  
-				<>
-					{{range .Inputs}}
-					{{.}}
-					<Spacer/>
-					{{end}}
-				</>
-			}
+			{{range .Inputs}}
+			{{.}}
+			<Spacer/>
+			{{end}}
 		</div>
 	);
 }

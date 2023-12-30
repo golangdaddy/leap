@@ -27,7 +27,8 @@ func EntrypointELEMENTS(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	app := common.NewApp()
-	app.UseGCP("ninja-punk-girls")
+	app.UseGCP("npg-generic")
+	app.UseGCPFirestore("test-project-db")
 
 	_, err := utils.GetSessionUser(app, r)
 	if err != nil {
@@ -123,7 +124,7 @@ func EntrypointELEMENTS(w http.ResponseWriter, r *http.Request) {
 
 			list := []*models.ELEMENT{}
 
-			q := layer.Meta.Firestore(app).Collection("elements").OrderBy("name", firestore.Asc)
+			q := layer.Meta.Firestore(app).Collection("elements").OrderBy("Meta.Modified", firestore.Desc)
 			if limit > 0 {
 				q = q.Limit(limit)
 			}

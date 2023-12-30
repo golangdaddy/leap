@@ -6,9 +6,10 @@ import (
 )
 
 type Stack struct {
-	ProjectID string    `json:"projectID"`
-	Objects   []*Object `json:"objects"`
-	objectMap map[string]*Object
+	ProjectID  string    `json:"projectID"`
+	DatabaseID string    `json:"databaseID"`
+	Objects    []*Object `json:"objects"`
+	objectMap  map[string]*Object
 }
 
 func (stack *Stack) NewObject(parent *Object, name string) *Object {

@@ -7,23 +7,25 @@ import { EditAttribute } from './editAttribute'
 
 export var AttributeInterfaces = {
     "newattribute": {
-        level: -1,
+        level: 2,
         name: "New Attribute", 
         component: (<NewAttribute />),
     },  
     "editattribute": {
-        level: -1,
+        level: 3,
         name: "Edit Attribute", 
         component: (<EditAttribute />),
     },  
     "attributes": {
-        level: 7,
+        level: 1,
         name: "Manage Attributes", 
         component: (<Attributes />),
+        subsublinks: ["newattribute"],
     },
     "attribute": {
-        level: 8,
+        level: 2,
         name: "Attribute", 
+        subsublinks: [""],
         component: (<Attribute />),
     },
 }

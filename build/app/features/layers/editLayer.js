@@ -16,7 +16,7 @@ export function EditLayer(props) {
     // make sure the object is current
     const [subject, setSubject] = useState(localdata.tab.context.object)
     useEffect(() => {
-        LayerObjectGET(userdata, layer.Meta.ID)
+        LayerObjectGET(userdata, subject?.Meta.ID)
         .then((res) => res.json())
 		.then((data) => {
 			console.log("UPDATED OBJECT",data)

@@ -7,23 +7,25 @@ import { EditProject } from './editProject'
 
 export var ProjectInterfaces = {
     "newproject": {
-        level: -1,
+        level: 2,
         name: "New Project", 
         component: (<NewProject />),
     },  
     "editproject": {
-        level: -1,
+        level: 3,
         name: "Edit Project", 
         component: (<EditProject />),
     },  
     "projects": {
-        level: 7,
+        level: 1,
         name: "Manage Projects", 
         component: (<Projects />),
+        subsublinks: ["newproject"],
     },
     "project": {
-        level: 8,
+        level: 2,
         name: "Project", 
+        subsublinks: ["collections",""],
         component: (<Project />),
     },
 }

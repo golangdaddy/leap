@@ -1,12 +1,19 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	"net/http"
 	"github.com/golangdaddy/leap/build/functions"
 )
 
 func main() {
+
+	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", "../../../npg-generic-d0985a6033b3.json")
+
+	http.HandleFunc("/api/user", functions.UserEntrypoint)
+	http.HandleFunc("/api/users", functions.UsersEntrypoint)
+	http.HandleFunc("/api/auth", functions.AuthEntrypoint)
 
 	{{range .Objects}}
 	http.HandleFunc("/api/{{lowercase .Name}}", functions.Entrypoint{{uppercase .Name}})

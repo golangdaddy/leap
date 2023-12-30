@@ -36,7 +36,7 @@ export function AttributeList(props) {
     // update tabs handles the updated context and sends the user to a new interface
     function selectItem(id) {
         console.log("SELECT Attribute", id)
-        const next = overlays[parseInt(id)]
+        const next = list[parseInt(id)]
         const context = {
             "_": next.name,
             "object": next,
@@ -46,7 +46,7 @@ export function AttributeList(props) {
     }
 
     function deleteItem(id) {
-        const object = overlays[parseInt(id)]
+        const object = list[parseInt(id)]
         console.log("DELETING", object)
         AttributeDELETE(userdata, object.Meta.ID)
         .then((res) => console.log(res))

@@ -24,20 +24,16 @@ export function FontForm(props) {
 
 	return (
 		<div className='flex flex-col'>
-			{  
-				<>
-					
-					<Input id="name" type='text' required={ true } title="font name" placeholder="font name" inputChange={handleInputChange}/>
-					<Spacer/>
-					
-					<Input id="description" type='text' required={ true } title="font description" placeholder="font description" inputChange={handleInputChange}/>
-					<Spacer/>
-					
-					<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
-					<Spacer/>
-					
-				</>
-			}
+			
+			<Input id="name" type='text' required={ true } title="font name" placeholder="font name" inputChange={handleInputChange}/>
+			<Spacer/>
+			
+			<Input id="description" type='text' required={ true } title="font description" placeholder="font description" inputChange={handleInputChange}/>
+			<Spacer/>
+			
+			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
+			<Spacer/>
+			
 		</div>
 	);
 }

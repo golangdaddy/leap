@@ -24,20 +24,16 @@ export function LayerForm(props) {
 
 	return (
 		<div className='flex flex-col'>
-			{  
-				<>
-					
-					<Input id="name" type='text' required={ true } title="layer name" placeholder="layer name" inputChange={handleInputChange}/>
-					<Spacer/>
-					
-					<Input id="description" type='text' required={ true } title="layer description" placeholder="layer description" inputChange={handleInputChange}/>
-					<Spacer/>
-					
-					<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
-					<Spacer/>
-					
-				</>
-			}
+			
+			<Input id="name" type='text' required={ true } title="layer name" placeholder="layer name" inputChange={handleInputChange}/>
+			<Spacer/>
+			
+			<Input id="description" type='text' required={ true } title="layer description" placeholder="layer description" inputChange={handleInputChange}/>
+			<Spacer/>
+			
+			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
+			<Spacer/>
+			
 		</div>
 	);
 }

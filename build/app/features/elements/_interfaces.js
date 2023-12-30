@@ -7,23 +7,25 @@ import { EditElement } from './editElement'
 
 export var ElementInterfaces = {
     "newelement": {
-        level: -1,
+        level: 2,
         name: "New Element", 
         component: (<NewElement />),
     },  
     "editelement": {
-        level: -1,
+        level: 3,
         name: "Edit Element", 
         component: (<EditElement />),
     },  
     "elements": {
-        level: 7,
+        level: 1,
         name: "Manage Elements", 
         component: (<Elements />),
+        subsublinks: ["newelement"],
     },
     "element": {
-        level: 8,
+        level: 2,
         name: "Element", 
+        subsublinks: [""],
         component: (<Element />),
     },
 }

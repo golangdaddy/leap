@@ -27,7 +27,8 @@ func EntrypointFONTS(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	app := common.NewApp()
-	app.UseGCP("ninja-punk-girls")
+	app.UseGCP("npg-generic")
+	app.UseGCPFirestore("test-project-db")
 
 	_, err := utils.GetSessionUser(app, r)
 	if err != nil {
@@ -123,7 +124,7 @@ func EntrypointFONTS(w http.ResponseWriter, r *http.Request) {
 
 			list := []*models.FONT{}
 
-			q := project.Meta.Firestore(app).Collection("fonts").OrderBy("name", firestore.Asc)
+			q := project.Meta.Firestore(app).Collection("fonts").OrderBy("Meta.Modified", firestore.Desc)
 			if limit > 0 {
 				q = q.Limit(limit)
 			}

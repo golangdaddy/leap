@@ -24,20 +24,16 @@ export function CollectionForm(props) {
 
 	return (
 		<div className='flex flex-col'>
-			{  
-				<>
-					
-					<Input id="name" type='text' required={ true } title="collection name" placeholder="collection name" inputChange={handleInputChange}/>
-					<Spacer/>
-					
-					<Input id="description" type='text' required={ true } title="collection description" placeholder="collection description" inputChange={handleInputChange}/>
-					<Spacer/>
-					
-					<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
-					<Spacer/>
-					
-				</>
-			}
+			
+			<Input id="name" type='text' required={ true } title="collection name" placeholder="collection name" inputChange={handleInputChange}/>
+			<Spacer/>
+			
+			<Input id="description" type='text' required={ true } title="collection description" placeholder="collection description" inputChange={handleInputChange}/>
+			<Spacer/>
+			
+			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
+			<Spacer/>
+			
 		</div>
 	);
 }

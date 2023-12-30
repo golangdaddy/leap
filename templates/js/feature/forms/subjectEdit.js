@@ -35,41 +35,12 @@ export function {{titlecase .Object.Name}}Edit(props) {
 		InputChange(inputs, setInputs, obj)
 	}
 
-  return (
-    <div className='flex flex-col'>
-		{  
-			<>
-					<Input id="description" type='text' required={true} value={inputs.description.value} title="{{titlecase .Object.Name}} Description" placeholder="{{titlecase .Object.Name}} description..." inputChange={handleInputChange}/>
-					<Spacer/>
-					<Select id="type" required={true} type='text' title="{{titlecase .Object.Name}} Type" options={["text", "attribute"]} value={inputs.type.value} inputChange={handleInputChange}/>
-					<Spacer/>
-					{
-						attributes && inputs["type"] && (inputs["type"].value == "attribute") && <>
-							<Select id="content" required={true} type='text' title="{{titlecase .Object.Name}} attribute" value={inputs.content.value} options={attributes} inputChange={handleInputChange}/>
-							<Spacer/>
-						</>
-					}
-					{
-						inputs["type"] && (inputs["type"].value == "text") && <>
-							<Input id="content" required={true} title="{{titlecase .Object.Name}} Value" type="text" value={inputs.content.value} placeholder="{{titlecase .Object.Name}} value..." inputChange={handleInputChange} />
-							<Spacer/>
-						</>
-					}
-					<Input id="x" required={true} title="{{titlecase .Object.Name}} X Position" type="number" value={inputs.x.value} placeholder="{{titlecase .Object.Name}} X..." inputChange={handleInputChange} />
-					<Spacer/>
-					<Input id="y" required={true} title="{{titlecase .Object.Name}} Y Position" type="number" value={inputs.y.value} placeholder="{{titlecase .Object.Name}} Y..." inputChange={handleInputChange} />
-					<Spacer/>
-					{
-						fonts && <>
-							<Select id="font" required={true} type='text' title="{{titlecase .Object.Name}} Font" options={fonts} value={inputs.font.value} inputChange={handleInputChange}/>
-							<Spacer/>
-						</>
-					}
-					<Input id="fontSize" required={true} title="Font Size" type="number"  value={inputs.fontSize.value} inputChange={handleInputChange} />
-					<Spacer/>
-					<Submit text="Update" inputs={inputs} submit={props.submit} assert={["description", "type", "content", "x", "y", "font", "fontSize"]}/>
-			</>
-		}
-    </div>
-  );
+	return (
+		<div className='flex flex-col'>
+			{{range .Inputs}}
+			{{.}}
+			<Spacer/>
+			{{end}}
+		</div>
+	);
 }

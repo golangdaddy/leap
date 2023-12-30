@@ -5,7 +5,7 @@ go 1.21.5
 require (
 	cloud.google.com/go/firestore v1.14.0
 	github.com/google/uuid v1.5.0
-	github.com/richardboase/npgpublic v0.0.0-20231222220759-3ec1b5f93abf
+	github.com/richardboase/npgpublic v0.0.0-20231228225256-705b8fd233ef
 	google.golang.org/api v0.154.0
 )
 

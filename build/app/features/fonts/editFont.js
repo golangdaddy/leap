@@ -16,7 +16,7 @@ export function EditFont(props) {
     // make sure the object is current
     const [subject, setSubject] = useState(localdata.tab.context.object)
     useEffect(() => {
-        FontObjectGET(userdata, font.Meta.ID)
+        FontObjectGET(userdata, subject?.Meta.ID)
         .then((res) => res.json())
 		.then((data) => {
 			console.log("UPDATED OBJECT",data)

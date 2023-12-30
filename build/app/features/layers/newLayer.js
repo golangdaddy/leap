@@ -16,21 +16,21 @@ export function NewLayer(props) {
 
   const [subject] = useState(localdata.tab.context.object)
 
-  function submitNew(inputs) {
-	LayersInitPOST(
-		userdata,
-		subject.Meta.ID,
-		inputs
-	)
-	.then((res) => console.log(res))
-	.then(function () {
-		// return to previous interface 
-	  	setLocaldata(GoBack(localdata))
-	})
-	.catch(function (e) {
-	  	console.error("FAILED TO SEND", e)
-	})
-  }
+	function submitNew(inputs) {
+		LayersInitPOST(
+			userdata,
+			subject?.Meta.ID,
+			inputs
+		)
+		.then((res) => console.log(res))
+		.then(function () {
+			// return to previous interface 
+			setLocaldata(GoBack(localdata))
+		})
+		.catch(function (e) {
+			console.error("FAILED TO SEND", e)
+		})
+	}
 
 	return (
 		<LayerForm submit={submitNew}/>

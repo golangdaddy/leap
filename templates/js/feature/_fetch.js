@@ -2,9 +2,9 @@ import { PublicFetch } from '@/app/fetch';
 import SessionFetch from '@/app/fetch';
 import InputFormat from '@/inputs/inputFormat';
 
-export function {{titlecase .Object.Name}}sInitPOST(user, layer, payload) {
+export function {{titlecase .Object.Name}}sInitPOST(user, parentID, payload) {
     var p = InputFormat(payload)
-    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}s?function=init&layer="+layer, p)
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}s?function=init&parent="+parentID, p)
 }
 
 export function {{titlecase .Object.Name}}UpdatePOST(user, id, payload) {
@@ -16,8 +16,8 @@ export function {{titlecase .Object.Name}}ObjectGET(user, id) {
     return SessionFetch(user, "GET", "api/{{lowercase .Object.Name}}?function=object&id="+id)
 }
 
-export function {{titlecase .Object.Name}}sListGET(user, layer, limit) {
-    return SessionFetch(user, "GET", "api/{{lowercase .Object.Name}}s?function=list&layer="+layer+"&limit="+limit)
+export function {{titlecase .Object.Name}}sListGET(user, parentID, limit) {
+    return SessionFetch(user, "GET", "api/{{lowercase .Object.Name}}s?function=list&parent="+parentID+"&limit="+limit)
 }
 
 export function {{titlecase .Object.Name}}sCountGET(user, collectionID) {

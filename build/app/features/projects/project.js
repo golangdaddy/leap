@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react'
 import VisitTab from '@/features/interfaces'
 
 import Loading from '@/app/loading'
-import { Preview } from './shared/project'
 
 import { ProjectObjectGET } from './_fetch'
 
@@ -35,8 +34,9 @@ export function Project(props) {
 
     return (
         <>
+			{ !subject && <Loading/> }
             {
-                subject && <Preview subject={subject} />
+                subject && <textarea className='w-full'>{JSON.stringify(subject.fields)}</textarea>
             }
         </>
     )

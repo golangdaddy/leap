@@ -7,23 +7,25 @@ import { EditFont } from './editFont'
 
 export var FontInterfaces = {
     "newfont": {
-        level: -1,
+        level: 2,
         name: "New Font", 
         component: (<NewFont />),
     },  
     "editfont": {
-        level: -1,
+        level: 3,
         name: "Edit Font", 
         component: (<EditFont />),
     },  
     "fonts": {
-        level: 7,
+        level: 1,
         name: "Manage Fonts", 
         component: (<Fonts />),
+        subsublinks: ["newfont"],
     },
     "font": {
-        level: 8,
+        level: 2,
         name: "Font", 
+        subsublinks: [""],
         component: (<Font />),
     },
 }

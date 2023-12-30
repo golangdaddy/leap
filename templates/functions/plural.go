@@ -28,6 +28,7 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 
 	app := common.NewApp()
 	app.UseGCP("{{.ProjectID}}")
+	app.UseGCPFirestore("{{.DatabaseID}}")
 
 	_, err := utils.GetSessionUser(app, r)
 	if err != nil {
@@ -123,7 +124,7 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 
 			list := []*models.{{uppercase .Object.Name}}{}
 
-			q := {{lowercase .Object.ParentName}}.Meta.Firestore(app).Collection("{{lowercase .Object.Name}}s").OrderBy("name", firestore.Asc)
+			q := {{lowercase .Object.ParentName}}.Meta.Firestore(app).Collection("{{lowercase .Object.Name}}s").OrderBy("Meta.Modified", firestore.Desc)
 			if limit > 0 {
 				q = q.Limit(limit)
 			}

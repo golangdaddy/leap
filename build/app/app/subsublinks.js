@@ -39,6 +39,7 @@ export default function Subsublinks(props) {
 			(localdata.tab.subsublinks?.length > 0) && <div className='flex flex-row justify-center w-full bg-gray-300 text-white px-2 py-2 text-sm'>
 				{
 					localdata.tab.subsublinks.map(function (tabname, i) {
+						if (tabname.length == 0) { return }
 						const tab = interfaces[tabname]
 						return (
 							<div key={i} className='flex flex-col justify-center'>

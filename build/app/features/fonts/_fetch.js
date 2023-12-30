@@ -2,9 +2,9 @@ import { PublicFetch } from '@/app/fetch';
 import SessionFetch from '@/app/fetch';
 import InputFormat from '@/inputs/inputFormat';
 
-export function FontsInitPOST(user, layer, payload) {
+export function FontsInitPOST(user, parentID, payload) {
     var p = InputFormat(payload)
-    return SessionFetch(user, "POST", "api/fonts?function=init&layer="+layer, p)
+    return SessionFetch(user, "POST", "api/fonts?function=init&parent="+parentID, p)
 }
 
 export function FontUpdatePOST(user, id, payload) {
@@ -16,8 +16,8 @@ export function FontObjectGET(user, id) {
     return SessionFetch(user, "GET", "api/font?function=object&id="+id)
 }
 
-export function FontsListGET(user, layer, limit) {
-    return SessionFetch(user, "GET", "api/fonts?function=list&layer="+layer+"&limit="+limit)
+export function FontsListGET(user, parentID, limit) {
+    return SessionFetch(user, "GET", "api/fonts?function=list&parent="+parentID+"&limit="+limit)
 }
 
 export function FontsCountGET(user, collectionID) {

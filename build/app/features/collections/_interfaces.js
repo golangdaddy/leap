@@ -7,23 +7,25 @@ import { EditCollection } from './editCollection'
 
 export var CollectionInterfaces = {
     "newcollection": {
-        level: -1,
+        level: 2,
         name: "New Collection", 
         component: (<NewCollection />),
     },  
     "editcollection": {
-        level: -1,
+        level: 3,
         name: "Edit Collection", 
         component: (<EditCollection />),
     },  
     "collections": {
-        level: 7,
+        level: 1,
         name: "Manage Collections", 
         component: (<Collections />),
+        subsublinks: ["newcollection"],
     },
     "collection": {
-        level: 8,
+        level: 2,
         name: "Collection", 
+        subsublinks: ["layers","attributes",""],
         component: (<Collection />),
     },
 }

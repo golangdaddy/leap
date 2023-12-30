@@ -16,7 +16,7 @@ export function EditCollection(props) {
     // make sure the object is current
     const [subject, setSubject] = useState(localdata.tab.context.object)
     useEffect(() => {
-        CollectionObjectGET(userdata, collection.Meta.ID)
+        CollectionObjectGET(userdata, subject?.Meta.ID)
         .then((res) => res.json())
 		.then((data) => {
 			console.log("UPDATED OBJECT",data)

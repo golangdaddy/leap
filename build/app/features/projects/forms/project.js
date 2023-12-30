@@ -24,20 +24,16 @@ export function ProjectForm(props) {
 
 	return (
 		<div className='flex flex-col'>
-			{  
-				<>
-					
-					<Input id="name" type='text' required={ true } title="project name" placeholder="project name" inputChange={handleInputChange}/>
-					<Spacer/>
-					
-					<Input id="description" type='text' required={ true } title="project description" placeholder="project description" inputChange={handleInputChange}/>
-					<Spacer/>
-					
-					<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
-					<Spacer/>
-					
-				</>
-			}
+			
+			<Input id="name" type='text' required={ true } title="project name" placeholder="project name" inputChange={handleInputChange}/>
+			<Spacer/>
+			
+			<Input id="description" type='text' required={ true } title="project description" placeholder="project description" inputChange={handleInputChange}/>
+			<Spacer/>
+			
+			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
+			<Spacer/>
+			
 		</div>
 	);
 }

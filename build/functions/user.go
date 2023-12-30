@@ -10,14 +10,15 @@ import (
 )
 
 // api-user
-func Entrypoint(w http.ResponseWriter, r *http.Request) {
+func UserEntrypoint(w http.ResponseWriter, r *http.Request) {
 
 	if cloudfunc.HandleCORS(w, r, "*") {
 		return
 	}
 
 	app := common.NewApp()
-	app.UseGCP(ninja-punk-girls)
+	app.UseGCP("npg-generic")
+	app.UseGCPFirestore("test-project-db")
 
 	function, err := cloudfunc.QueryParam(r, "function")
 	if err != nil {

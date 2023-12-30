@@ -2,9 +2,9 @@ import { PublicFetch } from '@/app/fetch';
 import SessionFetch from '@/app/fetch';
 import InputFormat from '@/inputs/inputFormat';
 
-export function AttributesInitPOST(user, layer, payload) {
+export function AttributesInitPOST(user, parentID, payload) {
     var p = InputFormat(payload)
-    return SessionFetch(user, "POST", "api/attributes?function=init&layer="+layer, p)
+    return SessionFetch(user, "POST", "api/attributes?function=init&parent="+parentID, p)
 }
 
 export function AttributeUpdatePOST(user, id, payload) {
@@ -16,8 +16,8 @@ export function AttributeObjectGET(user, id) {
     return SessionFetch(user, "GET", "api/attribute?function=object&id="+id)
 }
 
-export function AttributesListGET(user, layer, limit) {
-    return SessionFetch(user, "GET", "api/attributes?function=list&layer="+layer+"&limit="+limit)
+export function AttributesListGET(user, parentID, limit) {
+    return SessionFetch(user, "GET", "api/attributes?function=list&parent="+parentID+"&limit="+limit)
 }
 
 export function AttributesCountGET(user, collectionID) {

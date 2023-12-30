@@ -2,9 +2,9 @@ import { PublicFetch } from '@/app/fetch';
 import SessionFetch from '@/app/fetch';
 import InputFormat from '@/inputs/inputFormat';
 
-export function LayersInitPOST(user, layer, payload) {
+export function LayersInitPOST(user, parentID, payload) {
     var p = InputFormat(payload)
-    return SessionFetch(user, "POST", "api/layers?function=init&layer="+layer, p)
+    return SessionFetch(user, "POST", "api/layers?function=init&parent="+parentID, p)
 }
 
 export function LayerUpdatePOST(user, id, payload) {
@@ -16,8 +16,8 @@ export function LayerObjectGET(user, id) {
     return SessionFetch(user, "GET", "api/layer?function=object&id="+id)
 }
 
-export function LayersListGET(user, layer, limit) {
-    return SessionFetch(user, "GET", "api/layers?function=list&layer="+layer+"&limit="+limit)
+export function LayersListGET(user, parentID, limit) {
+    return SessionFetch(user, "GET", "api/layers?function=list&parent="+parentID+"&limit="+limit)
 }
 
 export function LayersCountGET(user, collectionID) {

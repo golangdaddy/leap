@@ -40,41 +40,18 @@ export function ProjectEdit(props) {
 		InputChange(inputs, setInputs, obj)
 	}
 
-  return (
-    <div className='flex flex-col'>
-		{  
-			<>
-					<Input id="description" type='text' required={true} value={inputs.description.value} title="Project Description" placeholder="Project description..." inputChange={handleInputChange}/>
-					<Spacer/>
-					<Select id="type" required={true} type='text' title="Project Type" options={["text", "attribute"]} value={inputs.type.value} inputChange={handleInputChange}/>
-					<Spacer/>
-					{
-						attributes && inputs["type"] && (inputs["type"].value == "attribute") && <>
-							<Select id="content" required={true} type='text' title="Project attribute" value={inputs.content.value} options={attributes} inputChange={handleInputChange}/>
-							<Spacer/>
-						</>
-					}
-					{
-						inputs["type"] && (inputs["type"].value == "text") && <>
-							<Input id="content" required={true} title="Project Value" type="text" value={inputs.content.value} placeholder="Project value..." inputChange={handleInputChange} />
-							<Spacer/>
-						</>
-					}
-					<Input id="x" required={true} title="Project X Position" type="number" value={inputs.x.value} placeholder="Project X..." inputChange={handleInputChange} />
-					<Spacer/>
-					<Input id="y" required={true} title="Project Y Position" type="number" value={inputs.y.value} placeholder="Project Y..." inputChange={handleInputChange} />
-					<Spacer/>
-					{
-						fonts && <>
-							<Select id="font" required={true} type='text' title="Project Font" options={fonts} value={inputs.font.value} inputChange={handleInputChange}/>
-							<Spacer/>
-						</>
-					}
-					<Input id="fontSize" required={true} title="Font Size" type="number"  value={inputs.fontSize.value} inputChange={handleInputChange} />
-					<Spacer/>
-					<Submit text="Update" inputs={inputs} submit={props.submit} assert={["description", "type", "content", "x", "y", "font", "fontSize"]}/>
-			</>
-		}
-    </div>
-  );
+	return (
+		<div className='flex flex-col'>
+			
+			<Input id="name" type='text' required={ true } title="project name" placeholder="project name" inputChange={handleInputChange}/>
+			<Spacer/>
+			
+			<Input id="description" type='text' required={ true } title="project description" placeholder="project description" inputChange={handleInputChange}/>
+			<Spacer/>
+			
+			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
+			<Spacer/>
+			
+		</div>
+	);
 }

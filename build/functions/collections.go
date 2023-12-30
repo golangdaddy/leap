@@ -27,7 +27,8 @@ func EntrypointCOLLECTIONS(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	app := common.NewApp()
-	app.UseGCP("ninja-punk-girls")
+	app.UseGCP("npg-generic")
+	app.UseGCPFirestore("test-project-db")
 
 	_, err := utils.GetSessionUser(app, r)
 	if err != nil {
@@ -123,7 +124,7 @@ func EntrypointCOLLECTIONS(w http.ResponseWriter, r *http.Request) {
 
 			list := []*models.COLLECTION{}
 
-			q := project.Meta.Firestore(app).Collection("collections").OrderBy("name", firestore.Asc)
+			q := project.Meta.Firestore(app).Collection("collections").OrderBy("Meta.Modified", firestore.Desc)
 			if limit > 0 {
 				q = q.Limit(limit)
 			}

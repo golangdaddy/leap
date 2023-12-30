@@ -11,18 +11,17 @@ import (
 	"github.com/richardboase/npgpublic/sdk/cloudfunc"
 	"github.com/richardboase/npgpublic/sdk/common"
 	"github.com/richardboase/npgpublic/utils"
-	"github.com/sendgrid/sendgrid-go"
-	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"google.golang.org/api/iterator"
 )
 
 // api-auth
-func Entrypoint(w http.ResponseWriter, r *http.Request) {
+func AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
 	app := common.NewApp()
-	app.UseGCP({{.ProjectID}})
+	app.UseGCP("{{.ProjectID}}")
+	app.UseGCPFirestore("{{.DatabaseID}}")
 
 	if cloudfunc.HandleCORS(w, r, "*") {
 		return
@@ -69,13 +68,6 @@ func Entrypoint(w http.ResponseWriter, r *http.Request) {
 
 		case "otp":
 
-			SENDGRID_API_KEY, err := cloudfunc.GetSecretFromVolume("/sendgrid-key/sendgrid-key")
-			if err != nil {
-				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-				return
-			}
-			println(SENDGRID_API_KEY)
-
 			email, err := cloudfunc.QueryParam(r, "email")
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusBadRequest)
@@ -91,33 +83,40 @@ func Entrypoint(w http.ResponseWriter, r *http.Request) {
 			}
 
 			secret := app.Token256()
+			log.Println(secret)
+			/*
+				from := mail.NewEmail("", "richard@ninjapunkgirls.com")
+				to := mail.NewEmail(user.Username, email)
+				subject := "Sending with Twilio SendGrid is Fun"
+				plainTextContent := "and easy to do anywhere, even with Go follow this link: "
 
-			from := mail.NewEmail("", "richard@ninjapunkgirls.com")
-			to := mail.NewEmail(user.Username, email)
-			subject := "Sending with Twilio SendGrid is Fun"
-			plainTextContent := "and easy to do anywhere, even with Go follow this link: "
-
-			htmlContent := fmt.Sprintf(
-				`<h2>One-time-password link:</h2>
-				<br/>
-				<a href='http://localhost:3000/dashboard?otp=%s'>Debug</a>
-				<br/>
-				<a href='http://npgplatform.vercel.app/dashboard?otp=%s'>Login</a>
-				`,
-				secret,
-				secret,
-			)
-			message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
-			client := sendgrid.NewSendClient(SENDGRID_API_KEY)
-			response, err := client.Send(message)
-			if err != nil {
-				log.Println(err)
-			} else {
-				fmt.Println(response.StatusCode)
-				fmt.Println(response.Body)
-				fmt.Println(response.Headers)
-			}
-
+				htmlContent := fmt.Sprintf(
+					`<h2>One-time-password link:</h2>
+					<br/>
+					<a href='http://localhost:3000/home?otp=%s'>Debug</a>
+					<br/>
+					<a href='http://npgplatform.vercel.app/home?otp=%s'>Login</a>
+					`,
+					secret,
+					secret,
+				)
+				message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
+				SENDGRID_API_KEY, err := cloudfunc.GetSecretFromVolume("/sendgrid-key/sendgrid-key")
+				if err != nil {
+					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+					return
+				}
+				println(SENDGRID_API_KEY)
+				client := sendgrid.NewSendClient(SENDGRID_API_KEY)
+				response, err := client.Send(message)
+				if err != nil {
+					log.Println(err)
+				} else {
+					fmt.Println(response.StatusCode)
+					fmt.Println(response.Body)
+					fmt.Println(response.Headers)
+				}
+			*/
 			otp := models.NewOTP(email, user.Meta.ID)
 
 			// hash the OTP secret to set the firestore record

@@ -21,14 +21,15 @@ func EntrypointELEMENT(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app := common.NewApp()
-	app.UseGCP("ninja-punk-girls")
-	/*
-		user, err := utils.GetSessionUser(app, r)
-		if err != nil {
-			cloudfunc.HttpError(w, err, http.StatusUnauthorized)
-			return
-		}
-	*/
+	app.UseGCP("npg-generic")
+	app.UseGCPFirestore("test-project-db")
+
+
+	_, err := utils.GetSessionUser(app, r)
+	if err != nil {
+		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
+		return
+	}
 
 	// get element
 	id, err := cloudfunc.QueryParam(r, "id")

@@ -1,5 +1,6 @@
 {
-	"projectID": "ninja-punk-girls",
+	"projectID": "npg-generic",
+	"databaseID": "test-project-db",
 	"objects": [
 		{
 			"root": true,
