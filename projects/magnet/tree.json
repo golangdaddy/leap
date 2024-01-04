@@ -1,10 +1,10 @@
 {
 	"projectID": "npg-generic",
-	"databaseID": "test-project-db",
+	"databaseID": "test-pubs-001",
 	"objects": [
 		{
 			"root": true,
-			"name": "project",
+			"name": "pub",
 			"fields": [
 				{
 					"name": "Name",
@@ -21,15 +21,39 @@
 			],
 			"children": [
 				{
-					"name": "collection",
+					"name": "drink",
 					"priority": 0
 				}
 			]
 		},
 		{
 			"root": true,
-			"name": "collection",
-			"parentName": "project",
+			"name": "drink",
+			"fields": [
+				{
+					"name": "Name",
+					"type": "string",
+					"required": true,
+					"input": "text"
+				},
+				{
+					"name": "Description",
+					"type": "string",
+					"required": true,
+					"input": "text"
+				},
+				{
+					"name": "ABV",
+					"type": "float64",
+					"required": true,
+					"input": "number"
+				}
+			],
+			"children": []
+		},
+		{
+			"root": true,
+			"name": "entertainment",
 			"fields": [
 				{
 					"name": "Name",
@@ -46,19 +70,14 @@
 			],
 			"children": [
 				{
-					"name": "layer",
-					"priority": 0
-				},
-				{
-					"name": "attribute",
+					"name": "act",
 					"priority": 0
 				}
 			]
 		},
 		{
-			"root": true,
-			"name": "font",
-			"parentName": "project",
+			"root": false,
+			"name": "act",
 			"fields": [
 				{
 					"name": "Name",
@@ -73,76 +92,7 @@
 					"input": "text"
 				}
 			],
-			"children": [
-			]
-		},
-		{
-			"root": true,
-			"name": "attribute",
-			"parentName": "collection",
-			"fields": [
-				{
-					"name": "Name",
-					"type": "string",
-					"required": true,
-					"input": "text"
-				},
-				{
-					"name": "Description",
-					"type": "string",
-					"required": true,
-					"input": "text"
-				}
-			],
-			"children": [
-			]
+			"children": []
 		}
-		,
-		{
-			"root": true,
-			"name": "layer",
-			"parentName": "collection",
-			"fields": [
-				{
-					"name": "Name",
-					"type": "string",
-					"required": true,
-					"input": "text"
-				},
-				{
-					"name": "Description",
-					"type": "string",
-					"required": true,
-					"input": "text"
-				}
-			],
-			"children": [
-				{
-					"name": "layer",
-					"priority": 0
-				}
-			]
-		},
-		{
-			"root": true,
-			"name": "element",
-			"parentName": "layer",
-			"fields": [
-				{
-					"name": "Name",
-					"type": "string",
-					"required": true,
-					"input": "text"
-				},
-				{
-					"name": "Description",
-					"type": "string",
-					"required": true,
-					"input": "text"
-				}
-			],
-			"children": [
-			]
-		}
-	]
+    ]
 }

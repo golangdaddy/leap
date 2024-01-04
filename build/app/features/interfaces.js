@@ -12,6 +12,7 @@ import { FontInterfaces } from '@/features/fonts/_interfaces'
 import { AttributeInterfaces } from '@/features/attributes/_interfaces'
 import { LayerInterfaces } from '@/features/layers/_interfaces'
 import { ElementInterfaces } from '@/features/elements/_interfaces'
+import { TagInterfaces } from '@/features/tags/_interfaces'
 
 import Home from '@/features/home'
 
@@ -68,6 +69,9 @@ export function GetInterfaces() {
 	}// ElementInterfaces
 	for (const k in ElementInterfaces) {
 		interfaces[k.toLowerCase()] = ElementInterfaces[k]
+	}// TagInterfaces
+	for (const k in TagInterfaces) {
+		interfaces[k.toLowerCase()] = TagInterfaces[k]
 	}
 	
 	// put id key into the object

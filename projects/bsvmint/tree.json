@@ -1,0 +1,135 @@
+{
+	"projectID": "npg-generic",
+	"databaseID": "test-project-db",
+	"entrypoints": [
+		"project"
+	],
+	"objects": [
+		{
+			"mode": "root",
+			"name": "project",
+			"fields": [
+				{
+					"name": "name",
+					"required": true,
+					"json": "string_100"
+				},
+				{
+					"name": "description",
+					"required": true,
+					"json": "string_100"
+				}
+			]
+		},
+		{
+			"mode": "many",
+			"name": "collection",
+			"parents": [
+				"project"
+			],
+			"fields": [
+				{
+					"name": "name",
+					"required": true,
+					"json": "string_100"
+				},
+				{
+					"name": "description",
+					"required": true,
+					"json": "string_100"
+				}
+			]
+		},
+		{
+			"mode": "many",
+			"name": "font",
+			"parents": [
+				"project"
+			],
+			"fields": [
+				{
+					"name": "name",
+					"required": true,
+					"json": "string_100"
+				}
+			]
+		},
+		{
+			"mode": "many",
+			"parents": [
+				"collection"
+			],
+			"name": "attribute",
+			"fields": [
+				{
+					"name": "name",
+					"required": true,
+					"json": "string_100"
+				},
+				{
+					"name": "min",
+					"required": true,
+					"json": "number_int"
+				},
+				{
+					"name": "max",
+					"required": true,
+					"json": "number_int"
+				}
+			]
+		},
+		{
+			"mode": "many",
+			"parents": [
+				"collection"
+			],
+			"name": "layer",
+			"fields": [
+				{
+					"name": "name",
+					"required": true,
+					"json": "string_100"
+				},
+				{
+					"name": "type",
+					"required": true,
+					"type": "string",
+					"input": "select",
+					"inputOptions": [
+						"foreground",
+						"element",
+						"background"
+					]
+				}
+			]
+		},
+		{
+			"mode": "many",
+			"parents": [
+				"layer"
+			],
+			"name": "element",
+			"fields": [
+				{
+					"name": "name",
+					"required": true,
+					"json": "string_100"
+				},
+				{
+					"name": "description",
+					"required": true,
+					"json": "string_100"
+				}
+			]
+		},
+		{
+			"mode": "many",
+			"parents": [
+				"layer",
+				"element"
+			],
+			"name": "tag",
+			"json": "tag"
+		}
+	]
+}

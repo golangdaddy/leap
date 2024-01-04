@@ -1,3 +1,4 @@
+
 package models
 
 import "net/http"
@@ -7,9 +8,15 @@ type ELEMENT struct {
 	Fields FieldsELEMENT `json:"fields" firestore:"fields"`
 }
 
-func (layer *LAYER) NewELEMENT(fields FieldsELEMENT) *ELEMENT {
+func NewELEMENT(parent *Internals, fields FieldsELEMENT) *ELEMENT {
+	if parent == nil {
+		return &ELEMENT{
+			Meta: (Internals{}).NewInternals("elements"),
+			Fields: fields,
+		}
+	}
 	return &ELEMENT{
-		Meta: layer.Meta.NewInternals("elements"),
+		Meta: parent.NewInternals("elements"),
 		Fields: fields,
 	}
 }
@@ -28,8 +35,16 @@ func (x *ELEMENT) ValidateInput(w http.ResponseWriter, m map[string]interface{})
 	if !exists {
 		return false
 	}
+	
+	if !AssertRange(w, 1, 100, x.Fields.Name) {
+		return false
+	}
 	x.Fields.Description, exists = AssertSTRING(w, m, "description")
 	if !exists {
+		return false
+	}
+	
+	if !AssertRange(w, 1, 100, x.Fields.Description) {
 		return false
 	}
 	return true

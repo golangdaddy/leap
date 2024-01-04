@@ -4,6 +4,7 @@ import { Collections } from './collections'
 import { Collection } from './collection'
 import { NewCollection } from './newCollection'
 import { EditCollection } from './editCollection'
+import { UploadCollection } from './uploadCollection'
 
 export var CollectionInterfaces = {
     "newcollection": {
@@ -16,6 +17,11 @@ export var CollectionInterfaces = {
         name: "Edit Collection", 
         component: (<EditCollection />),
     },  
+    "uploadcollection": {
+        level: 3,
+        name: "Upload File", 
+        component: (<UploadCollection />),
+    },  
     "collections": {
         level: 1,
         name: "Manage Collections", 
@@ -24,8 +30,9 @@ export var CollectionInterfaces = {
     },
     "collection": {
         level: 2,
-        name: "Collection", 
-        subsublinks: ["layers","attributes",""],
+        name: "Collection",
+        sublinks: ["editcollection", "uploadcollection"],
+        subsublinks: ["attributes","layers",""],
         component: (<Collection />),
     },
 }

@@ -29,7 +29,9 @@ export function Preview(props) {
 			<div onClick={selectItem} className='flex flex-row w-full items-center cursor-pointer'>
 				<div className='text-xl font-bold' title="name">{ props.item.fields["name"] }</div>
 				<div className="px-4"></div>
-				<Spacer/><div className='text-xl font-bold' title="description">{ props.item.fields["description"] }</div>
+				<Spacer/><div className='text-xl font-bold' title="min">{ props.item.fields["min"] }</div>
+				<div className="px-4"></div>
+				<Spacer/><div className='text-xl font-bold' title="max">{ props.item.fields["max"] }</div>
 				<div className="px-4"></div>
 				<Spacer/>
 			</div>

@@ -1,4 +1,4 @@
-import { PublicFetch } from '@/app/fetch';
+import { PublicFetch, AxiosPOST } from '@/app/fetch';
 import SessionFetch from '@/app/fetch';
 import InputFormat from '@/inputs/inputFormat';
 
@@ -30,4 +30,8 @@ export function {{titlecase .Object.Name}}DELETE(user, id) {
 
 export function {{titlecase .Object.Name}}FunctionPOST(user, id, func) {
     return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function="+func+"&id="+id)
+}
+
+export function {{titlecase .Object.Name}}FileUpload(user, id, formData) {
+    return AxiosPOST(user, "api/{{lowercase .Object.Name}}?function=upload&id="+id, formData)
 }

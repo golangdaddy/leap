@@ -1,4 +1,4 @@
-import { PublicFetch } from '@/app/fetch';
+import { PublicFetch, AxiosPOST } from '@/app/fetch';
 import SessionFetch from '@/app/fetch';
 import InputFormat from '@/inputs/inputFormat';
 
@@ -30,4 +30,8 @@ export function CollectionDELETE(user, id) {
 
 export function CollectionFunctionPOST(user, id, func) {
     return SessionFetch(user, "POST", "api/collection?function="+func+"&id="+id)
+}
+
+export function CollectionFileUpload(user, id, formData) {
+    return AxiosPOST(user, "api/collection?function=upload&id="+id, formData)
 }

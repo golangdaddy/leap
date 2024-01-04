@@ -4,6 +4,7 @@ import { Layers } from './layers'
 import { Layer } from './layer'
 import { NewLayer } from './newLayer'
 import { EditLayer } from './editLayer'
+import { UploadLayer } from './uploadLayer'
 
 export var LayerInterfaces = {
     "newlayer": {
@@ -16,6 +17,11 @@ export var LayerInterfaces = {
         name: "Edit Layer", 
         component: (<EditLayer />),
     },  
+    "uploadlayer": {
+        level: 3,
+        name: "Upload File", 
+        component: (<UploadLayer />),
+    },  
     "layers": {
         level: 1,
         name: "Manage Layers", 
@@ -24,8 +30,9 @@ export var LayerInterfaces = {
     },
     "layer": {
         level: 2,
-        name: "Layer", 
-        subsublinks: ["layers",""],
+        name: "Layer",
+        sublinks: ["editlayer", "uploadlayer"],
+        subsublinks: ["elements","tags",""],
         component: (<Layer />),
     },
 }

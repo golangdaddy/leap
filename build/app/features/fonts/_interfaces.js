@@ -4,6 +4,7 @@ import { Fonts } from './fonts'
 import { Font } from './font'
 import { NewFont } from './newFont'
 import { EditFont } from './editFont'
+import { UploadFont } from './uploadFont'
 
 export var FontInterfaces = {
     "newfont": {
@@ -16,6 +17,11 @@ export var FontInterfaces = {
         name: "Edit Font", 
         component: (<EditFont />),
     },  
+    "uploadfont": {
+        level: 3,
+        name: "Upload File", 
+        component: (<UploadFont />),
+    },  
     "fonts": {
         level: 1,
         name: "Manage Fonts", 
@@ -24,7 +30,8 @@ export var FontInterfaces = {
     },
     "font": {
         level: 2,
-        name: "Font", 
+        name: "Font",
+        sublinks: ["editfont", "uploadfont"],
         subsublinks: [""],
         component: (<Font />),
     },

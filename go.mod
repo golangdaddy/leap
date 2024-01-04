@@ -5,7 +5,7 @@ go 1.21.5
 require (
 	cloud.google.com/go/firestore v1.14.0
 	github.com/google/uuid v1.5.0
-	github.com/richardboase/npgpublic v0.0.0-20231228225256-705b8fd233ef
+	github.com/richardboase/npgpublic v0.0.0-20240103161304-267bae5afae3
 	google.golang.org/api v0.154.0
 )
 
@@ -43,12 +43,15 @@ require (
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
+	github.com/kr/pretty v0.3.1 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/ninjapunkgirls/sdk v0.0.0-20221201145847-920638355e20 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
+	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	github.com/x448/float16 v0.8.4 // indirect

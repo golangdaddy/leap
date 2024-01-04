@@ -36,14 +36,14 @@ func EntrypointFONTS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// get project
+	// get project metadata
 	parentID, err := cloudfunc.QueryParam(r, "parent")
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return
 	}
-	project := &models.PROJECT{}
-	if err := utils.GetDocument(app, parentID, project); err != nil {
+	parent, err := models.GetMetadata(app, parentID)
+	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusNotFound)
 		return
 	}
@@ -71,7 +71,7 @@ func EntrypointFONTS(w http.ResponseWriter, r *http.Request) {
 		case "init":
 
 			fields := models.FieldsFONT{}
-			font := project.NewFONT(fields)
+			font := models.NewFONT(parent, fields)
 			if !font.ValidateInput(w, m) {
 				return
 			}
@@ -79,7 +79,7 @@ func EntrypointFONTS(w http.ResponseWriter, r *http.Request) {
 			log.Println(*font)
 
 			// write new FONT to the DB
-			if _, err := project.Meta.FirestoreDoc(app, font.Meta).Set(app.Context(), font); err != nil {
+			if err := font.Meta.SaveToFirestore(app, font); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
@@ -105,7 +105,7 @@ func EntrypointFONTS(w http.ResponseWriter, r *http.Request) {
 		case "count":
 
 			data := map[string]int{
-				"count": project.Meta.FirestoreCount(app, "fonts"),
+				"count": parent.FirestoreCount(app, "fonts"),
 			}
 			if err := cloudfunc.ServeJSON(w, data); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
@@ -124,7 +124,7 @@ func EntrypointFONTS(w http.ResponseWriter, r *http.Request) {
 
 			list := []*models.FONT{}
 
-			q := project.Meta.Firestore(app).Collection("fonts").OrderBy("Meta.Modified", firestore.Desc)
+			q := parent.Firestore(app).Collection("fonts").OrderBy("Meta.Modified", firestore.Desc)
 			if limit > 0 {
 				q = q.Limit(limit)
 			}

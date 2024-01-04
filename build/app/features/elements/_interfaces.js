@@ -4,6 +4,7 @@ import { Elements } from './elements'
 import { Element } from './element'
 import { NewElement } from './newElement'
 import { EditElement } from './editElement'
+import { UploadElement } from './uploadElement'
 
 export var ElementInterfaces = {
     "newelement": {
@@ -16,6 +17,11 @@ export var ElementInterfaces = {
         name: "Edit Element", 
         component: (<EditElement />),
     },  
+    "uploadelement": {
+        level: 3,
+        name: "Upload File", 
+        component: (<UploadElement />),
+    },  
     "elements": {
         level: 1,
         name: "Manage Elements", 
@@ -24,8 +30,9 @@ export var ElementInterfaces = {
     },
     "element": {
         level: 2,
-        name: "Element", 
-        subsublinks: [""],
+        name: "Element",
+        sublinks: ["editelement", "uploadelement"],
+        subsublinks: ["tags",""],
         component: (<Element />),
     },
 }

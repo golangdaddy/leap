@@ -40,6 +40,10 @@ func main() {
 	http.HandleFunc("/api/elements", functions.EntrypointELEMENTS)
 	println("registering handlers for elements")
 	
+	http.HandleFunc("/api/tag", functions.EntrypointTAG)
+	http.HandleFunc("/api/tags", functions.EntrypointTAGS)
+	println("registering handlers for tags")
+	
 
 	port := 8080
 	addr := fmt.Sprintf(":%d", port)

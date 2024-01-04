@@ -4,6 +4,7 @@ import { Projects } from './projects'
 import { Project } from './project'
 import { NewProject } from './newProject'
 import { EditProject } from './editProject'
+import { UploadProject } from './uploadProject'
 
 export var ProjectInterfaces = {
     "newproject": {
@@ -16,6 +17,11 @@ export var ProjectInterfaces = {
         name: "Edit Project", 
         component: (<EditProject />),
     },  
+    "uploadproject": {
+        level: 3,
+        name: "Upload File", 
+        component: (<UploadProject />),
+    },  
     "projects": {
         level: 1,
         name: "Manage Projects", 
@@ -24,8 +30,9 @@ export var ProjectInterfaces = {
     },
     "project": {
         level: 2,
-        name: "Project", 
-        subsublinks: ["collections",""],
+        name: "Project",
+        sublinks: ["editproject", "uploadproject"],
+        subsublinks: ["collections","fonts",""],
         component: (<Project />),
     },
 }

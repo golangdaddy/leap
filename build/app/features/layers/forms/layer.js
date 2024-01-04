@@ -28,10 +28,10 @@ export function LayerForm(props) {
 			<Input id="name" type='text' required={ true } title="layer name" placeholder="layer name" inputChange={handleInputChange}/>
 			<Spacer/>
 			
-			<Input id="description" type='text' required={ true } title="layer description" placeholder="layer description" inputChange={handleInputChange}/>
+			<Select id="type" type='text' required={ true } title="layer type" options={ ["foreground","element","background"] } placeholder="layer type" inputChange={handleInputChange}/>
 			<Spacer/>
 			
-			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
+			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","type"]}/>
 			<Spacer/>
 			
 		</div>

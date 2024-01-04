@@ -36,14 +36,14 @@ func EntrypointATTRIBUTES(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// get collection
+	// get collection metadata
 	parentID, err := cloudfunc.QueryParam(r, "parent")
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return
 	}
-	collection := &models.COLLECTION{}
-	if err := utils.GetDocument(app, parentID, collection); err != nil {
+	parent, err := models.GetMetadata(app, parentID)
+	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusNotFound)
 		return
 	}
@@ -71,7 +71,7 @@ func EntrypointATTRIBUTES(w http.ResponseWriter, r *http.Request) {
 		case "init":
 
 			fields := models.FieldsATTRIBUTE{}
-			attribute := collection.NewATTRIBUTE(fields)
+			attribute := models.NewATTRIBUTE(parent, fields)
 			if !attribute.ValidateInput(w, m) {
 				return
 			}
@@ -79,7 +79,7 @@ func EntrypointATTRIBUTES(w http.ResponseWriter, r *http.Request) {
 			log.Println(*attribute)
 
 			// write new ATTRIBUTE to the DB
-			if _, err := collection.Meta.FirestoreDoc(app, attribute.Meta).Set(app.Context(), attribute); err != nil {
+			if err := attribute.Meta.SaveToFirestore(app, attribute); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
@@ -105,7 +105,7 @@ func EntrypointATTRIBUTES(w http.ResponseWriter, r *http.Request) {
 		case "count":
 
 			data := map[string]int{
-				"count": collection.Meta.FirestoreCount(app, "attributes"),
+				"count": parent.FirestoreCount(app, "attributes"),
 			}
 			if err := cloudfunc.ServeJSON(w, data); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
@@ -124,7 +124,7 @@ func EntrypointATTRIBUTES(w http.ResponseWriter, r *http.Request) {
 
 			list := []*models.ATTRIBUTE{}
 
-			q := collection.Meta.Firestore(app).Collection("attributes").OrderBy("Meta.Modified", firestore.Desc)
+			q := parent.Firestore(app).Collection("attributes").OrderBy("Meta.Modified", firestore.Desc)
 			if limit > 0 {
 				q = q.Limit(limit)
 			}

@@ -59,7 +59,7 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 		case "init":
 
 			fields := models.Fields{{uppercase .Object.Name}}{}
-			{{lowercase .Object.Name}} := models.New{{uppercase .Object.Name}}(fields)
+			{{lowercase .Object.Name}} := models.New{{uppercase .Object.Name}}(nil, fields)
 			if !{{lowercase .Object.Name}}.ValidateInput(w, m) {
 				return
 			}

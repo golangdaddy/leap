@@ -8,9 +8,6 @@ import Submit from '@/inputs/submit';
 import Input from '@/inputs/input';
 import InputChange from '@/inputs/inputChange';
 
-import { FontsGET } from '@/features/fonts/_fetch';
-import { AttributesGET } from '@/features/attributes/_fetch';
-
 export function LayerEdit(props) {
 
 	console.log("COLLECTION EDIT", props)
@@ -29,10 +26,10 @@ export function LayerEdit(props) {
 			type: "string",
 			value: subject.name,
 			required: true,
-		},"description": {
-			id: "description",
+		},"type": {
+			id: "type",
 			type: "string",
-			value: subject.description,
+			value: subject.type,
 			required: true,
 		},
 	})
@@ -46,10 +43,10 @@ export function LayerEdit(props) {
 			<Input id="name" type='text' required={ true } title="layer name" placeholder="layer name" inputChange={handleInputChange}/>
 			<Spacer/>
 			
-			<Input id="description" type='text' required={ true } title="layer description" placeholder="layer description" inputChange={handleInputChange}/>
+			<Select id="type" type='text' required={ true } title="layer type" options={ ["foreground","element","background"] } placeholder="layer type" inputChange={handleInputChange}/>
 			<Spacer/>
 			
-			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
+			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","type"]}/>
 			<Spacer/>
 			
 		</div>

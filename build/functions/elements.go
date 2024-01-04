@@ -36,14 +36,14 @@ func EntrypointELEMENTS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// get layer
+	// get layer metadata
 	parentID, err := cloudfunc.QueryParam(r, "parent")
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return
 	}
-	layer := &models.LAYER{}
-	if err := utils.GetDocument(app, parentID, layer); err != nil {
+	parent, err := models.GetMetadata(app, parentID)
+	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusNotFound)
 		return
 	}
@@ -71,7 +71,7 @@ func EntrypointELEMENTS(w http.ResponseWriter, r *http.Request) {
 		case "init":
 
 			fields := models.FieldsELEMENT{}
-			element := layer.NewELEMENT(fields)
+			element := models.NewELEMENT(parent, fields)
 			if !element.ValidateInput(w, m) {
 				return
 			}
@@ -79,7 +79,7 @@ func EntrypointELEMENTS(w http.ResponseWriter, r *http.Request) {
 			log.Println(*element)
 
 			// write new ELEMENT to the DB
-			if _, err := layer.Meta.FirestoreDoc(app, element.Meta).Set(app.Context(), element); err != nil {
+			if err := element.Meta.SaveToFirestore(app, element); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
@@ -105,7 +105,7 @@ func EntrypointELEMENTS(w http.ResponseWriter, r *http.Request) {
 		case "count":
 
 			data := map[string]int{
-				"count": layer.Meta.FirestoreCount(app, "elements"),
+				"count": parent.FirestoreCount(app, "elements"),
 			}
 			if err := cloudfunc.ServeJSON(w, data); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
@@ -124,7 +124,7 @@ func EntrypointELEMENTS(w http.ResponseWriter, r *http.Request) {
 
 			list := []*models.ELEMENT{}
 
-			q := layer.Meta.Firestore(app).Collection("elements").OrderBy("Meta.Modified", firestore.Desc)
+			q := parent.Firestore(app).Collection("elements").OrderBy("Meta.Modified", firestore.Desc)
 			if limit > 0 {
 				q = q.Limit(limit)
 			}

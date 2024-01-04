@@ -35,6 +35,10 @@ export default function Dashboard(props) {
 					setUserdata(user)
 					console.log("DOWNLOADED USERDATA", user)
 				})
+				.catch((e) => {
+					console.log(e)
+					router("/otp")
+				})
 			}
 		}, [])
 

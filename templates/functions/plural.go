@@ -36,14 +36,14 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	// get {{lowercase .Object.ParentName}}
+	{{range $parentID := .Object.Parents}}// get {{$parentID}} metadata{{end}}
 	parentID, err := cloudfunc.QueryParam(r, "parent")
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return
 	}
-	{{lowercase .Object.ParentName}} := &models.{{uppercase .Object.ParentName}}{}
-	if err := utils.GetDocument(app, parentID, {{lowercase .Object.ParentName}}); err != nil {
+	parent, err := models.GetMetadata(app, parentID)
+	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusNotFound)
 		return
 	}
@@ -71,7 +71,7 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 		case "init":
 
 			fields := models.Fields{{uppercase .Object.Name}}{}
-			{{lowercase .Object.Name}} := {{lowercase .Object.ParentName}}.New{{uppercase .Object.Name}}(fields)
+			{{lowercase .Object.Name}} := models.New{{uppercase .Object.Name}}(parent, fields)
 			if !{{lowercase .Object.Name}}.ValidateInput(w, m) {
 				return
 			}
@@ -79,7 +79,7 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 			log.Println(*{{lowercase .Object.Name}})
 
 			// write new {{uppercase .Object.Name}} to the DB
-			if _, err := {{lowercase .Object.ParentName}}.Meta.FirestoreDoc(app, {{lowercase .Object.Name}}.Meta).Set(app.Context(), {{lowercase .Object.Name}}); err != nil {
+			if err := {{lowercase .Object.Name}}.Meta.SaveToFirestore(app, {{lowercase .Object.Name}}); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
@@ -105,7 +105,7 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 		case "count":
 
 			data := map[string]int{
-				"count": {{lowercase .Object.ParentName}}.Meta.FirestoreCount(app, "{{lowercase .Object.Name}}s"),
+				"count": parent.FirestoreCount(app, "{{lowercase .Object.Name}}s"),
 			}
 			if err := cloudfunc.ServeJSON(w, data); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
@@ -124,7 +124,7 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 
 			list := []*models.{{uppercase .Object.Name}}{}
 
-			q := {{lowercase .Object.ParentName}}.Meta.Firestore(app).Collection("{{lowercase .Object.Name}}s").OrderBy("Meta.Modified", firestore.Desc)
+			q := parent.Firestore(app).Collection("{{lowercase .Object.Name}}s").OrderBy("Meta.Modified", firestore.Desc)
 			if limit > 0 {
 				q = q.Limit(limit)
 			}

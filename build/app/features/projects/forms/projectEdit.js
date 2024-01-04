@@ -8,9 +8,6 @@ import Submit from '@/inputs/submit';
 import Input from '@/inputs/input';
 import InputChange from '@/inputs/inputChange';
 
-import { FontsGET } from '@/features/fonts/_fetch';
-import { AttributesGET } from '@/features/attributes/_fetch';
-
 export function ProjectEdit(props) {
 
 	console.log("COLLECTION EDIT", props)

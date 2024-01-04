@@ -1,3 +1,4 @@
+
 package models
 
 import "net/http"
@@ -7,9 +8,15 @@ type PROJECT struct {
 	Fields FieldsPROJECT `json:"fields" firestore:"fields"`
 }
 
-func NewPROJECT(fields FieldsPROJECT) *PROJECT {
+func NewPROJECT(parent *Internals, fields FieldsPROJECT) *PROJECT {
+	if parent == nil {
+		return &PROJECT{
+			Meta: (Internals{}).NewInternals("projects"),
+			Fields: fields,
+		}
+	}
 	return &PROJECT{
-		Meta: (Internals{}).NewInternals("projects"),
+		Meta: parent.NewInternals("projects"),
 		Fields: fields,
 	}
 }
@@ -28,8 +35,16 @@ func (x *PROJECT) ValidateInput(w http.ResponseWriter, m map[string]interface{})
 	if !exists {
 		return false
 	}
+	
+	if !AssertRange(w, 1, 100, x.Fields.Name) {
+		return false
+	}
 	x.Fields.Description, exists = AssertSTRING(w, m, "description")
 	if !exists {
+		return false
+	}
+	
+	if !AssertRange(w, 1, 100, x.Fields.Description) {
 		return false
 	}
 	return true

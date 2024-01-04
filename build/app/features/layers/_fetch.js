@@ -1,4 +1,4 @@
-import { PublicFetch } from '@/app/fetch';
+import { PublicFetch, AxiosPOST } from '@/app/fetch';
 import SessionFetch from '@/app/fetch';
 import InputFormat from '@/inputs/inputFormat';
 
@@ -30,4 +30,8 @@ export function LayerDELETE(user, id) {
 
 export function LayerFunctionPOST(user, id, func) {
     return SessionFetch(user, "POST", "api/layer?function="+func+"&id="+id)
+}
+
+export function LayerFileUpload(user, id, formData) {
+    return AxiosPOST(user, "api/layer?function=upload&id="+id, formData)
 }

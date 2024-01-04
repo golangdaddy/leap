@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -37,12 +38,26 @@ func (n Internals) NewInternals(class string) Internals {
 type Internals struct {
 	ID         string
 	Class      string
+	URIs       []string
 	Context    Context
 	Moderation Moderation
 	Updated    bool
 	Created    int64
 	Modified   int64
-	Stats      map[string]int
+	Stats      map[string]float64
+}
+
+func (i *Internals) URI() (string, error) {
+	if len(i.URIs) == 0 {
+		return "", errors.New("this object has no assigned URI")
+	}
+	return i.URIs[len(i.URIs)-1], nil
+}
+
+func (i *Internals) NewURI() string {
+	i.URIs = append(i.URIs, uuid.NewString())
+	i.Modify()
+	return i.URIs[len(i.URIs)-1]
 }
 
 func (i *Internals) DocPath() string {
@@ -111,6 +126,16 @@ func (i *Internals) FirestoreCount(app *common.App, collection string) int {
 	return count
 }
 
+func ClassFromID(id string) (string, error) {
+	p := strings.Split(id, ".")
+	last := p[len(p)-1]
+	class := strings.Split(last, "-")
+	if len(class) != 2 {
+		return "", fmt.Errorf("CANT GET CLASS FROM ID: %s", id)
+	}
+	return class[0], nil
+}
+
 func (i *Internals) ParentID() (string, error) {
 	if len(i.Context.Parents) == 0 {
 		return "", fmt.Errorf("%s has no parents", i.Class)
@@ -149,6 +174,7 @@ type Context struct {
 	Parents []string
 	Country string
 	Region  string
+	Order   int
 }
 
 type Moderation struct {

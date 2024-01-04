@@ -28,10 +28,7 @@ export function FontForm(props) {
 			<Input id="name" type='text' required={ true } title="font name" placeholder="font name" inputChange={handleInputChange}/>
 			<Spacer/>
 			
-			<Input id="description" type='text' required={ true } title="font description" placeholder="font description" inputChange={handleInputChange}/>
-			<Spacer/>
-			
-			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
+			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name"]}/>
 			<Spacer/>
 			
 		</div>

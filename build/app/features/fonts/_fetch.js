@@ -1,4 +1,4 @@
-import { PublicFetch } from '@/app/fetch';
+import { PublicFetch, AxiosPOST } from '@/app/fetch';
 import SessionFetch from '@/app/fetch';
 import InputFormat from '@/inputs/inputFormat';
 
@@ -30,4 +30,8 @@ export function FontDELETE(user, id) {
 
 export function FontFunctionPOST(user, id, func) {
     return SessionFetch(user, "POST", "api/font?function="+func+"&id="+id)
+}
+
+export function FontFileUpload(user, id, formData) {
+    return AxiosPOST(user, "api/font?function=upload&id="+id, formData)
 }

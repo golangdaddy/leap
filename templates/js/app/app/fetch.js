@@ -16,7 +16,7 @@ export function PublicFetch(method, url, body) {
     )
 }
 
-export function MediaPOST(user, element, formData) {
+export function AxiosPOST(user, url, formData) {
     const config = {
         headers: {
             'Authorization': user.headers.Authorization,
@@ -24,29 +24,7 @@ export function MediaPOST(user, element, formData) {
         },
     };
     console.log(config)
-    return axios.post(host+"api/image?element="+element, formData, config)
-}
-
-export function MediaArchivePOST(user, layer, formData) {
-    const config = {
-        headers: {
-            'Authorization': user.headers.Authorization,
-            'content-type': 'multipart/form-data',
-        },
-    };
-    console.log(config)
-    return axios.post(host+"api/images?layer="+layer, formData, config)
-}
-
-export function FontUploadPOST(user, project, formData) {
-    const config = {
-        headers: {
-            'Authorization': user.headers.Authorization,
-            'content-type': 'multipart/form-data',
-        },
-    };
-    console.log(config)
-    return axios.post(host+"api/fonts?function=init&project="+project, formData, config)
+    return axios.post(host+url, formData, config)
 }
 
 export default function SessionFetch(user, method, url, body) {

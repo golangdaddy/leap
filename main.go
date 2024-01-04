@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,13 +15,8 @@ import (
 	"golang.org/x/text/language"
 
 	"github.com/golangdaddy/leap/models"
+	"github.com/kr/pretty"
 )
-
-var funcMap = template.FuncMap{
-	"lowercase": lowercase,
-	"uppercase": uppercase,
-	"titlecase": titlecase,
-}
 
 type Container struct {
 	ProjectID  string
@@ -36,6 +30,16 @@ func main() {
 	os.RemoveAll("./build/")
 	if err := os.Mkdir("./build/", 0777); err != nil {
 		panic(err)
+	}
+
+	// parse the tree
+	folder := "projects/" + os.Args[len(os.Args)-1]
+	stack, err := models.ParseStack(folder, "out")
+	if err != nil {
+		panic(err)
+	}
+	if stack.DatabaseID == "" {
+		panic("set a databaseID")
 	}
 
 	if err := copyDir("templates/js/app/", "build/app/"); err != nil {
@@ -57,14 +61,9 @@ func main() {
 		panic(err)
 	}
 
-	stack, err := models.ParseStack()
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	if stack.DatabaseID == "" {
-		panic("set a databaseID")
+	// add the entrypoints
+	if err := doTemplate("build/app/features/home.js", stack); err != nil {
+		panic(err)
 	}
 
 	for _, object := range stack.Objects {
@@ -80,6 +79,8 @@ func main() {
 		for _, field := range object.Fields {
 			s, err := getInputs(object, field)
 			if err != nil {
+				println("field name:", field.Name)
+				pretty.Println(field)
 				panic(err)
 			}
 			container.Inputs = append(container.Inputs, s)
@@ -93,15 +94,16 @@ func main() {
 			fmt.Sprintf(`<Submit text="Save" inputs={inputs} submit={props.submit} assert={%s}/>`, string(b)),
 		)
 
+		if err := execTemplate(
+			"models",
+			"model.go",
+			strings.ToUpper(object.Name)+".go",
+			container,
+		); err != nil {
+			panic(err)
+		}
+
 		if object.HasParent() {
-			if err := execTemplate(
-				"models",
-				"model.go",
-				strings.ToUpper(object.Name)+".go",
-				container,
-			); err != nil {
-				panic(err)
-			}
 			if err := execTemplate(
 				"functions",
 				"plural.go",
@@ -112,14 +114,6 @@ func main() {
 			}
 		} else {
 			if err := execTemplate(
-				"models",
-				"modelNoParent.go",
-				strings.ToUpper(object.Name)+".go",
-				container,
-			); err != nil {
-				panic(err)
-			}
-			if err := execTemplate(
 				"functions",
 				"pluralNoParent.go",
 				strings.ToLower(object.Name)+"s.go",
@@ -128,6 +122,7 @@ func main() {
 				panic(err)
 			}
 		}
+
 		if err := execTemplate(
 			"functions",
 			"singular.go",
@@ -313,6 +308,23 @@ func main() {
 				panic(err)
 			}
 		}
+		{
+			path := fmt.Sprintf(
+				"./build/app/features/%ss/upload%s.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Title(language.English).String(object.Name),
+			)
+			copyFile(
+				"./templates/js/feature/uploadSubject.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				panic(err)
+			}
+		}
+		if object.Mode == "root" {
+			stack.Entrypoints = append(stack.Entrypoints, object.Name)
+		}
 	}
 
 	copyFile(
@@ -335,18 +347,6 @@ func main() {
 	copyFile("./templates/models/internals.go", "./build/models/internals.go")
 	copyFile("./templates/models/pkg.go", "./build/models/pkg.go")
 
-}
-
-func titlecase(s string) string {
-	return string(strings.ToUpper(s)[0]) + string(strings.ToLower(s)[1:])
-}
-
-func uppercase(s string) string {
-	return strings.ToUpper(s)
-}
-
-func lowercase(s string) string {
-	return strings.ToLower(s)
 }
 
 // loaTemplate Parses the template buffer
@@ -439,43 +439,6 @@ func copyFile(sourcePath, destinationPath string) error {
 
 	fmt.Printf("File %s copied to %s\n", sourcePath, destinationPath)
 	return nil
-}
-
-func getInputs(object *models.Object, field *models.Field) (string, error) {
-
-	var err error
-	var tmp *template.Template
-
-	switch field.Input {
-	case "select":
-		const s = `<Select id="{{lowercase .Name}}" type='text' required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
-		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(s)
-	case "text":
-		const s = `<Input id="{{lowercase .Name}}" type='text' required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
-		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(s)
-	case "number":
-		const s = `<Input id="{{lowercase .Name}}" type='number' required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
-		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(s)
-	case "textarea":
-		const s = `<Textarea id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
-		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(s)
-	case "checkbox":
-		const s = `<Checkbox id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
-		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(s)
-	default:
-		panic("missing input for " + field.Input)
-	}
-	if err != nil {
-		return "", err
-	}
-
-	buf := bytes.NewBuffer(nil)
-	// Execute the template with the provided data
-	if err := tmp.Execute(buf, field); err != nil {
-		return "", err
-	}
-
-	return fmt.Sprintf(buf.String(), object.Name, object.Name), nil
 }
 
 func copyDir(src, dest string) error {

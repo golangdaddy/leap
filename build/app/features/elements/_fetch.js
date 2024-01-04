@@ -1,4 +1,4 @@
-import { PublicFetch } from '@/app/fetch';
+import { PublicFetch, AxiosPOST } from '@/app/fetch';
 import SessionFetch from '@/app/fetch';
 import InputFormat from '@/inputs/inputFormat';
 
@@ -30,4 +30,8 @@ export function ElementDELETE(user, id) {
 
 export function ElementFunctionPOST(user, id, func) {
     return SessionFetch(user, "POST", "api/element?function="+func+"&id="+id)
+}
+
+export function ElementFileUpload(user, id, formData) {
+    return AxiosPOST(user, "api/element?function=upload&id="+id, formData)
 }

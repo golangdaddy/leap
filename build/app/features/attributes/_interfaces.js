@@ -4,6 +4,7 @@ import { Attributes } from './attributes'
 import { Attribute } from './attribute'
 import { NewAttribute } from './newAttribute'
 import { EditAttribute } from './editAttribute'
+import { UploadAttribute } from './uploadAttribute'
 
 export var AttributeInterfaces = {
     "newattribute": {
@@ -16,6 +17,11 @@ export var AttributeInterfaces = {
         name: "Edit Attribute", 
         component: (<EditAttribute />),
     },  
+    "uploadattribute": {
+        level: 3,
+        name: "Upload File", 
+        component: (<UploadAttribute />),
+    },  
     "attributes": {
         level: 1,
         name: "Manage Attributes", 
@@ -24,7 +30,8 @@ export var AttributeInterfaces = {
     },
     "attribute": {
         level: 2,
-        name: "Attribute", 
+        name: "Attribute",
+        sublinks: ["editattribute", "uploadattribute"],
         subsublinks: [""],
         component: (<Attribute />),
     },

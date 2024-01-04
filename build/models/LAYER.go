@@ -1,3 +1,4 @@
+
 package models
 
 import "net/http"
@@ -7,16 +8,22 @@ type LAYER struct {
 	Fields FieldsLAYER `json:"fields" firestore:"fields"`
 }
 
-func (collection *COLLECTION) NewLAYER(fields FieldsLAYER) *LAYER {
+func NewLAYER(parent *Internals, fields FieldsLAYER) *LAYER {
+	if parent == nil {
+		return &LAYER{
+			Meta: (Internals{}).NewInternals("layers"),
+			Fields: fields,
+		}
+	}
 	return &LAYER{
-		Meta: collection.Meta.NewInternals("layers"),
+		Meta: parent.NewInternals("layers"),
 		Fields: fields,
 	}
 }
 
 type FieldsLAYER struct {
 	Name string `json:"name"`
-	Description string `json:"description"`
+	Type string `json:"type"`
 	
 }
 
@@ -28,9 +35,14 @@ func (x *LAYER) ValidateInput(w http.ResponseWriter, m map[string]interface{}) b
 	if !exists {
 		return false
 	}
-	x.Fields.Description, exists = AssertSTRING(w, m, "description")
+	
+	if !AssertRange(w, 1, 100, x.Fields.Name) {
+		return false
+	}
+	x.Fields.Type, exists = AssertSTRING(w, m, "type")
 	if !exists {
 		return false
 	}
+	
 	return true
 }

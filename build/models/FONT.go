@@ -1,3 +1,4 @@
+
 package models
 
 import "net/http"
@@ -7,16 +8,21 @@ type FONT struct {
 	Fields FieldsFONT `json:"fields" firestore:"fields"`
 }
 
-func (project *PROJECT) NewFONT(fields FieldsFONT) *FONT {
+func NewFONT(parent *Internals, fields FieldsFONT) *FONT {
+	if parent == nil {
+		return &FONT{
+			Meta: (Internals{}).NewInternals("fonts"),
+			Fields: fields,
+		}
+	}
 	return &FONT{
-		Meta: project.Meta.NewInternals("fonts"),
+		Meta: parent.NewInternals("fonts"),
 		Fields: fields,
 	}
 }
 
 type FieldsFONT struct {
 	Name string `json:"name"`
-	Description string `json:"description"`
 	
 }
 
@@ -28,8 +34,8 @@ func (x *FONT) ValidateInput(w http.ResponseWriter, m map[string]interface{}) bo
 	if !exists {
 		return false
 	}
-	x.Fields.Description, exists = AssertSTRING(w, m, "description")
-	if !exists {
+	
+	if !AssertRange(w, 1, 100, x.Fields.Name) {
 		return false
 	}
 	return true

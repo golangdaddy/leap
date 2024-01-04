@@ -36,14 +36,14 @@ func EntrypointLAYERS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// get collection
+	// get collection metadata
 	parentID, err := cloudfunc.QueryParam(r, "parent")
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return
 	}
-	collection := &models.COLLECTION{}
-	if err := utils.GetDocument(app, parentID, collection); err != nil {
+	parent, err := models.GetMetadata(app, parentID)
+	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusNotFound)
 		return
 	}
@@ -71,7 +71,7 @@ func EntrypointLAYERS(w http.ResponseWriter, r *http.Request) {
 		case "init":
 
 			fields := models.FieldsLAYER{}
-			layer := collection.NewLAYER(fields)
+			layer := models.NewLAYER(parent, fields)
 			if !layer.ValidateInput(w, m) {
 				return
 			}
@@ -79,7 +79,7 @@ func EntrypointLAYERS(w http.ResponseWriter, r *http.Request) {
 			log.Println(*layer)
 
 			// write new LAYER to the DB
-			if _, err := collection.Meta.FirestoreDoc(app, layer.Meta).Set(app.Context(), layer); err != nil {
+			if err := layer.Meta.SaveToFirestore(app, layer); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
@@ -105,7 +105,7 @@ func EntrypointLAYERS(w http.ResponseWriter, r *http.Request) {
 		case "count":
 
 			data := map[string]int{
-				"count": collection.Meta.FirestoreCount(app, "layers"),
+				"count": parent.FirestoreCount(app, "layers"),
 			}
 			if err := cloudfunc.ServeJSON(w, data); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
@@ -124,7 +124,7 @@ func EntrypointLAYERS(w http.ResponseWriter, r *http.Request) {
 
 			list := []*models.LAYER{}
 
-			q := collection.Meta.Firestore(app).Collection("layers").OrderBy("Meta.Modified", firestore.Desc)
+			q := parent.Firestore(app).Collection("layers").OrderBy("Meta.Modified", firestore.Desc)
 			if limit > 0 {
 				q = q.Limit(limit)
 			}

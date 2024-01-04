@@ -1,3 +1,4 @@
+
 package models
 
 import "net/http"
@@ -7,9 +8,15 @@ type COLLECTION struct {
 	Fields FieldsCOLLECTION `json:"fields" firestore:"fields"`
 }
 
-func (project *PROJECT) NewCOLLECTION(fields FieldsCOLLECTION) *COLLECTION {
+func NewCOLLECTION(parent *Internals, fields FieldsCOLLECTION) *COLLECTION {
+	if parent == nil {
+		return &COLLECTION{
+			Meta: (Internals{}).NewInternals("collections"),
+			Fields: fields,
+		}
+	}
 	return &COLLECTION{
-		Meta: project.Meta.NewInternals("collections"),
+		Meta: parent.NewInternals("collections"),
 		Fields: fields,
 	}
 }
@@ -28,8 +35,16 @@ func (x *COLLECTION) ValidateInput(w http.ResponseWriter, m map[string]interface
 	if !exists {
 		return false
 	}
+	
+	if !AssertRange(w, 1, 100, x.Fields.Name) {
+		return false
+	}
 	x.Fields.Description, exists = AssertSTRING(w, m, "description")
 	if !exists {
+		return false
+	}
+	
+	if !AssertRange(w, 1, 100, x.Fields.Description) {
 		return false
 	}
 	return true

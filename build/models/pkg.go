@@ -2,14 +2,62 @@ package models
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/richardboase/npgpublic/sdk/cloudfunc"
+	"github.com/richardboase/npgpublic/sdk/common"
 )
 
 func getTime() int64 {
 	return time.Now().UTC().Unix()
+}
+
+type Generic struct {
+	Meta Internals
+}
+
+func GetMetadata(app *common.App, id string) (*Internals, error) {
+
+	dst := &Generic{}
+
+	i := Internal(id)
+	path := i.DocPath()
+
+	println("GET DOCUMENT", path)
+
+	doc, err := app.Firestore().Doc(path).Get(app.Context())
+	if err != nil {
+		return nil, err
+	}
+	return &dst.Meta, doc.DataTo(dst)
+}
+
+func AssertRange(w http.ResponseWriter, min, max float64, value interface{}) bool {
+
+	var val float64
+	switch v := value.(type) {
+	case int:
+		val = float64(v)
+	case float64:
+		val = v
+	case string:
+		val = float64(len(v))
+	default:
+		log.Println("ignoring range assertion for unknown type")
+	}
+
+	err := fmt.Errorf("value %v exceeded value of range min: %v max: %v ", value, min, max)
+	if val < min {
+		cloudfunc.HttpError(w, err, http.StatusBadRequest)
+		return false
+	}
+	if val > max {
+		cloudfunc.HttpError(w, err, http.StatusBadRequest)
+		return false
+	}
+	return true
 }
 
 func AssertSTRING(w http.ResponseWriter, m map[string]interface{}, key string) (string, bool) {

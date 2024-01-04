@@ -59,7 +59,7 @@ func EntrypointPROJECTS(w http.ResponseWriter, r *http.Request) {
 		case "init":
 
 			fields := models.FieldsPROJECT{}
-			project := models.NewPROJECT(fields)
+			project := models.NewPROJECT(nil, fields)
 			if !project.ValidateInput(w, m) {
 				return
 			}

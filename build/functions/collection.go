@@ -1,8 +1,11 @@
 package functions
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"io"
+	"log"
 	"net/http"
 
 	"github.com/richardboase/npgpublic/sdk/cloudfunc"
@@ -10,7 +13,6 @@ import (
 	"github.com/richardboase/npgpublic/utils"
 
 	"github.com/golangdaddy/leap/build/models"
-
 )
 
 // api-collection
@@ -72,6 +74,52 @@ func EntrypointCOLLECTION(w http.ResponseWriter, r *http.Request) {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
+
+		case "upload":
+
+			log.Println("PARSING FORM")
+			r.ParseMultipartForm(10 << 20)
+		
+			// Get handler for filename, size and headers
+			file, handler, err := r.FormFile("file")
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
+		
+			defer file.Close()
+			fmt.Printf("Uploaded File: %+v\n", handler.Filename)
+			fmt.Printf("File Size: %+v\n", handler.Size)
+			fmt.Printf("MIME Header: %+v\n", handler.Header)
+
+			// prepare upload with a new URI
+			objectName := collection.Meta.NewURI()
+			writer := app.GCPClients.GCS().Bucket("npg-generic-uploads").Object(objectName).NewWriter(app.Context())
+			//writer.ObjectAttrs.CacheControl = "no-store"
+			defer writer.Close()
+		
+			buf := bytes.NewBuffer(nil)
+
+			// Copy the uploaded file to the created file on the filesystem
+			n, err := io.Copy(buf, file)
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+				return
+			}
+			log.Println("UPLOAD copytobuffer: wrote", n, "bytes")
+
+			if _, err := writer.Write(buf.Bytes()); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+				return
+			}
+		
+			// update file with new URI value
+			if err := collection.Meta.SaveToFirestore(app, collection); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+				return
+			}
+
+			return
 
 		default:
 			err := fmt.Errorf("function not found: %s", function)

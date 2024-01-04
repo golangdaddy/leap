@@ -28,10 +28,13 @@ export function AttributeForm(props) {
 			<Input id="name" type='text' required={ true } title="attribute name" placeholder="attribute name" inputChange={handleInputChange}/>
 			<Spacer/>
 			
-			<Input id="description" type='text' required={ true } title="attribute description" placeholder="attribute description" inputChange={handleInputChange}/>
+			<Input id="min" type='number' required={ true } title="attribute min" placeholder="attribute min" inputChange={handleInputChange}/>
 			<Spacer/>
 			
-			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
+			<Input id="max" type='number' required={ true } title="attribute max" placeholder="attribute max" inputChange={handleInputChange}/>
+			<Spacer/>
+			
+			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","min","max"]}/>
 			<Spacer/>
 			
 		</div>

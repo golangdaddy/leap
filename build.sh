@@ -1,5 +1,6 @@
 #!/bin/bash
 
-go run . || exit 10
+go run . $1 || exit 10
 chmod -R 775 build/ || exit 10
-(cd build/app && rm -r node_modules && npm install) || exit 10
+(cd build/server && go build . errors) || exit 10
+(cd build/app && rm -r node_modules && npm install && npm run dev) || exit 10

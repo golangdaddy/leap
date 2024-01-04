@@ -1,4 +1,4 @@
-import { PublicFetch } from '@/app/fetch';
+import { PublicFetch, AxiosPOST } from '@/app/fetch';
 import SessionFetch from '@/app/fetch';
 import InputFormat from '@/inputs/inputFormat';
 
@@ -30,4 +30,8 @@ export function AttributeDELETE(user, id) {
 
 export function AttributeFunctionPOST(user, id, func) {
     return SessionFetch(user, "POST", "api/attribute?function="+func+"&id="+id)
+}
+
+export function AttributeFileUpload(user, id, formData) {
+    return AxiosPOST(user, "api/attribute?function=upload&id="+id, formData)
 }
