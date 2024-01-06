@@ -36,6 +36,10 @@ func main() {
 	http.HandleFunc("/api/layers", functions.EntrypointLAYERS)
 	println("registering handlers for layers")
 	
+	http.HandleFunc("/api/overlays", functions.EntrypointOVERLAYS)
+	http.HandleFunc("/api/overlayss", functions.EntrypointOVERLAYSS)
+	println("registering handlers for overlayss")
+	
 	http.HandleFunc("/api/element", functions.EntrypointELEMENT)
 	http.HandleFunc("/api/elements", functions.EntrypointELEMENTS)
 	println("registering handlers for elements")

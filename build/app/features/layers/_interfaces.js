@@ -32,7 +32,7 @@ export var LayerInterfaces = {
         level: 2,
         name: "Layer",
         sublinks: ["editlayer", "uploadlayer"],
-        subsublinks: ["elements","tags",""],
+        subsublinks: ["overlayss","elements","tags",""],
         component: (<Layer />),
     },
 }

@@ -11,6 +11,7 @@ import { CollectionInterfaces } from '@/features/collections/_interfaces'
 import { FontInterfaces } from '@/features/fonts/_interfaces'
 import { AttributeInterfaces } from '@/features/attributes/_interfaces'
 import { LayerInterfaces } from '@/features/layers/_interfaces'
+import { OverlaysInterfaces } from '@/features/overlayss/_interfaces'
 import { ElementInterfaces } from '@/features/elements/_interfaces'
 import { TagInterfaces } from '@/features/tags/_interfaces'
 
@@ -66,6 +67,9 @@ export function GetInterfaces() {
 	}// LayerInterfaces
 	for (const k in LayerInterfaces) {
 		interfaces[k.toLowerCase()] = LayerInterfaces[k]
+	}// OverlaysInterfaces
+	for (const k in OverlaysInterfaces) {
+		interfaces[k.toLowerCase()] = OverlaysInterfaces[k]
 	}// ElementInterfaces
 	for (const k in ElementInterfaces) {
 		interfaces[k.toLowerCase()] = ElementInterfaces[k]

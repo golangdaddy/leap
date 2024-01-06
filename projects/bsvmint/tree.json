@@ -108,6 +108,31 @@
 			"parents": [
 				"layer"
 			],
+			"name": "overlays",
+			"fields": [
+				{
+					"name": "name",
+					"required": true,
+					"json": "string_100"
+				},
+				{
+					"name": "type",
+					"required": true,
+					"type": "string",
+					"input": "select",
+					"inputOptions": [
+						"foreground",
+						"element",
+						"background"
+					]
+				}
+			]
+		},
+		{
+			"mode": "many",
+			"parents": [
+				"layer"
+			],
 			"name": "element",
 			"fields": [
 				{
