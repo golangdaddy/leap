@@ -20,8 +20,16 @@ export function LayersListGET(user, parentID, limit) {
     return SessionFetch(user, "GET", "api/layers?function=list&parent="+parentID+"&limit="+limit)
 }
 
-export function LayersCountGET(user, collectionID) {
-    return SessionFetch(user, "GET", "api/layers?function=count&collection="+collectionID)
+export function LayersCountGET(user, parentID) {
+    return SessionFetch(user, "GET", "api/layers?function=count&parent="+parentID)
+}
+
+export function LayerMoveUpPOST(user, id) {
+    return SessionFetch(user, "POST", "api/layer?function=up&id="+id)
+}
+
+export function LayerMoveDownPOST(user, id) {
+    return SessionFetch(user, "POST", "api/layer?function=down&id="+id)
 }
 
 export function LayerDELETE(user, id) {

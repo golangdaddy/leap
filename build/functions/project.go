@@ -8,6 +8,9 @@ import (
 	"log"
 	"net/http"
 
+	"cloud.google.com/go/firestore"
+	"google.golang.org/api/iterator"
+
 	"github.com/richardboase/npgpublic/sdk/cloudfunc"
 	"github.com/richardboase/npgpublic/sdk/common"
 	"github.com/richardboase/npgpublic/utils"
@@ -120,6 +123,7 @@ func EntrypointPROJECT(w http.ResponseWriter, r *http.Request) {
 			}
 
 			return
+		
 
 		default:
 			err := fmt.Errorf("function not found: %s", function)
@@ -164,4 +168,34 @@ func EntrypointPROJECT(w http.ResponseWriter, r *http.Request) {
 		cloudfunc.HttpError(w, err, http.StatusMethodNotAllowed)
 		return
 	}
+}
+
+func getProjectList(app *common.App, subject *models.PROJECT) []*models.PROJECT {
+	list := []*models.PROJECT{}
+	class := subject.Meta.Class
+	var ref *firestore.CollectionRef
+	if len(subject.Meta.Context.Parent) > 0 {
+		ref = models.Internal(subject.Meta.Context.Parent).Firestore(app).Collection(class)
+	} else {
+		ref = app.Firestore().Collection(class)
+	}
+	iter := ref.OrderBy("Meta.Context.Order", firestore.Asc).Documents(app.Context())
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Println(err)
+			break
+		}
+		object := &models.PROJECT{}
+		if err := doc.DataTo(object); err != nil {
+			log.Println(err)
+			continue
+		}
+		list = append(list, object)
+	}
+	log.Println(len(list))
+	return list
 }

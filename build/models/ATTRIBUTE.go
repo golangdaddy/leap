@@ -1,7 +1,10 @@
 
 package models
 
-import "net/http"
+import (
+	"net/http"
+	"regexp"
+)
 
 type ATTRIBUTE struct {
 	Meta    Internals
@@ -37,6 +40,14 @@ func (x *ATTRIBUTE) ValidateInput(w http.ResponseWriter, m map[string]interface{
 		return false
 	}
 	
+	{
+		exp := ""
+		if len(exp) > 0 {
+			if !regexp.MustCompile(exp).MatchString(x.Fields.Name) {
+				return false
+			}
+		}
+	}
 	if !AssertRange(w, 1, 100, x.Fields.Name) {
 		return false
 	}
@@ -50,5 +61,6 @@ func (x *ATTRIBUTE) ValidateInput(w http.ResponseWriter, m map[string]interface{
 		return false
 	}
 	
+
 	return true
 }

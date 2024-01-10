@@ -4,11 +4,11 @@ import { useLocalContext } from '@/context/local';
 
 import { GoBack } from '@/features/interfaces';
 
-import { OverlaysObjectGET, OverlaysUpdatePOST } from './_fetch';
+import { OverlayObjectGET, OverlayUpdatePOST } from './_fetch';
 
-import { OverlaysEdit } from './forms/overlaysEdit';
+import { OverlayEdit } from './forms/overlayEdit';
 
-export function EditOverlays(props) {
+export function EditOverlay(props) {
 
 	const [userdata, _] = useUserContext()
 	const [localdata, setLocaldata] = useLocalContext()
@@ -16,7 +16,7 @@ export function EditOverlays(props) {
     // make sure the object is current
     const [subject, setSubject] = useState(localdata.tab.context.object)
     useEffect(() => {
-        OverlaysObjectGET(userdata, subject?.Meta.ID)
+        OverlayObjectGET(userdata, subject?.Meta.ID)
         .then((res) => res.json())
 		.then((data) => {
 			console.log("UPDATED OBJECT",data)
@@ -24,11 +24,12 @@ export function EditOverlays(props) {
 		})
 		.catch((e) => {
 			console.log(e)
+			setLocaldata(GoBack(localdata))
 		})
-    }, [])
+	}, [])
 
 	function submitEdit(inputs) {
-		OverlaysUpdatePOST(
+		OverlayUpdatePOST(
 			userdata,
 			subject.Meta.ID,
 			inputs
@@ -46,7 +47,7 @@ export function EditOverlays(props) {
 	return (
 		<>
 		{
-			subject && <OverlaysEdit subject={subject} submit={submitEdit}/>
+			subject && <OverlayEdit subject={subject} submit={submitEdit}/>
 		}
 		</>
   	);

@@ -1,10 +1,5 @@
 import * as React from 'react'
 
-import { DeleteObject } from '@/inputs/deleteObject'
-import { ImageUpload } from '@/components/imageUpload'
-import { ArchiveUpload } from '@/components/archiveUpload'
-import { FontUpload } from '@/components/fontUpload'
-
 {{range .Objects}}
 import { {{titlecase .Name}}Interfaces } from '@/features/{{lowercase .Name}}s/_interfaces'{{end}}
 
@@ -15,26 +10,6 @@ export var Interfaces = {
 		level: 0,
 		name: "Home",
 		component: (<Home/>),
-	},
-	"deleteobject": {
-		level: -1,
-		name: "Delete", 
-		component: (<DeleteObject/>),
-	},
-	"imageupload": {
-		level: -1,
-		name: "Image Upload", 
-		component: (<ImageUpload/>),
-	},
-	"archiveupload": {
-		level: -1,
-		name: "Archive Upload", 
-		component: (<ArchiveUpload/>),
-	},
-	"fontupload": {
-		level: -1,
-		name: "Font Upload", 
-		component: (<FontUpload/>),
 	},
 }
 

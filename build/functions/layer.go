@@ -8,6 +8,9 @@ import (
 	"log"
 	"net/http"
 
+	"cloud.google.com/go/firestore"
+	"google.golang.org/api/iterator"
+
 	"github.com/richardboase/npgpublic/sdk/cloudfunc"
 	"github.com/richardboase/npgpublic/sdk/common"
 	"github.com/richardboase/npgpublic/utils"
@@ -120,6 +123,83 @@ func EntrypointLAYER(w http.ResponseWriter, r *http.Request) {
 			}
 
 			return
+		
+		case "down":
+
+			list := getLayerList(app, layer)
+
+			var me, beforeMe *models.LAYER
+			for order, item := range list {
+				item.Meta.Context.Order = order
+				if item.Meta.ID == layer.Meta.ID {
+					me = item
+					break
+				} else {
+					beforeMe = item
+				}
+			}
+			if beforeMe == nil {
+				return
+			}
+
+			order := me.Meta.Context.Order
+			me.Meta.Context.Order = beforeMe.Meta.Context.Order
+			beforeMe.Meta.Context.Order = order
+
+			for _, item := range list {
+				updates := []firestore.Update{
+					{
+						FieldPath: firestore.FieldPath{"Meta.Context.Order"},
+						Value:     item.Meta.Context.Order,
+					},
+				}
+				println("UPDATING", item.Meta.ID, item.Meta.Context.Order)
+				if _, err := item.Meta.Firestore(app).Update(app.Context(), updates); err != nil {
+					log.Println(err)
+				}
+			}
+
+			return
+
+		case "up":
+
+			list := getLayerList(app, layer)
+
+			var me, afterMe *models.LAYER
+			for x, _ := range list {
+				order := (len(list) - 1) - x
+				item := list[order]
+				item.Meta.Context.Order = order
+				if item.Meta.ID == layer.Meta.ID {
+					me = item
+					break
+				} else {
+					afterMe = item
+				}
+			}
+			if afterMe == nil {
+				return
+			}
+
+			order := me.Meta.Context.Order
+			me.Meta.Context.Order = afterMe.Meta.Context.Order
+			afterMe.Meta.Context.Order = order
+
+			for _, item := range list {
+				updates := []firestore.Update{
+					{
+						FieldPath: firestore.FieldPath{"Meta.Context.Order"},
+						Value:     item.Meta.Context.Order,
+					},
+				}
+				println("UPDATING", item.Meta.ID, item.Meta.Context.Order)
+				if _, err := item.Meta.Firestore(app).Update(app.Context(), updates); err != nil {
+					log.Println(err)
+				}
+			}
+
+			return
+		
 
 		default:
 			err := fmt.Errorf("function not found: %s", function)
@@ -164,4 +244,34 @@ func EntrypointLAYER(w http.ResponseWriter, r *http.Request) {
 		cloudfunc.HttpError(w, err, http.StatusMethodNotAllowed)
 		return
 	}
+}
+
+func getLayerList(app *common.App, subject *models.LAYER) []*models.LAYER {
+	list := []*models.LAYER{}
+	class := subject.Meta.Class
+	var ref *firestore.CollectionRef
+	if len(subject.Meta.Context.Parent) > 0 {
+		ref = models.Internal(subject.Meta.Context.Parent).Firestore(app).Collection(class)
+	} else {
+		ref = app.Firestore().Collection(class)
+	}
+	iter := ref.OrderBy("Meta.Context.Order", firestore.Asc).Documents(app.Context())
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Println(err)
+			break
+		}
+		object := &models.LAYER{}
+		if err := doc.DataTo(object); err != nil {
+			log.Println(err)
+			continue
+		}
+		list = append(list, object)
+	}
+	log.Println(len(list))
+	return list
 }

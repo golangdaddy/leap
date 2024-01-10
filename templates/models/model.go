@@ -1,7 +1,10 @@
 {{ $obj := .Object }}
 package models
 
-import "net/http"
+import (
+	"net/http"
+	"regexp"
+)
 
 type {{uppercase .Object.Name}} struct {
 	Meta    Internals
@@ -35,8 +38,17 @@ func (x *{{uppercase .Object.Name}}) ValidateInput(w http.ResponseWriter, m map[
 		return false
 	}
 	{{if .Range}}
+	{
+		exp := "{{.Regexp}}"
+		if len(exp) > 0 {
+			if !regexp.MustCompile(exp).MatchString(x.Fields.{{titlecase .Name}}) {
+				return false
+			}
+		}
+	}
 	if !AssertRange(w, {{.Range.Min}}, {{.Range.Max}}, x.Fields.{{titlecase .Name}}) {
 		return false
 	}{{end}}{{end}}
+
 	return true
 }

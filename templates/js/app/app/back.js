@@ -62,7 +62,7 @@ export default function Back(props) {
 
 							return (
 								<div key={i} className='flex flex-col justify-center'>
-									<div className='flex flex-row'>
+									<div className='flex flex-row text-sm'>
 										<div className='mx-2'>/</div>
 										<div className="cursor-pointer" id={"crumb_"+i} onClick={ (i == (localdata.breadcrumbs.length - 1) ) ? function () {} : updateBackEvent}>{displayName}</div>
 									</div>

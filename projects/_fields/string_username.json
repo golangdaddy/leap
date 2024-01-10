@@ -1,0 +1,9 @@
+{
+    "type": "string",
+    "input": "text",
+    "range": {
+        "min": 1,
+        "max": 20
+    },
+    "regexp": "^[A-Z_]+$"
+}

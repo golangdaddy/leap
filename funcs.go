@@ -4,13 +4,16 @@ import (
 	"encoding/json"
 	"strings"
 	"text/template"
+
+	"github.com/golangdaddy/leap/models"
 )
 
 var funcMap = template.FuncMap{
-	"lowercase": lowercase,
-	"uppercase": uppercase,
-	"titlecase": titlecase,
-	"json":      jsonmarshal,
+	"parentcount": parentcount,
+	"lowercase":   lowercase,
+	"uppercase":   uppercase,
+	"titlecase":   titlecase,
+	"json":        jsonmarshal,
 }
 
 func jsonmarshal(x interface{}) string {
@@ -28,4 +31,8 @@ func uppercase(s string) string {
 
 func lowercase(s string) string {
 	return strings.ToLower(s)
+}
+
+func parentcount(object *models.Object) int {
+	return object.ParentCount * 2
 }

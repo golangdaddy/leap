@@ -3,7 +3,7 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 import { useState, useEffect } from 'react';
 
-import { TagList } from './shared/TagList';
+import { TagList } from './shared/tagList';
 
 export function Tags(props) {
 

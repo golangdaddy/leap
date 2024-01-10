@@ -24,12 +24,12 @@ export function CollectionEdit(props) {
 		"name": {
 			id: "name",
 			type: "string",
-			value: subject.name,
+			value: subject.fields.name,
 			required: true,
 		},"description": {
 			id: "description",
 			type: "string",
-			value: subject.description,
+			value: subject.fields.description,
 			required: true,
 		},
 	})
@@ -40,10 +40,10 @@ export function CollectionEdit(props) {
 	return (
 		<div className='flex flex-col'>
 			
-			<Input id="name" type='text' required={ true } title="collection name" placeholder="collection name" inputChange={handleInputChange}/>
+			<Input id="name" type='text' required={ true } title="collection name" placeholder="collection name" inputChange={handleInputChange} value={ inputs["name"].value } />
 			<Spacer/>
 			
-			<Input id="description" type='text' required={ true } title="collection description" placeholder="collection description" inputChange={handleInputChange}/>
+			<Input id="description" type='text' required={ true } title="collection description" placeholder="collection description" inputChange={handleInputChange} value={ inputs["description"].value } />
 			<Spacer/>
 			
 			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>

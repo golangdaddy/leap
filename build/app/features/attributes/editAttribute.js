@@ -24,8 +24,9 @@ export function EditAttribute(props) {
 		})
 		.catch((e) => {
 			console.log(e)
+			setLocaldata(GoBack(localdata))
 		})
-    }, [])
+	}, [])
 
 	function submitEdit(inputs) {
 		AttributeUpdatePOST(

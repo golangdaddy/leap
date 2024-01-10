@@ -23,6 +23,7 @@ type Container struct {
 	DatabaseID string
 	Object     *models.Object
 	Inputs     []string
+	EditInputs []string
 }
 
 func main() {
@@ -66,17 +67,33 @@ func main() {
 		panic(err)
 	}
 
+	objectIndex := map[string]*models.Object{}
 	for _, object := range stack.Objects {
+		objectIndex[object.Name] = object
+	}
+
+	for _, object := range stack.Objects {
+
+		o := *object
+		for len(o.Parents) > 0 {
+			object.ParentCount++
+			o = *objectIndex[o.Parents[0]]
+		}
 
 		container := Container{
 			stack.ProjectID,
 			stack.DatabaseID,
 			object,
 			[]string{},
+			[]string{},
 		}
 
 		required := []string{}
 		for _, field := range object.Fields {
+			if field.Required {
+				required = append(required, strings.ToLower(field.Name))
+			}
+
 			s, err := getInputs(object, field)
 			if err != nil {
 				println("field name:", field.Name)
@@ -84,13 +101,22 @@ func main() {
 				panic(err)
 			}
 			container.Inputs = append(container.Inputs, s)
-			if field.Required {
-				required = append(required, strings.ToLower(field.Name))
+
+			s, err = getEditInputs(object, field)
+			if err != nil {
+				println("edit field name:", field.Name)
+				pretty.Println(field)
+				panic(err)
 			}
+			container.EditInputs = append(container.EditInputs, s)
 		}
 		b, _ := json.Marshal(required)
 		container.Inputs = append(
 			container.Inputs,
+			fmt.Sprintf(`<Submit text="Save" inputs={inputs} submit={props.submit} assert={%s}/>`, string(b)),
+		)
+		container.EditInputs = append(
+			container.EditInputs,
 			fmt.Sprintf(`<Submit text="Save" inputs={inputs} submit={props.submit} assert={%s}/>`, string(b)),
 		)
 
@@ -302,6 +328,48 @@ func main() {
 			)
 			copyFile(
 				"./templates/js/feature/editSubject.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				panic(err)
+			}
+		}
+		{
+			path := fmt.Sprintf(
+				"./build/app/features/%ss/delete%s.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Title(language.English).String(object.Name),
+			)
+			copyFile(
+				"./templates/js/feature/deleteSubject.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				panic(err)
+			}
+		}
+		{
+			path := fmt.Sprintf(
+				"./build/app/features/%ss/initUpload%s.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Title(language.English).String(object.Name),
+			)
+			copyFile(
+				"./templates/js/feature/initUploadSubject.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				panic(err)
+			}
+		}
+		{
+			path := fmt.Sprintf(
+				"./build/app/features/%ss/initUpload%ss.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Title(language.English).String(object.Name),
+			)
+			copyFile(
+				"./templates/js/feature/initUploadSubjects.js",
 				path,
 			)
 			if err := doTemplate(path, container); err != nil {

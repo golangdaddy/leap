@@ -20,8 +20,16 @@ export function ElementsListGET(user, parentID, limit) {
     return SessionFetch(user, "GET", "api/elements?function=list&parent="+parentID+"&limit="+limit)
 }
 
-export function ElementsCountGET(user, collectionID) {
-    return SessionFetch(user, "GET", "api/elements?function=count&collection="+collectionID)
+export function ElementsCountGET(user, parentID) {
+    return SessionFetch(user, "GET", "api/elements?function=count&parent="+parentID)
+}
+
+export function ElementMoveUpPOST(user, id) {
+    return SessionFetch(user, "POST", "api/element?function=up&id="+id)
+}
+
+export function ElementMoveDownPOST(user, id) {
+    return SessionFetch(user, "POST", "api/element?function=down&id="+id)
 }
 
 export function ElementDELETE(user, id) {
@@ -34,4 +42,8 @@ export function ElementFunctionPOST(user, id, func) {
 
 export function ElementFileUpload(user, id, formData) {
     return AxiosPOST(user, "api/element?function=upload&id="+id, formData)
+}
+
+export function ElementArchiveUpload(user, parentID, formData) {
+    return AxiosPOST(user, "api/elements?function=archiveupload&parent="+parentID, formData)
 }

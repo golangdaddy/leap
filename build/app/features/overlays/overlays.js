@@ -3,9 +3,9 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 import { useState, useEffect } from 'react';
 
-import { OverlaysList } from './shared/OverlaysList';
+import { OverlayList } from './shared/overlayList';
 
-export function Overlayss(props) {
+export function Overlays(props) {
 
 	const [ userdata, setUserdata] = useUserContext()
 	const [ localdata, setLocaldata] = useLocalContext()
@@ -13,6 +13,6 @@ export function Overlayss(props) {
 	const [ parent ] = useState(localdata.tab.context.object)
 
 	return (
-		<OverlaysList subject={parent} />
+		<OverlayList subject={parent} />
 	)
 }

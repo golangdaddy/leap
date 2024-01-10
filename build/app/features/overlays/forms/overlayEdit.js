@@ -8,7 +8,7 @@ import Submit from '@/inputs/submit';
 import Input from '@/inputs/input';
 import InputChange from '@/inputs/inputChange';
 
-export function OverlaysEdit(props) {
+export function OverlayEdit(props) {
 
 	console.log("COLLECTION EDIT", props)
 
@@ -24,12 +24,12 @@ export function OverlaysEdit(props) {
 		"name": {
 			id: "name",
 			type: "string",
-			value: subject.name,
+			value: subject.fields.name,
 			required: true,
 		},"type": {
 			id: "type",
 			type: "string",
-			value: subject.type,
+			value: subject.fields.type,
 			required: true,
 		},
 	})
@@ -40,10 +40,10 @@ export function OverlaysEdit(props) {
 	return (
 		<div className='flex flex-col'>
 			
-			<Input id="name" type='text' required={ true } title="overlays name" placeholder="overlays name" inputChange={handleInputChange}/>
+			<Input id="name" type='text' required={ true } title="overlay name" placeholder="overlay name" inputChange={handleInputChange} value={ inputs["name"].value } />
 			<Spacer/>
 			
-			<Select id="type" type='text' required={ true } title="overlays type" options={ ["foreground","element","background"] } placeholder="overlays type" inputChange={handleInputChange}/>
+			<Select id="type" type='text' required={ true } title="overlay type" options={ ["foreground","element","background"] } placeholder="overlay type" inputChange={handleInputChange} value={ inputs["type"].value } />
 			<Spacer/>
 			
 			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","type"]}/>

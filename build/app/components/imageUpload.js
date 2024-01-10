@@ -52,7 +52,7 @@ export function ImageUpload(props) {
 				}
 				{
 					!loading && <>
-						<div className='my-3 font-medium'>Image upload</div>
+						<div className='my-3 font-medium'>Upload</div>
 						<div className='flex flex-col'>
 							<input type="file" onChange={handleChangeFile}/>
 							<div>

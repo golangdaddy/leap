@@ -42,7 +42,7 @@ export default function Select(props) {
 				{
 					props.options.map(function (item, i) {
 						return (
-							<option key={i+1}>
+							<option key={i+1} value={item}>
 							{item}
 							</option>
 						)

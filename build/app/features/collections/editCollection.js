@@ -24,8 +24,9 @@ export function EditCollection(props) {
 		})
 		.catch((e) => {
 			console.log(e)
+			setLocaldata(GoBack(localdata))
 		})
-    }, [])
+	}, [])
 
 	function submitEdit(inputs) {
 		CollectionUpdatePOST(

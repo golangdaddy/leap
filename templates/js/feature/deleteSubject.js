@@ -4,8 +4,11 @@ import { useLocalContext } from '@/context/local';
 
 import VisitTab, { GoBack } from '@/features/interfaces';
 import Loading from '@/app/loading';
+import { titlecase } from './_interfaces';
 
-export function DeleteObject(props) {
+import { {{titlecase .Object.Name}}DELETE } from './_fetch'
+
+export function Delete{{titlecase .Object.Name}}(props) {
 
 	const [userdata] = useUserContext()
 	const [localdata, setLocaldata] = useLocalContext()
@@ -15,13 +18,13 @@ export function DeleteObject(props) {
 	function confirm() {
 		setLoading(true)
 		console.log("DELETING", object)
-		localdata.tab.context.deleteFunction(userdata, object.Meta.ID)
+		{{titlecase .Object.Name}}DELETE(userdata, object.Meta.ID)
 		.then((res) => console.log(res))
 		.then(function () {
 			setLocaldata(GoBack(localdata))
 		})
 		.catch(function (e) {
-			console.error("FAILED TO SEND", e)
+			console.error("FAILED TO DELETE", e)
 		})
 	}
 
@@ -33,7 +36,7 @@ export function DeleteObject(props) {
 			{
 				!loading && <div>
 					<button onClick={confirm} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-						Confirm Delete
+						Confirm Delete {{.Object.Name}}
 					</button>
 				</div>
 			}

@@ -24,8 +24,9 @@ export function Edit{{titlecase .Object.Name}}(props) {
 		})
 		.catch((e) => {
 			console.log(e)
+			setLocaldata(GoBack(localdata))
 		})
-    }, [])
+	}, [])
 
 	function submitEdit(inputs) {
 		{{titlecase .Object.Name}}UpdatePOST(

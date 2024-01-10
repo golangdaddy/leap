@@ -148,9 +148,20 @@ func (i *Internals) GetParent(app *common.App, dst interface{}) error {
 	if err != nil {
 		return err
 	}
-	parent := &Internals{
-		ID: parentID,
+	parent := Internal(parentID)
+	doc, err := parent.Firestore(app).Get(app.Context())
+	if err != nil {
+		return err
 	}
+	return doc.DataTo(dst)
+}
+
+func (i *Internals) GetParentMeta(app *common.App, dst interface{}) error {
+	parentID, err := i.ParentID()
+	if err != nil {
+		return err
+	}
+	parent := Internal(parentID)
 	doc, err := parent.Firestore(app).Get(app.Context())
 	if err != nil {
 		return err

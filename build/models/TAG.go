@@ -1,7 +1,10 @@
 
 package models
 
-import "net/http"
+import (
+	"net/http"
+	"regexp"
+)
 
 type TAG struct {
 	Meta    Internals
@@ -37,6 +40,14 @@ func (x *TAG) ValidateInput(w http.ResponseWriter, m map[string]interface{}) boo
 		return false
 	}
 	
+	{
+		exp := ""
+		if len(exp) > 0 {
+			if !regexp.MustCompile(exp).MatchString(x.Fields.Name) {
+				return false
+			}
+		}
+	}
 	if !AssertRange(w, 1, 10, x.Fields.Name) {
 		return false
 	}
@@ -45,6 +56,14 @@ func (x *TAG) ValidateInput(w http.ResponseWriter, m map[string]interface{}) boo
 		return false
 	}
 	
+	{
+		exp := ""
+		if len(exp) > 0 {
+			if !regexp.MustCompile(exp).MatchString(x.Fields.Foreground_color) {
+				return false
+			}
+		}
+	}
 	if !AssertRange(w, 1, 10, x.Fields.Foreground_color) {
 		return false
 	}
@@ -53,8 +72,17 @@ func (x *TAG) ValidateInput(w http.ResponseWriter, m map[string]interface{}) boo
 		return false
 	}
 	
+	{
+		exp := ""
+		if len(exp) > 0 {
+			if !regexp.MustCompile(exp).MatchString(x.Fields.Background_color) {
+				return false
+			}
+		}
+	}
 	if !AssertRange(w, 1, 10, x.Fields.Background_color) {
 		return false
 	}
+
 	return true
 }

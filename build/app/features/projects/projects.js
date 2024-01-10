@@ -3,7 +3,7 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 import { useState, useEffect } from 'react';
 
-import { ProjectList } from './shared/ProjectList';
+import { ProjectList } from './shared/projectList';
 
 export function Projects(props) {
 

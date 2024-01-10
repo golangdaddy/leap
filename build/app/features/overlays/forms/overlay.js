@@ -11,7 +11,7 @@ import Checkbox from '@/inputs/checkbox';
 import Select from '@/inputs/select';
 import CollectionSelect from '@/inputs/collectionSelect';
 
-export function OverlaysForm(props) {
+export function OverlayForm(props) {
 
 	const [userdata, _] = useUserContext()
 	const [localdata, setLocaldata] = useLocalContext()
@@ -25,10 +25,10 @@ export function OverlaysForm(props) {
 	return (
 		<div className='flex flex-col'>
 			
-			<Input id="name" type='text' required={ true } title="overlays name" placeholder="overlays name" inputChange={handleInputChange}/>
+			<Input id="name" type='text' required={ true } title="overlay name" placeholder="overlay name" inputChange={handleInputChange}/>
 			<Spacer/>
 			
-			<Select id="type" type='text' required={ true } title="overlays type" options={ ["foreground","element","background"] } placeholder="overlays type" inputChange={handleInputChange}/>
+			<Select id="type" type='text' required={ true } title="overlay type" options={ ["foreground","element","background"] } placeholder="overlay type" inputChange={handleInputChange}/>
 			<Spacer/>
 			
 			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","type"]}/>

@@ -3,7 +3,7 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 import { useState, useEffect } from 'react';
 
-import { FontList } from './shared/FontList';
+import { FontList } from './shared/fontList';
 
 export function Fonts(props) {
 

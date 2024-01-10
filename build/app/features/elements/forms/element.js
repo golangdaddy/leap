@@ -28,10 +28,10 @@ export function ElementForm(props) {
 			<Input id="name" type='text' required={ true } title="element name" placeholder="element name" inputChange={handleInputChange}/>
 			<Spacer/>
 			
-			<Input id="description" type='text' required={ true } title="element description" placeholder="element description" inputChange={handleInputChange}/>
+			<Input id="max_mint" type='number' required={ true } title="element max_mint" placeholder="element max_mint" inputChange={handleInputChange}/>
 			<Spacer/>
 			
-			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
+			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","max_mint"]}/>
 			<Spacer/>
 			
 		</div>

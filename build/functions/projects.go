@@ -64,6 +64,8 @@ func EntrypointPROJECTS(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
+			
+
 			log.Println(*project)
 
 			// write new PROJECT to the DB
@@ -112,7 +114,10 @@ func EntrypointPROJECTS(w http.ResponseWriter, r *http.Request) {
 
 			list := []*models.PROJECT{}
 
+			// handle objects that need to be ordered
+			
 			q := app.Firestore().Collection("projects").OrderBy("Meta.Modified", firestore.Desc)
+			
 			if limit > 0 {
 				q = q.Limit(limit)
 			}

@@ -3,7 +3,7 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 import { useState, useEffect } from 'react';
 
-import { CollectionList } from './shared/CollectionList';
+import { CollectionList } from './shared/collectionList';
 
 export function Collections(props) {
 

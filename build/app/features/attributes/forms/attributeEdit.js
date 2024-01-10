@@ -24,17 +24,17 @@ export function AttributeEdit(props) {
 		"name": {
 			id: "name",
 			type: "string",
-			value: subject.name,
+			value: subject.fields.name,
 			required: true,
 		},"min": {
 			id: "min",
 			type: "int",
-			value: subject.min,
+			value: subject.fields.min,
 			required: true,
 		},"max": {
 			id: "max",
 			type: "int",
-			value: subject.max,
+			value: subject.fields.max,
 			required: true,
 		},
 	})
@@ -45,13 +45,13 @@ export function AttributeEdit(props) {
 	return (
 		<div className='flex flex-col'>
 			
-			<Input id="name" type='text' required={ true } title="attribute name" placeholder="attribute name" inputChange={handleInputChange}/>
+			<Input id="name" type='text' required={ true } title="attribute name" placeholder="attribute name" inputChange={handleInputChange} value={ inputs["name"].value } />
 			<Spacer/>
 			
-			<Input id="min" type='number' required={ true } title="attribute min" placeholder="attribute min" inputChange={handleInputChange}/>
+			<Input id="min" type='number' required={ true } title="attribute min" placeholder="attribute min" inputChange={handleInputChange} value={ inputs["min"].value } />
 			<Spacer/>
 			
-			<Input id="max" type='number' required={ true } title="attribute max" placeholder="attribute max" inputChange={handleInputChange}/>
+			<Input id="max" type='number' required={ true } title="attribute max" placeholder="attribute max" inputChange={handleInputChange} value={ inputs["max"].value } />
 			<Spacer/>
 			
 			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","min","max"]}/>

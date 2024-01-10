@@ -20,8 +20,16 @@ export function FontsListGET(user, parentID, limit) {
     return SessionFetch(user, "GET", "api/fonts?function=list&parent="+parentID+"&limit="+limit)
 }
 
-export function FontsCountGET(user, collectionID) {
-    return SessionFetch(user, "GET", "api/fonts?function=count&collection="+collectionID)
+export function FontsCountGET(user, parentID) {
+    return SessionFetch(user, "GET", "api/fonts?function=count&parent="+parentID)
+}
+
+export function FontMoveUpPOST(user, id) {
+    return SessionFetch(user, "POST", "api/font?function=up&id="+id)
+}
+
+export function FontMoveDownPOST(user, id) {
+    return SessionFetch(user, "POST", "api/font?function=down&id="+id)
 }
 
 export function FontDELETE(user, id) {

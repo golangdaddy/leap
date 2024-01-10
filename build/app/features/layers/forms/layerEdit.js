@@ -24,12 +24,12 @@ export function LayerEdit(props) {
 		"name": {
 			id: "name",
 			type: "string",
-			value: subject.name,
+			value: subject.fields.name,
 			required: true,
 		},"type": {
 			id: "type",
 			type: "string",
-			value: subject.type,
+			value: subject.fields.type,
 			required: true,
 		},
 	})
@@ -40,10 +40,10 @@ export function LayerEdit(props) {
 	return (
 		<div className='flex flex-col'>
 			
-			<Input id="name" type='text' required={ true } title="layer name" placeholder="layer name" inputChange={handleInputChange}/>
+			<Input id="name" type='text' required={ true } title="layer name" placeholder="layer name" inputChange={handleInputChange} value={ inputs["name"].value } />
 			<Spacer/>
 			
-			<Select id="type" type='text' required={ true } title="layer type" options={ ["foreground","element","background"] } placeholder="layer type" inputChange={handleInputChange}/>
+			<Select id="type" type='text' required={ true } title="layer type" options={ ["foreground","element","background"] } placeholder="layer type" inputChange={handleInputChange} value={ inputs["type"].value } />
 			<Spacer/>
 			
 			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","type"]}/>

@@ -20,8 +20,16 @@ export function TagsListGET(user, parentID, limit) {
     return SessionFetch(user, "GET", "api/tags?function=list&parent="+parentID+"&limit="+limit)
 }
 
-export function TagsCountGET(user, collectionID) {
-    return SessionFetch(user, "GET", "api/tags?function=count&collection="+collectionID)
+export function TagsCountGET(user, parentID) {
+    return SessionFetch(user, "GET", "api/tags?function=count&parent="+parentID)
+}
+
+export function TagMoveUpPOST(user, id) {
+    return SessionFetch(user, "POST", "api/tag?function=up&id="+id)
+}
+
+export function TagMoveDownPOST(user, id) {
+    return SessionFetch(user, "POST", "api/tag?function=down&id="+id)
 }
 
 export function TagDELETE(user, id) {

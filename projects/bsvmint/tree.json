@@ -46,6 +46,10 @@
 			"parents": [
 				"project"
 			],
+			"options": {
+				"file": true,
+				"font": true
+			},
 			"fields": [
 				{
 					"name": "name",
@@ -84,6 +88,9 @@
 				"collection"
 			],
 			"name": "layer",
+			"options": {
+				"order": true
+			},
 			"fields": [
 				{
 					"name": "name",
@@ -108,7 +115,7 @@
 			"parents": [
 				"layer"
 			],
-			"name": "overlays",
+			"name": "overlay",
 			"fields": [
 				{
 					"name": "name",
@@ -134,6 +141,10 @@
 				"layer"
 			],
 			"name": "element",
+			"options": {
+				"file": true,
+				"image": true
+			},
 			"fields": [
 				{
 					"name": "name",
@@ -141,9 +152,9 @@
 					"json": "string_100"
 				},
 				{
-					"name": "description",
+					"name": "max_mint",
 					"required": true,
-					"json": "string_100"
+					"json": "number_int"
 				}
 			]
 		},

@@ -20,8 +20,16 @@ export function AttributesListGET(user, parentID, limit) {
     return SessionFetch(user, "GET", "api/attributes?function=list&parent="+parentID+"&limit="+limit)
 }
 
-export function AttributesCountGET(user, collectionID) {
-    return SessionFetch(user, "GET", "api/attributes?function=count&collection="+collectionID)
+export function AttributesCountGET(user, parentID) {
+    return SessionFetch(user, "GET", "api/attributes?function=count&parent="+parentID)
+}
+
+export function AttributeMoveUpPOST(user, id) {
+    return SessionFetch(user, "POST", "api/attribute?function=up&id="+id)
+}
+
+export function AttributeMoveDownPOST(user, id) {
+    return SessionFetch(user, "POST", "api/attribute?function=down&id="+id)
 }
 
 export function AttributeDELETE(user, id) {

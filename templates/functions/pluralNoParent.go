@@ -64,6 +64,23 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 				return
 			}
 
+			{{if .Object.Options.Order}}
+			var order int
+			iter := app.Firestore().Collection("{{lowercase .Object.Name}}s").Documents(ctx)
+			for {
+				_, err := iter.Next()
+				if err == iterator.Done {
+					break
+				}
+				if err != nil {
+					log.Println(err)
+					break
+				}
+				order++
+			}
+			{{lowercase .Object.Name}}.Meta.Context.Order = order
+			{{end}}
+
 			log.Println(*{{lowercase .Object.Name}})
 
 			// write new {{uppercase .Object.Name}} to the DB
@@ -112,7 +129,12 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 
 			list := []*models.{{uppercase .Object.Name}}{}
 
+			// handle objects that need to be ordered
+			{{if .Object.Options.Order}}
+			q := app.Firestore().Collection("{{lowercase .Object.Name}}s").OrderBy("Meta.Context.Order", firestore.Desc)
+			{{else}}
 			q := app.Firestore().Collection("{{lowercase .Object.Name}}s").OrderBy("Meta.Modified", firestore.Desc)
+			{{end}}
 			if limit > 0 {
 				q = q.Limit(limit)
 			}

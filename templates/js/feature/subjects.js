@@ -3,7 +3,7 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 import { useState, useEffect } from 'react';
 
-import { {{titlecase .Object.Name}}List } from './shared/{{titlecase .Object.Name}}List';
+import { {{titlecase .Object.Name}}List } from './shared/{{lowercase .Object.Name}}List';
 
 export function {{titlecase .Object.Name}}s(props) {
 

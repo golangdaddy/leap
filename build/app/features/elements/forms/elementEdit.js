@@ -24,12 +24,12 @@ export function ElementEdit(props) {
 		"name": {
 			id: "name",
 			type: "string",
-			value: subject.name,
+			value: subject.fields.name,
 			required: true,
-		},"description": {
-			id: "description",
-			type: "string",
-			value: subject.description,
+		},"max_mint": {
+			id: "max_mint",
+			type: "int",
+			value: subject.fields.max_mint,
 			required: true,
 		},
 	})
@@ -40,13 +40,13 @@ export function ElementEdit(props) {
 	return (
 		<div className='flex flex-col'>
 			
-			<Input id="name" type='text' required={ true } title="element name" placeholder="element name" inputChange={handleInputChange}/>
+			<Input id="name" type='text' required={ true } title="element name" placeholder="element name" inputChange={handleInputChange} value={ inputs["name"].value } />
 			<Spacer/>
 			
-			<Input id="description" type='text' required={ true } title="element description" placeholder="element description" inputChange={handleInputChange}/>
+			<Input id="max_mint" type='number' required={ true } title="element max_mint" placeholder="element max_mint" inputChange={handleInputChange} value={ inputs["max_mint"].value } />
 			<Spacer/>
 			
-			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","description"]}/>
+			<Submit text="Save" inputs={inputs} submit={props.submit} assert={["name","max_mint"]}/>
 			<Spacer/>
 			
 		</div>

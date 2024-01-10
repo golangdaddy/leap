@@ -20,8 +20,16 @@ export function {{titlecase .Object.Name}}sListGET(user, parentID, limit) {
     return SessionFetch(user, "GET", "api/{{lowercase .Object.Name}}s?function=list&parent="+parentID+"&limit="+limit)
 }
 
-export function {{titlecase .Object.Name}}sCountGET(user, collectionID) {
-    return SessionFetch(user, "GET", "api/{{lowercase .Object.Name}}s?function=count&collection="+collectionID)
+export function {{titlecase .Object.Name}}sCountGET(user, parentID) {
+    return SessionFetch(user, "GET", "api/{{lowercase .Object.Name}}s?function=count&parent="+parentID)
+}
+
+export function {{titlecase .Object.Name}}MoveUpPOST(user, id) {
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=up&id="+id)
+}
+
+export function {{titlecase .Object.Name}}MoveDownPOST(user, id) {
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=down&id="+id)
 }
 
 export function {{titlecase .Object.Name}}DELETE(user, id) {
@@ -35,3 +43,7 @@ export function {{titlecase .Object.Name}}FunctionPOST(user, id, func) {
 export function {{titlecase .Object.Name}}FileUpload(user, id, formData) {
     return AxiosPOST(user, "api/{{lowercase .Object.Name}}?function=upload&id="+id, formData)
 }
+{{if .Object.Options.File}}
+export function {{titlecase .Object.Name}}ArchiveUpload(user, parentID, formData) {
+    return AxiosPOST(user, "api/{{lowercase .Object.Name}}s?function=archiveupload&parent="+parentID, formData)
+}{{end}}

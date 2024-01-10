@@ -24,7 +24,7 @@ export function {{titlecase .Object.Name}}Edit(props) {
 		{{range .Object.Fields}}"{{lowercase .Name}}": {
 			id: "{{lowercase .Name}}",
 			type: "{{lowercase .Type}}",
-			value: subject.{{lowercase .Name}},
+			value: subject.fields.{{lowercase .Name}},
 			required: {{.Required}},
 		},{{end}}
 	})
@@ -34,7 +34,7 @@ export function {{titlecase .Object.Name}}Edit(props) {
 
 	return (
 		<div className='flex flex-col'>
-			{{range .Inputs}}
+			{{range .EditInputs}}
 			{{.}}
 			<Spacer/>
 			{{end}}

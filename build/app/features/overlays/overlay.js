@@ -3,24 +3,29 @@ import { useUserContext } from '@/context/user'
 import { useLocalContext } from '@/context/local'
 import { useState, useEffect } from 'react'
 
+import { GoBack } from '../interfaces'
 import VisitTab from '@/features/interfaces'
 
 import Loading from '@/app/loading'
 
-import { OverlaysObjectGET } from './_fetch'
 
-export function Overlays(props) {  
+
+import { OverlayObjectGET } from './_fetch'
+
+export function Overlay(props) {  
 
     const [userdata, setUserdata] = useUserContext()
     const [localdata, setLocaldata] = useLocalContext() 
 
+    const [jdata, setJdata] = useState(localdata.tab.context.object)
     const [subject, setSubject] = useState(localdata.tab.context.object)
 	function getObject() {
-		OverlaysObjectGET(userdata, subject.Meta.ID)
+		OverlayObjectGET(userdata, subject.Meta.ID)
 		.then((res) => res.json())
 		.then((data) => {
 			console.log(data)
 			setSubject(data)
+			setJdata(JSON.stringify(data.fields))
 		}) 
 		.catch((e) => {
             console.error(e)
@@ -35,9 +40,7 @@ export function Overlays(props) {
     return (
         <>
 			{ !subject && <Loading/> }
-            {
-                subject && <textarea className='w-full'>{JSON.stringify(subject.fields)}</textarea>
-            }
+            
         </>
     )
 

@@ -24,8 +24,9 @@ export function EditLayer(props) {
 		})
 		.catch((e) => {
 			console.log(e)
+			setLocaldata(GoBack(localdata))
 		})
-    }, [])
+	}, [])
 
 	function submitEdit(inputs) {
 		LayerUpdatePOST(

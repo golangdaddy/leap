@@ -5,9 +5,9 @@ import { useLocalContext } from '@/context/local';
 import { GoBack } from '@/features/interfaces';
 import Loading from '@/app/loading';
 
-import { OverlaysFileUpload } from './_fetch'
+import { LayerArchiveUpload } from './_fetch'
 
-export function UploadOverlays(props) {
+export function InitUploadLayers(props) {
 
 	const [userdata, _] = useUserContext();
 	const [localdata, setLocaldata] = useLocalContext()
@@ -29,7 +29,7 @@ export function UploadOverlays(props) {
 		formData.append('file', file);
 		formData.append('fileName', file.name);
 
-		OverlaysFileUpload(userdata, element.Meta.ID, formData).then((response) => {
+		LayerArchiveUpload(userdata, element.Meta.ID, formData).then((response) => {
 			console.log(response.data);
 			if (props.done) {
 				props.done()

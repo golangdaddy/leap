@@ -3,9 +3,13 @@ import { useUserContext } from '@/context/user'
 import { useLocalContext } from '@/context/local'
 import { useState, useEffect } from 'react'
 
+import { GoBack } from '../interfaces'
 import VisitTab from '@/features/interfaces'
 
 import Loading from '@/app/loading'
+
+{{range .Object.Children}}import { {{titlecase .Name}}List } from '@/features/{{lowercase .Name}}s/shared/{{lowercase .Name}}List'
+{{end}}
 
 import { {{titlecase .Object.Name}}ObjectGET } from './_fetch'
 
@@ -14,6 +18,7 @@ export function {{titlecase .Object.Name}}(props) {
     const [userdata, setUserdata] = useUserContext()
     const [localdata, setLocaldata] = useLocalContext() 
 
+    const [jdata, setJdata] = useState(localdata.tab.context.object)
     const [subject, setSubject] = useState(localdata.tab.context.object)
 	function getObject() {
 		{{titlecase .Object.Name}}ObjectGET(userdata, subject.Meta.ID)
@@ -21,6 +26,7 @@ export function {{titlecase .Object.Name}}(props) {
 		.then((data) => {
 			console.log(data)
 			setSubject(data)
+			setJdata(JSON.stringify(data.fields))
 		}) 
 		.catch((e) => {
             console.error(e)
@@ -35,9 +41,9 @@ export function {{titlecase .Object.Name}}(props) {
     return (
         <>
 			{ !subject && <Loading/> }
-            {
-                subject && <textarea className='w-full'>{JSON.stringify(subject.fields)}</textarea>
-            }
+            {{range .Object.Children}}
+			<{{titlecase .Name}}List title="{{titlecase .Name}}" subject={subject} />
+			{{end}}
         </>
     )
 

@@ -1,9 +1,13 @@
 package functions
 
 import (
+	"io"
 	"context"
 	"errors"
+	"archive/zip"
+	"bytes"
 	"fmt"
+	
 	"log"
 	"net/http"
 	"strconv"
@@ -58,23 +62,40 @@ func EntrypointLAYERS(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
 
-		m := map[string]interface{}{}
-		if err := cloudfunc.ParseJSON(r, &m); err != nil {
-			cloudfunc.HttpError(w, err, http.StatusBadRequest)
-			return
-		}
-
 		log.Println("SWITCH FUNCTION", function)
 
 		switch function {
 
 		case "init":
 
+			m := map[string]interface{}{}
+			if err := cloudfunc.ParseJSON(r, &m); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
+
 			fields := models.FieldsLAYER{}
 			layer := models.NewLAYER(parent, fields)
 			if !layer.ValidateInput(w, m) {
 				return
 			}
+
+			
+			var order int
+			iter := parent.Firestore(app).Collection(layer.Meta.Class).Documents(ctx)
+			for {
+				_, err := iter.Next()
+				if err == iterator.Done {
+					break
+				}
+				if err != nil {
+					log.Println(err)
+					break
+				}
+				order++
+			}
+			layer.Meta.Context.Order = order
+			
 
 			log.Println(*layer)
 
@@ -90,6 +111,92 @@ func EntrypointLAYERS(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			return
+
+		case "archiveupload":
+
+			log.Println("PARSING FORM")
+			if err := r.ParseMultipartForm(300 << 20); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusNotFound)
+				return
+			}
+		
+			// Get handler for filename, size and headers
+			file, handler, err := r.FormFile("file")
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
+		
+			defer file.Close()
+			fmt.Printf("Uploaded File: %+v\n", handler.Filename)
+			fmt.Printf("File Size: %+v\n", handler.Size)
+			fmt.Printf("MIME Header: %+v\n", handler.Header)
+		
+			buf := bytes.NewBuffer(nil)
+		
+			// Copy the uploaded file to the created file on the filesystem
+			if n, err := io.Copy(buf, file); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+				return
+			} else {
+				log.Println("copy: wrote", n, "bytes")
+			}
+		
+			// Open the zip archive from the buffer
+			zipReader, err := zip.NewReader(bytes.NewReader(buf.Bytes()), int64(buf.Len()))
+			if err != nil {
+				err = fmt.Errorf("Error opening zip archive: %v", err)
+				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+				return
+			}
+		
+			// Extract each file from the zip archive
+			for n, zipFile := range zipReader.File {
+				// Open the file from the zip archive
+				zipFileReader, err := zipFile.Open()
+				if err != nil {
+					err = fmt.Errorf("Error opening zip file entry: %v", err)
+					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+					return
+				}
+				defer zipFileReader.Close()
+		
+				// Read the content of the file from the zip archive
+				var extractedContent bytes.Buffer
+				if _, err = io.Copy(&extractedContent, zipFileReader); err != nil {
+					http.Error(w, fmt.Sprintf("Error reading zip file entry content: %v", err), http.StatusInternalServerError)
+					return
+				}
+		
+				// hacky, please investigate
+				fileBytes := extractedContent.Bytes()
+		
+				
+		
+				log.Println("creating new layer:", zipFile.Name)
+		
+				fields := models.FieldsLAYER{}
+				layer := models.NewLAYER(parent, fields)
+
+				layer.Meta.Context.Order = n
+
+				// generate a new URI
+				uri := layer.Meta.NewURI()
+				println ("URI", uri)
+
+				bucketName := "test-project-db-uploads"
+				if err := writeLayerFile(app, bucketName, uri, fileBytes); err != nil {
+					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+					return
+				}
+				
+				if err := layer.Meta.SaveToFirestore(app, layer); err != nil {
+					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+					return
+				}
+
+			}
+		
 
 		default:
 			err := fmt.Errorf("function not found: %s", function)
@@ -124,7 +231,11 @@ func EntrypointLAYERS(w http.ResponseWriter, r *http.Request) {
 
 			list := []*models.LAYER{}
 
-			q := parent.Firestore(app).Collection("layers").OrderBy("Meta.Modified", firestore.Desc)
+			// handle objects that need to be ordered
+			
+			q := parent.Firestore(app).Collection("layers").OrderBy("Meta.Context.Order", firestore.Asc)
+			
+
 			if limit > 0 {
 				q = q.Limit(limit)
 			}
@@ -164,4 +275,13 @@ func EntrypointLAYERS(w http.ResponseWriter, r *http.Request) {
 		cloudfunc.HttpError(w, err, http.StatusMethodNotAllowed)
 		return
 	}
+}
+
+func writeLayerFile(app *common.App, bucketName, objectName string, content []byte) error {
+	writer := app.GCPClients.GCS().Bucket(bucketName).Object(objectName).NewWriter(app.Context())
+	//writer.ObjectAttrs.CacheControl = "no-store"
+	defer writer.Close()
+	n, err := writer.Write(content)
+	fmt.Printf("wrote %s %d bytes to bucket: %s \n", objectName, n, bucketName)
+	return err
 }

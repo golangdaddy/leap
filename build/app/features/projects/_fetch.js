@@ -20,8 +20,16 @@ export function ProjectsListGET(user, parentID, limit) {
     return SessionFetch(user, "GET", "api/projects?function=list&parent="+parentID+"&limit="+limit)
 }
 
-export function ProjectsCountGET(user, collectionID) {
-    return SessionFetch(user, "GET", "api/projects?function=count&collection="+collectionID)
+export function ProjectsCountGET(user, parentID) {
+    return SessionFetch(user, "GET", "api/projects?function=count&parent="+parentID)
+}
+
+export function ProjectMoveUpPOST(user, id) {
+    return SessionFetch(user, "POST", "api/project?function=up&id="+id)
+}
+
+export function ProjectMoveDownPOST(user, id) {
+    return SessionFetch(user, "POST", "api/project?function=down&id="+id)
 }
 
 export function ProjectDELETE(user, id) {

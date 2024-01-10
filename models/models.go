@@ -38,10 +38,17 @@ type Object struct {
 	JSON string `json:"json"`
 	Mode string `json:"mode"`
 
-	Parents  []string  `json:"parents,omitempty"`
-	Children []*Object `json:"children,omitempty"`
-	Name     string    `json:"name"`
-	Fields   []*Field  `json:"fields"`
+	Parents     []string  `json:"parents,omitempty"`
+	ParentCount int       `json:"parentCount,omitempty"`
+	Children    []*Object `json:"children,omitempty"`
+	Name        string    `json:"name"`
+	Fields      []*Field  `json:"fields"`
+	Options     struct {
+		Order bool `json:"order"`
+		File  bool `json:"file"`
+		Image bool `json:"image"`
+		Font  bool `json:"font"`
+	} `json:"options"`
 }
 
 type ObjectRef struct {
@@ -63,6 +70,7 @@ type Field struct {
 	InputOptions []string `json:"inputOptions,omitempty"`
 	Required     bool     `json:"required"`
 	Range        *Range   `json:"range"`
+	Regexp       string   `json:"regexp`
 }
 
 type Range struct {

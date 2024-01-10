@@ -20,8 +20,16 @@ export function CollectionsListGET(user, parentID, limit) {
     return SessionFetch(user, "GET", "api/collections?function=list&parent="+parentID+"&limit="+limit)
 }
 
-export function CollectionsCountGET(user, collectionID) {
-    return SessionFetch(user, "GET", "api/collections?function=count&collection="+collectionID)
+export function CollectionsCountGET(user, parentID) {
+    return SessionFetch(user, "GET", "api/collections?function=count&parent="+parentID)
+}
+
+export function CollectionMoveUpPOST(user, id) {
+    return SessionFetch(user, "POST", "api/collection?function=up&id="+id)
+}
+
+export function CollectionMoveDownPOST(user, id) {
+    return SessionFetch(user, "POST", "api/collection?function=down&id="+id)
 }
 
 export function CollectionDELETE(user, id) {

@@ -1,17 +1,12 @@
 import * as React from 'react'
 
-import { DeleteObject } from '@/inputs/deleteObject'
-import { ImageUpload } from '@/components/imageUpload'
-import { ArchiveUpload } from '@/components/archiveUpload'
-import { FontUpload } from '@/components/fontUpload'
-
 
 import { ProjectInterfaces } from '@/features/projects/_interfaces'
 import { CollectionInterfaces } from '@/features/collections/_interfaces'
 import { FontInterfaces } from '@/features/fonts/_interfaces'
 import { AttributeInterfaces } from '@/features/attributes/_interfaces'
 import { LayerInterfaces } from '@/features/layers/_interfaces'
-import { OverlaysInterfaces } from '@/features/overlayss/_interfaces'
+import { OverlayInterfaces } from '@/features/overlays/_interfaces'
 import { ElementInterfaces } from '@/features/elements/_interfaces'
 import { TagInterfaces } from '@/features/tags/_interfaces'
 
@@ -22,26 +17,6 @@ export var Interfaces = {
 		level: 0,
 		name: "Home",
 		component: (<Home/>),
-	},
-	"deleteobject": {
-		level: -1,
-		name: "Delete", 
-		component: (<DeleteObject/>),
-	},
-	"imageupload": {
-		level: -1,
-		name: "Image Upload", 
-		component: (<ImageUpload/>),
-	},
-	"archiveupload": {
-		level: -1,
-		name: "Archive Upload", 
-		component: (<ArchiveUpload/>),
-	},
-	"fontupload": {
-		level: -1,
-		name: "Font Upload", 
-		component: (<FontUpload/>),
 	},
 }
 
@@ -67,9 +42,9 @@ export function GetInterfaces() {
 	}// LayerInterfaces
 	for (const k in LayerInterfaces) {
 		interfaces[k.toLowerCase()] = LayerInterfaces[k]
-	}// OverlaysInterfaces
-	for (const k in OverlaysInterfaces) {
-		interfaces[k.toLowerCase()] = OverlaysInterfaces[k]
+	}// OverlayInterfaces
+	for (const k in OverlayInterfaces) {
+		interfaces[k.toLowerCase()] = OverlayInterfaces[k]
 	}// ElementInterfaces
 	for (const k in ElementInterfaces) {
 		interfaces[k.toLowerCase()] = ElementInterfaces[k]

@@ -4,12 +4,12 @@ import { useLocalContext } from '@/context/local';
 
 import { GoBack } from '@/features/interfaces';
 
-import { OverlayssInitPOST } from './_fetch';
+import { OverlaysInitPOST } from './_fetch';
 
-import { OverlaysForm } from './forms/overlays';
+import { OverlayForm } from './forms/overlay';
 import { titlecase } from './_interfaces';
 
-export function NewOverlays(props) {
+export function NewOverlay(props) {
 
   const [userdata, _] = useUserContext()
   const [localdata, setLocaldata] = useLocalContext()
@@ -17,7 +17,7 @@ export function NewOverlays(props) {
   const [subject] = useState(localdata.tab.context.object)
 
 	function submitNew(inputs) {
-		OverlayssInitPOST(
+		OverlaysInitPOST(
 			userdata,
 			subject?.Meta.ID,
 			inputs
@@ -33,6 +33,6 @@ export function NewOverlays(props) {
 	}
 
 	return (
-		<OverlaysForm submit={submitNew}/>
+		<OverlayForm submit={submitNew}/>
 	);
 }

@@ -3,7 +3,7 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 import { useState, useEffect } from 'react';
 
-import { AttributeList } from './shared/AttributeList';
+import { AttributeList } from './shared/attributeList';
 
 export function Attributes(props) {
 
