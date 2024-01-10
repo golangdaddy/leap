@@ -39,6 +39,7 @@ type Internals struct {
 	ID         string
 	Class      string
 	URIs       []string
+	Asset      string
 	Context    Context
 	Moderation Moderation
 	Updated    bool
