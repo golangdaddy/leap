@@ -39,7 +39,7 @@ export function {{titlecase .Object.Name}}List(props) {
 		console.log("SELECT {{titlecase .Object.Name}}", id)
 		const next = list[parseInt(id)]
 		const context = {
-			"_": next.name,
+			"_": next.fields.name,
 			"object": next,
 		}
 		setLocaldata(VisitTab(localdata, "{{lowercase .Object.Name}}", context))
@@ -87,7 +87,7 @@ export function {{titlecase .Object.Name}}List(props) {
 	return (
 	<div className='flex flex-col my-4'>
 	{
-		props.title && <div className='py-4 my-4 text-2xl font-bold'>{props.title}s:</div>
+		props.title && <div className='py-4 my-4 text-xl font-bold'>{props.title}s:</div>
 	}
 	{
 		!list && <Loading/>

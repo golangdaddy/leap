@@ -1,9 +1,8 @@
 {{ $obj := .Object }}
-package models
+package main
 
 import (
 	"net/http"
-	"regexp"
 )
 
 type {{uppercase .Object.Name}} struct {
@@ -12,16 +11,19 @@ type {{uppercase .Object.Name}} struct {
 }
 
 func New{{uppercase $obj.Name}}(parent *Internals, fields Fields{{uppercase $obj.Name}}) *{{uppercase $obj.Name}} {
+	var object *{{uppercase $obj.Name}}
 	if parent == nil {
-		return &{{uppercase $obj.Name}}{
+		object = &{{uppercase $obj.Name}}{
 			Meta: (Internals{}).NewInternals("{{lowercase $obj.Name}}s"),
 			Fields: fields,
 		}
+	} else {
+		object = &{{uppercase $obj.Name}}{
+			Meta: parent.NewInternals("{{lowercase $obj.Name}}s"),
+			Fields: fields,
+		}
 	}
-	return &{{uppercase $obj.Name}}{
-		Meta: parent.NewInternals("{{lowercase $obj.Name}}s"),
-		Fields: fields,
-	}
+	return object
 }
 
 type Fields{{uppercase .Object.Name}} struct {
@@ -37,11 +39,12 @@ func (x *{{uppercase .Object.Name}}) ValidateInput(w http.ResponseWriter, m map[
 	if !exists {
 		return false
 	}
-	{{if .Range}}
-	{
+
+	// ignore this, a mostly redundant artifact
+	{{if .Range}}{
 		exp := "{{.Regexp}}"
 		if len(exp) > 0 {
-			if !regexp.MustCompile(exp).MatchString(x.Fields.{{titlecase .Name}}) {
+			if !RegExp(exp, x.Fields.{{titlecase .Name}}) {
 				return false
 			}
 		}

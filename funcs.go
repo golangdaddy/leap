@@ -1,4 +1,4 @@
-package main
+package leap
 
 import (
 	"encoding/json"

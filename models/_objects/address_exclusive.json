@@ -1,0 +1,37 @@
+{
+	"mode": "exclusive",
+	"name": "address",
+	"title": "Postal Address",
+	"fields": [
+		{
+			"name": "country",
+			"required": true,
+			"json": "string_100"
+		},
+		{
+			"name": "region",
+			"required": true,
+			"json": "string_100"
+		},
+		{
+			"name": "locality",
+			"required": true,
+			"json": "string_100"
+		},
+        {
+			"name": "streetaddress",
+			"required": true,
+			"json": "string_100"
+		},
+		{
+			"name": "pobox",
+			"required": true,
+			"json": "string_100"
+		},
+		{
+			"name": "postcode",
+			"required": true,
+			"json": "string_30"
+		}
+    ]
+}

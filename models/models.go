@@ -6,9 +6,12 @@ import (
 )
 
 type Stack struct {
+	RepoURI     string    `json:"repoURI"`
+	SiteName    string    `json:"siteName"`
 	ProjectID   string    `json:"projectID"`
 	DatabaseID  string    `json:"databaseID"`
 	Objects     []*Object `json:"objects"`
+	Wallets     []string  `json:"wallets"`
 	Entrypoints []string  `json:"entrypoints"`
 }
 
@@ -38,17 +41,27 @@ type Object struct {
 	JSON string `json:"json"`
 	Mode string `json:"mode"`
 
-	Parents     []string  `json:"parents,omitempty"`
-	ParentCount int       `json:"parentCount,omitempty"`
-	Children    []*Object `json:"children,omitempty"`
-	Name        string    `json:"name"`
-	Fields      []*Field  `json:"fields"`
-	Options     struct {
-		Order bool `json:"order"`
-		File  bool `json:"file"`
-		Image bool `json:"image"`
-		Font  bool `json:"font"`
-	} `json:"options"`
+	Parents     []string   `json:"parents,omitempty"`
+	ParentCount int        `json:"parentCount,omitempty"`
+	Children    []*Object  `json:"children,omitempty"`
+	Name        string     `json:"name"`
+	Fields      []*Field   `json:"fields"`
+	Options     Options    `json:"options"`
+	Assetlayer  Assetlayer `json:"assetlayer"`
+}
+
+type Options struct {
+	Order          bool   `json:"order"`
+	File           bool   `json:"file"`
+	Image          bool   `json:"image"`
+	Font           bool   `json:"font"`
+	UseCreateTopic bool   `json:"useCreateTopic"`
+	TopicCreate    string `json:"topicCreate"`
+}
+
+type Assetlayer struct {
+	Token  bool `json:"token"`
+	Wallet bool `json:"wallet"`
 }
 
 type ObjectRef struct {

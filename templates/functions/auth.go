@@ -1,27 +1,18 @@
-package functions
+package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"strings"
 
-	"github.com/richardboase/npgpublic/models"
 	"github.com/richardboase/npgpublic/sdk/cloudfunc"
-	"github.com/richardboase/npgpublic/sdk/common"
 	"github.com/richardboase/npgpublic/utils"
 	"google.golang.org/api/iterator"
 )
 
 // api-auth
-func AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
-
-	ctx := context.Background()
-
-	app := common.NewApp()
-	app.UseGCP("{{.ProjectID}}")
-	app.UseGCPFirestore("{{.DatabaseID}}")
+func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 
 	if cloudfunc.HandleCORS(w, r, "*") {
 		return
@@ -47,7 +38,7 @@ func AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 			}
 			var result int = 0
 			email = strings.TrimSpace(email)
-			iter := app.Firestore().Collection("users").Where("email", "==", email).Documents(ctx)
+			iter := app.Firestore().Collection("users").Where("email", "==", email).Documents(app.Context())
 			for {
 				_, err = iter.Next()
 				if err == iterator.Done {
@@ -76,7 +67,7 @@ func AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 
 			email = strings.ToLower(strings.TrimSpace(email))
 
-			user, err := utils.GetUserByEmail(app, email)
+			user, err := utils.GetUserByEmail(app.App, email)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusBadRequest)
 				return
@@ -117,12 +108,12 @@ func AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 					fmt.Println(response.Headers)
 				}
 			*/
-			otp := models.NewOTP(email, user.Meta.ID)
+			otp := NewOTP(email, user.Meta.ID)
 
 			// hash the OTP secret to set the firestore record
 			if _, err := app.Firestore().Collection("otp").Doc(
 				app.SeedDigest(secret),
-			).Set(ctx, otp); err != nil {
+			).Set(app.Context(), otp); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
@@ -149,7 +140,7 @@ func AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			user := models.NewUser(email, username)
+			user := NewUser(email, username)
 
 			if !user.IsValid() {
 				err := fmt.Errorf("username failed validation: %s", user.Username)
@@ -158,25 +149,25 @@ func AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 			}
 
 			// find if email is conflicting
-			if _, err := utils.GetUserByEmail(app, user.Email); err == nil {
+			if _, err := utils.GetUserByEmail(app.App, user.Email); err == nil {
 				cloudfunc.HttpError(w, err, http.StatusConflict)
 				return
 			}
 
 			// create new user
-			if _, err := app.Firestore().Collection("users").Doc(user.Meta.ID).Set(ctx, user); err != nil {
+			if _, err := app.Firestore().Collection("users").Doc(user.Meta.ID).Set(app.Context(), user); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
 
 			// fail if a conflicting username exists
-			if _, err := app.Firestore().Collection("usernames").Doc(user.Username).Get(ctx); err == nil {
+			if _, err := app.Firestore().Collection("usernames").Doc(user.Username).Get(app.Context()); err == nil {
 				cloudfunc.HttpError(w, err, http.StatusConflict)
 				return
 			}
 
 			// create username association
-			if _, err := app.Firestore().Collection("usernames").Doc(user.Username).Set(ctx, user.GetUsernameRef()); err != nil {
+			if _, err := app.Firestore().Collection("usernames").Doc(user.Username).Set(app.Context(), user.Ref().Username); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
@@ -185,19 +176,19 @@ func AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 		case "login":
 
 			// get and delete(?) otp
-			otp, err := utils.DebugGetOTP(app, r)
+			otp, err := utils.DebugGetOTP(app.App, r)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusBadRequest)
 				return
 			}
 
-			secret, expires, err := utils.CreateSessionSecret(app, otp)
+			secret, expires, err := utils.CreateSessionSecret(app.App, otp)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
 
-			user, err := otp.GetUser(app)
+			user, err := otp.GetUser(app.App)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return

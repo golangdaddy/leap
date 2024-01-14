@@ -1,4 +1,4 @@
-package main
+package leap
 
 import (
 	"bytes"
@@ -30,7 +30,7 @@ func getInputs(object *models.Object, field *models.Field) (string, error) {
 		const s = `<Checkbox id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(s)
 	default:
-		return "", fmt.Errorf("missing input for %s", field.Input)
+		return "", fmt.Errorf("missing input for %s %s %s:", object.Name, field.Name, field.Input)
 	}
 	if err != nil {
 		return "", err

@@ -4,12 +4,18 @@ import * as React from 'react'
 import { {{titlecase .Name}}Interfaces } from '@/features/{{lowercase .Name}}s/_interfaces'{{end}}
 
 import Home from '@/features/home'
+import EditProfile from '@/features/editProfile'
 
 export var Interfaces = {
 	"home": {
 		level: 0,
 		name: "Home",
 		component: (<Home/>),
+	},
+	"editprofile": {
+		level: 0,
+		name: "Edit Profile",
+		component: (<EditProfile/>),
 	},
 }
 

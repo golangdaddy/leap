@@ -1,7 +1,6 @@
-package functions
+package main
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -10,27 +9,18 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/richardboase/npgpublic/sdk/cloudfunc"
-	"github.com/richardboase/npgpublic/sdk/common"
 	"github.com/richardboase/npgpublic/utils"
 	"google.golang.org/api/iterator"
-
-	"github.com/golangdaddy/leap/build/models"
 )
 
 // api-{{lowercase .Object.Name}}s
-func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Request) {
+func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Request) {
 
 	if cloudfunc.HandleCORS(w, r, "*") {
 		return
 	}
 
-	ctx := context.Background()
-
-	app := common.NewApp()
-	app.UseGCP("{{.ProjectID}}")
-	app.UseGCPFirestore("{{.DatabaseID}}")
-
-	_, err := utils.GetSessionUser(app, r)
+	_, err := utils.GetSessionUser(app.App, r)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 		return
@@ -58,35 +48,16 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 
 		case "init":
 
-			fields := models.Fields{{uppercase .Object.Name}}{}
-			{{lowercase .Object.Name}} := models.New{{uppercase .Object.Name}}(nil, fields)
+			fields := Fields{{uppercase .Object.Name}}{}
+			{{lowercase .Object.Name}} := New{{uppercase .Object.Name}}(nil, fields)
 			if !{{lowercase .Object.Name}}.ValidateInput(w, m) {
 				return
 			}
 
-			{{if .Object.Options.Order}}
-			var order int
-			iter := app.Firestore().Collection("{{lowercase .Object.Name}}s").Documents(ctx)
-			for {
-				_, err := iter.Next()
-				if err == iterator.Done {
-					break
-				}
-				if err != nil {
-					log.Println(err)
-					break
-				}
-				order++
-			}
-			{{lowercase .Object.Name}}.Meta.Context.Order = order
-			{{end}}
-
-			log.Println(*{{lowercase .Object.Name}})
-
-			// write new {{uppercase .Object.Name}} to the DB
-			if _, err := app.Firestore().Collection({{lowercase .Object.Name}}.Meta.Class).Doc({{lowercase .Object.Name}}.Meta.ID).Set(app.Context(), {{lowercase .Object.Name}}); err != nil {
+			// reuse document init create code
+			if err := app.CreateDocument{{uppercase .Object.Name}}(nil, {{lowercase .Object.Name}}); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-				return
+				return				
 			}
 
 			// finish the request
@@ -95,6 +66,12 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 				return
 			}
 			return
+
+		{{if eq false .Object.Options.File}}/*{{end}}
+		case "archiveupload":
+			// reuse code
+			app.UploadArchive{{uppercase .Object.Name}}(w, r, parent)
+			return{{if eq false .Object.Options.File}}*/{{end}}
 
 		default:
 			err := fmt.Errorf("function not found: %s", function)
@@ -110,7 +87,7 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 		case "count":
 
 			data := map[string]int{
-				"count": models.FirestoreCount(app, "{{lowercase .Object.Name}}s"),
+				"count": FirestoreCount(app.App, "{{lowercase .Object.Name}}s"),
 			}
 			if err := cloudfunc.ServeJSON(w, data); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
@@ -127,7 +104,7 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 				limit = n
 			}
 
-			list := []*models.{{uppercase .Object.Name}}{}
+			list := []*{{uppercase .Object.Name}}{}
 
 			// handle objects that need to be ordered
 			{{if .Object.Options.Order}}
@@ -138,7 +115,7 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 			if limit > 0 {
 				q = q.Limit(limit)
 			}
-			iter := q.Documents(ctx)
+			iter := q.Documents(app.Context())
 			for {
 				doc, err := iter.Next()
 				if err == iterator.Done {
@@ -148,7 +125,7 @@ func Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *http.Reques
 					log.Println(err)
 					break
 				}
-				{{lowercase .Object.Name}} := &models.{{uppercase .Object.Name}}{}
+				{{lowercase .Object.Name}} := &{{uppercase .Object.Name}}{}
 				if err := doc.DataTo({{lowercase .Object.Name}}); err != nil {
 					log.Println(err)
 					continue

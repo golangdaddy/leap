@@ -1,4 +1,4 @@
-package functions
+package main
 
 import (
 	"context"
@@ -9,23 +9,17 @@ import (
 	"strings"
 
 	"cloud.google.com/go/firestore"
-	"github.com/richardboase/npgpublic/models"
 	"github.com/richardboase/npgpublic/sdk/cloudfunc"
-	"github.com/richardboase/npgpublic/sdk/common"
 	"github.com/richardboase/npgpublic/utils"
 	"google.golang.org/api/iterator"
 )
 
 // api-users
-func UsersEntrypoint(w http.ResponseWriter, r *http.Request) {
+func (app *App) UsersEntrypoint(w http.ResponseWriter, r *http.Request) {
 
 	if cloudfunc.HandleCORS(w, r, "*") {
 		return
 	}
-
-	app := common.NewApp()
-	app.UseGCP("{{.ProjectID}}")
-	app.UseGCPFirestore("{{.DatabaseID}}")
 
 	function, err := cloudfunc.QueryParam(r, "function")
 	if err != nil {
@@ -41,7 +35,7 @@ func UsersEntrypoint(w http.ResponseWriter, r *http.Request) {
 
 		case "session":
 
-			user, err := utils.GetSessionUser(app, r)
+			user, err := utils.GetSessionUser(app.App, r)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 				return
@@ -74,7 +68,7 @@ func UsersEntrypoint(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			list := []models.UserRef{}
+			list := []UserRef{}
 
 			var iter *firestore.DocumentIterator = app.Firestore().Collection("usernames").Where("Index."+strconv.Itoa(len(query)), "array-contains", query).Limit(20).Documents(context.Background())
 			for {
@@ -86,12 +80,12 @@ func UsersEntrypoint(w http.ResponseWriter, r *http.Request) {
 					log.Println(err)
 					break
 				}
-				username := &models.Username{}
-				if err := doc.DataTo(username); err != nil {
+				user := &User{}
+				if err := doc.DataTo(user); err != nil {
 					log.Println(err)
 					continue
 				}
-				list = append(list, username.User)
+				list = append(list, user.Ref())
 			}
 
 			if err := cloudfunc.ServeJSON(w, list); err != nil {

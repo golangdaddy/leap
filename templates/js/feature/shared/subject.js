@@ -21,7 +21,7 @@ export function Preview(props) {
 	}
 
 	return (
-		<div className='flex flex-row justify-between items-center w-full my-2 px-4'>
+		<div className='flex flex-row justify-between items-center w-full my-2'>
 			{{if .Object.Options.Image}}<RowThumbnail source={'https://storage.googleapis.com/{{.DatabaseID}}-uploads/'+props.item.Meta.URIs[props.item.Meta.URIs.length-1]}/>{{end}}
 			<div onClick={selectItem} className='flex flex-row w-full items-center cursor-pointer m-4'>
 				{{range $item, $key := .Object.Fields}}<div className='text-xl font-bold' title="{{lowercase $key.Name}}">{ props.item.fields["{{lowercase $key.Name}}"] }</div>

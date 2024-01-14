@@ -1,9 +1,13 @@
-package models
+package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"log"
+	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -11,6 +15,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/richardboase/npgpublic/sdk/common"
 	"google.golang.org/api/iterator"
+
+	"github.com/richardboase/npgpublic/sdk/assetlayer"
 )
 
 func Internal(id string) *Internals {
@@ -46,6 +52,27 @@ type Internals struct {
 	Created    int64
 	Modified   int64
 	Stats      map[string]float64
+}
+
+func RegExp(exp, matchString string) bool {
+	return regexp.MustCompile(exp).MatchString(matchString)
+}
+
+func (i *Internals) Assetlayer() *assetlayer.Client {
+	return assetlayer.NewClient(
+		os.Getenv("APPID"),
+		os.Getenv("ASSETLAYERSECRET"),
+		os.Getenv("DIDTOKEN"),
+	)
+}
+
+func (i *Internals) AssetlayerWalletID() string {
+	x := sha256.Sum256([]byte(i.ID))
+	return hex.EncodeToString(x[:])[:32]
+}
+
+func (i *Internals) AssetlayerCollectionID() string {
+	return os.Getenv("MODEL_" + strings.ToUpper(i.Class))
 }
 
 func (i *Internals) URI() (string, error) {

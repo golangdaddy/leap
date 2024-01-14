@@ -1,0 +1,26 @@
+{
+	"mode": "many",
+	"name": "thread",
+	"fields": [
+		{
+			"name": "title",
+			"required": true,
+			"json": "string_100"
+		},
+		{
+			"name": "author",
+			"required": true,
+			"json": "string_username"
+		},
+		{
+			"name": "content",
+			"required": true,
+			"json": "string_10000"
+		}
+	],
+	"children": [
+		{
+			"json": "threadreply"
+		}
+	]
+}

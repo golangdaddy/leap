@@ -1,4 +1,4 @@
-package functions
+package main
 
 import (
 	"bytes"
@@ -12,25 +12,17 @@ import (
 	"google.golang.org/api/iterator"
 
 	"github.com/richardboase/npgpublic/sdk/cloudfunc"
-	"github.com/richardboase/npgpublic/sdk/common"
 	"github.com/richardboase/npgpublic/utils"
-
-	"github.com/golangdaddy/leap/build/models"
 )
 
 // api-{{lowercase .Object.Name}}
-func Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request) {
+func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request) {
 
 	if cloudfunc.HandleCORS(w, r, "*") {
 		return
 	}
 
-	app := common.NewApp()
-	app.UseGCP("{{.ProjectID}}")
-	app.UseGCPFirestore("{{.DatabaseID}}")
-
-
-	_, err := utils.GetSessionUser(app, r)
+	_, err := utils.GetSessionUser(app.App, r)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 		return
@@ -42,8 +34,8 @@ func Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return
 	}
-	{{lowercase .Object.Name}} := &models.{{uppercase .Object.Name}}{}
-	if err := utils.GetDocument(app, id, {{lowercase .Object.Name}}); err != nil {
+	{{lowercase .Object.Name}} := &{{uppercase .Object.Name}}{}
+	if err := utils.GetDocument(app.App, id, {{lowercase .Object.Name}}); err != nil {
 		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 		return
 	}
@@ -73,7 +65,7 @@ func Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request
 				return
 			}
 
-			if err := {{lowercase .Object.Name}}.Meta.SaveToFirestore(app, {{lowercase .Object.Name}}); err != nil {
+			if err := {{lowercase .Object.Name}}.Meta.SaveToFirestore(app.App, {{lowercase .Object.Name}}); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
@@ -117,7 +109,7 @@ func Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request
 			}
 		
 			// update file with new URI value
-			if err := {{lowercase .Object.Name}}.Meta.SaveToFirestore(app, {{lowercase .Object.Name}}); err != nil {
+			if err := {{lowercase .Object.Name}}.Meta.SaveToFirestore(app.App, {{lowercase .Object.Name}}); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
@@ -126,9 +118,9 @@ func Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request
 		{{if .Object.Options.Order}}
 		case "down":
 
-			list := get{{titlecase .Object.Name}}List(app, {{lowercase .Object.Name}})
+			list := app.get{{titlecase .Object.Name}}List({{lowercase .Object.Name}})
 
-			var me, beforeMe *models.{{uppercase .Object.Name}}
+			var me, beforeMe *{{uppercase .Object.Name}}
 			for order, item := range list {
 				item.Meta.Context.Order = order
 				if item.Meta.ID == {{lowercase .Object.Name}}.Meta.ID {
@@ -154,7 +146,7 @@ func Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request
 					},
 				}
 				println("UPDATING", item.Meta.ID, item.Meta.Context.Order)
-				if _, err := item.Meta.Firestore(app).Update(app.Context(), updates); err != nil {
+				if _, err := item.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
 					log.Println(err)
 				}
 			}
@@ -163,9 +155,9 @@ func Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request
 
 		case "up":
 
-			list := get{{titlecase .Object.Name}}List(app, {{lowercase .Object.Name}})
+			list := app.get{{titlecase .Object.Name}}List({{lowercase .Object.Name}})
 
-			var me, afterMe *models.{{uppercase .Object.Name}}
+			var me, afterMe *{{uppercase .Object.Name}}
 			for x, _ := range list {
 				order := (len(list) - 1) - x
 				item := list[order]
@@ -193,7 +185,7 @@ func Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request
 					},
 				}
 				println("UPDATING", item.Meta.ID, item.Meta.Context.Order)
-				if _, err := item.Meta.Firestore(app).Update(app.Context(), updates); err != nil {
+				if _, err := item.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
 					log.Println(err)
 				}
 			}
@@ -232,7 +224,7 @@ func Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request
 
 	case "DELETE":
 
-		_, err := {{lowercase .Object.Name}}.Meta.Firestore(app).Delete(app.Context())
+		_, err := {{lowercase .Object.Name}}.Meta.Firestore(app.App).Delete(app.Context())
 		if err != nil {
 			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 			return
@@ -246,12 +238,12 @@ func Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func get{{titlecase .Object.Name}}List(app *common.App, subject *models.{{uppercase .Object.Name}}) []*models.{{uppercase .Object.Name}} {
-	list := []*models.{{uppercase .Object.Name}}{}
+func (app *App) get{{titlecase .Object.Name}}List(subject *{{uppercase .Object.Name}}) []*{{uppercase .Object.Name}} {
+	list := []*{{uppercase .Object.Name}}{}
 	class := subject.Meta.Class
 	var ref *firestore.CollectionRef
 	if len(subject.Meta.Context.Parent) > 0 {
-		ref = models.Internal(subject.Meta.Context.Parent).Firestore(app).Collection(class)
+		ref = Internal(subject.Meta.Context.Parent).Firestore(app.App).Collection(class)
 	} else {
 		ref = app.Firestore().Collection(class)
 	}
@@ -265,7 +257,7 @@ func get{{titlecase .Object.Name}}List(app *common.App, subject *models.{{upperc
 			log.Println(err)
 			break
 		}
-		object := &models.{{uppercase .Object.Name}}{}
+		object := &{{uppercase .Object.Name}}{}
 		if err := doc.DataTo(object); err != nil {
 			log.Println(err)
 			continue

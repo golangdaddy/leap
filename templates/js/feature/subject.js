@@ -4,8 +4,6 @@ import { useLocalContext } from '@/context/local'
 import { useState, useEffect } from 'react'
 
 import { GoBack } from '../interfaces'
-import VisitTab from '@/features/interfaces'
-
 import Loading from '@/app/loading'
 
 {{range .Object.Children}}import { {{titlecase .Name}}List } from '@/features/{{lowercase .Name}}s/shared/{{lowercase .Name}}List'
@@ -41,8 +39,13 @@ export function {{titlecase .Object.Name}}(props) {
     return (
         <>
 			{ !subject && <Loading/> }
+			{
+				!subject && <div>
+					
+				</div>
+			}
             {{range .Object.Children}}
-			<{{titlecase .Name}}List title="{{titlecase .Name}}" subject={subject} />
+			<{{titlecase .Name}}List title="{{titlecase .Name}}" subject={subject} limit={4} />
 			{{end}}
         </>
     )

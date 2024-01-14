@@ -1,0 +1,24 @@
+{
+	"mode": "many",
+	"name": "business",
+	"fields": [
+		{
+			"name": "name",
+			"required": true,
+			"json": "string_100"
+		},
+		{
+			"name": "description",
+			"required": true,
+			"json": "string_1000"
+		}
+	],
+	"children": [
+		{
+			"json": "opening_times"
+		},
+		{
+            "json": "address_exclusive"
+        }
+	]
+}
