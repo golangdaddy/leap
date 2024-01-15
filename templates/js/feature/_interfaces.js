@@ -47,7 +47,7 @@ export var {{titlecase .Object.Name}}Interfaces = {
 		level: {{parentcount .Object}}+1,
 		name: "{{titlecase .Object.Name}}s", 
 		component: (<{{titlecase .Object.Name}}s />),
-		subsublinks: ["new{{lowercase .Object.Name}}"{{if .Object.Options.File}}, "initupload{{lowercase .Object.Name}}s"{{end}}],
+		subsublinks: ["new{{lowercase .Object.Name}}"{{if .Object.Options.File}}, "initupload{{lowercase .Object.Name}}", "initupload{{lowercase .Object.Name}}s"{{end}}],
 		hasNewButton: true,
 	},
 	"{{lowercase .Object.Name}}": {
