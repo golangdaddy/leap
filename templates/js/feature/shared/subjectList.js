@@ -90,6 +90,9 @@ export function {{titlecase .Object.Name}}List(props) {
 		props.title && <div className='py-4 my-4 text-xl font-bold'>{props.title}s:</div>
 	}
 	{
+		props.title && <hr/>
+	}
+	{
 		!list && <Loading/>
 	}
 	{
