@@ -21,6 +21,8 @@ import (
 )
 
 type Container struct {
+	WebAPI     string
+	SiteName   string
 	ProjectID  string
 	DatabaseID string
 	Object     *models.Object
@@ -89,6 +91,10 @@ func Build(stack *models.Stack) error {
 	if err := doTemplate("build/app/app/header.js", stack); err != nil {
 		return err
 	}
+	// dynamic backend url
+	if err := doTemplate("build/app/app/fetch.js", stack); err != nil {
+		return err
+	}
 	// add the entrypoints
 	if err := doTemplate("build/app/features/home.js", stack); err != nil {
 		return err
@@ -108,6 +114,8 @@ func Build(stack *models.Stack) error {
 		}
 
 		container := Container{
+			stack.WebAPI,
+			stack.SiteName,
 			stack.ProjectID,
 			stack.DatabaseID,
 			object,

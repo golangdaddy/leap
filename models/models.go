@@ -6,6 +6,8 @@ import (
 )
 
 type Stack struct {
+	WebAPI      string    `json:"webAPI"`
+	HostAPI     string    `json:"hostAPI"`
 	RepoURI     string    `json:"repoURI"`
 	SiteName    string    `json:"siteName"`
 	ProjectID   string    `json:"projectID"`

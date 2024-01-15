@@ -209,11 +209,12 @@ func (i *Internals) Update() {
 }
 
 type Context struct {
-	Parent  string
-	Parents []string
-	Country string
-	Region  string
-	Order   int
+	Children []string
+	Parent   string
+	Parents  []string
+	Country  string
+	Region   string
+	Order    int
 }
 
 type Moderation struct {

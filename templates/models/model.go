@@ -23,6 +23,10 @@ func New{{uppercase $obj.Name}}(parent *Internals, fields Fields{{uppercase $obj
 			Fields: fields,
 		}
 	}
+	object.Meta.Context.Children = []string{
+		{{range .Object.Children}}"{{.Name}}",
+		{{end}}
+	}
 	return object
 }
 

@@ -4,10 +4,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/richardboase/npgpublic/sdk/cloudfunc"
 	"github.com/richardboase/npgpublic/utils"
+	"github.com/sendgrid/sendgrid-go"
+	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"google.golang.org/api/iterator"
 )
 
@@ -75,39 +78,41 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 
 			secret := app.Token256()
 			log.Println(secret)
-			/*
-				from := mail.NewEmail("", "richard@ninjapunkgirls.com")
-				to := mail.NewEmail(user.Username, email)
-				subject := "Sending with Twilio SendGrid is Fun"
-				plainTextContent := "and easy to do anywhere, even with Go follow this link: "
 
-				htmlContent := fmt.Sprintf(
-					`<h2>One-time-password link:</h2>
-					<br/>
-					<a href='http://localhost:3000/home?otp=%s'>Debug</a>
-					<br/>
-					<a href='http://npgplatform.vercel.app/home?otp=%s'>Login</a>
-					`,
-					secret,
-					secret,
-				)
-				message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
-				SENDGRID_API_KEY, err := cloudfunc.GetSecretFromVolume("/sendgrid-key/sendgrid-key")
-				if err != nil {
-					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-					return
-				}
-				println(SENDGRID_API_KEY)
-				client := sendgrid.NewSendClient(SENDGRID_API_KEY)
-				response, err := client.Send(message)
-				if err != nil {
-					log.Println(err)
-				} else {
-					fmt.Println(response.StatusCode)
-					fmt.Println(response.Body)
-					fmt.Println(response.Headers)
-				}
-			*/
+			// send magic email link
+			SENDGRID_API_KEY := os.Getenv("SENDGRID_API_KEY")
+			from := mail.NewEmail("", "richard@ninjapunkgirls.com")
+			to := mail.NewEmail(user.Username, email)
+			subject := "MAGIC LINK for {{.SiteName}}"
+			plainTextContent := fmt.Sprintf(
+				"one time password link: %shome?otp=%s",
+				"{{.WebAPI}}",
+				secret,
+			)
+
+			htmlContent := fmt.Sprintf(
+				`<h2>One-time-password link:</h2>
+				<br/>
+				<a href='http://localhost:3000/home?otp=%s'>Debug</a>
+				<br/>
+				<br/>
+				<a href='{{.WebAPI}}home?otp=%s'>Click here to Login</a>
+				`,
+				secret,
+				secret,
+			)
+			message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
+			println(SENDGRID_API_KEY)
+			client := sendgrid.NewSendClient(SENDGRID_API_KEY)
+			response, err := client.Send(message)
+			if err != nil {
+				log.Println(err)
+			} else {
+				fmt.Println(response.StatusCode)
+				fmt.Println(response.Body)
+				fmt.Println(response.Headers)
+			}
+
 			otp := NewOTP(email, user.Meta.ID)
 
 			// hash the OTP secret to set the firestore record

@@ -2,13 +2,18 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"net/http"
 	"os"
 )
 
 func main() {
+	log.Println("Starting Application", "{{.ProjectID}}", "{{.DatabaseID}}")
 
-	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", "../../../npg-generic-d0985a6033b3.json")
+	// handle local dev
+	if os.Getenv("ENVIRONMENT") != "production" {
+		os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", "../../../npg-generic-d0985a6033b3.json")
+	}
 
 	app := NewApp()
 	app.UseGCP("{{.ProjectID}}")
@@ -44,7 +49,10 @@ func main() {
 
 	http.HandleFunc("/ws", app.HandleConnections)
 
-	port := 8080
+	port, err := strconv.Atoi(os.Getenv("PORT"))
+	if err != nil {
+		port = 8080
+	}
 	addr := fmt.Sprintf(":%d", port)
 	fmt.Printf("Server is running on http://localhost:%d\n", port)
 	if err := http.ListenAndServe(addr, nil); err != nil {

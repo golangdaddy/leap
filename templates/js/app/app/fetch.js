@@ -1,6 +1,6 @@
 import axios, {isCancel, AxiosError} from 'axios';
 
-export const host = "http://localhost:8080/"
+export const host = "{{.HostAPI}}"
 
 export function PublicFetch(method, url, body) {
 
