@@ -43,22 +43,22 @@ type Object struct {
 	JSON string `json:"json"`
 	Mode string `json:"mode"`
 
-	Parents     []string   `json:"parents,omitempty"`
-	ParentCount int        `json:"parentCount,omitempty"`
-	Children    []*Object  `json:"children,omitempty"`
-	Name        string     `json:"name"`
-	Fields      []*Field   `json:"fields"`
-	Options     Options    `json:"options"`
-	Assetlayer  Assetlayer `json:"assetlayer"`
+	Parents     []string  `json:"parents,omitempty"`
+	ParentCount int       `json:"parentCount,omitempty"`
+	Children    []*Object `json:"children,omitempty"`
+	Name        string    `json:"name"`
+	Fields      []*Field  `json:"fields"`
+	Options     Options   `json:"options"`
 }
 
 type Options struct {
-	Order          bool   `json:"order"`
-	File           bool   `json:"file"`
-	Image          bool   `json:"image"`
-	Font           bool   `json:"font"`
-	UseCreateTopic bool   `json:"useCreateTopic"`
-	TopicCreate    string `json:"topicCreate"`
+	Order          bool       `json:"order"`
+	File           bool       `json:"file"`
+	Image          bool       `json:"image"`
+	Font           bool       `json:"font"`
+	UseCreateTopic bool       `json:"useCreateTopic"`
+	TopicCreate    string     `json:"topicCreate"`
+	Assetlayer     Assetlayer `json:"assetlayer"`
 }
 
 type Assetlayer struct {

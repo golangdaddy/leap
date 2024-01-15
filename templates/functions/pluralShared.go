@@ -36,7 +36,7 @@ func (app *App) CreateDocument{{uppercase .Object.Name}}(parent *Internals, obje
 	object.Meta.Context.Order = order
 	{{if eq false .Object.Options.Order}}*/{{end}}
 
-	{{if eq false .Object.Assetlayer.Token}}/*{{end}}
+	{{if eq false .Object.Options.Assetlayer.Token}}/*{{end}}
 	// create asset
 	{
 		log.Println("CREATING TOKEN")
@@ -46,9 +46,9 @@ func (app *App) CreateDocument{{uppercase .Object.Name}}(parent *Internals, obje
 		}
 		object.Meta.Asset = assetID
 	}
-	{{if eq false .Object.Assetlayer.Token}}*/{{end}}
+	{{if eq false .Object.Options.Assetlayer.Token}}*/{{end}}
 
-	{{if eq false .Object.Assetlayer.Wallet}}/*{{end}}
+	{{if eq false .Object.Options.Assetlayer.Wallet}}/*{{end}}
 	// create app wallet
 	{
 		log.Println("CREATING WALLET")
@@ -56,7 +56,7 @@ func (app *App) CreateDocument{{uppercase .Object.Name}}(parent *Internals, obje
 			return err
 		}
 	}
-	{{if eq false .Object.Assetlayer.Wallet}}*/{{end}}
+	{{if eq false .Object.Options.Assetlayer.Wallet}}*/{{end}}
 	
 	// write new {{uppercase .Object.Name}} to the DB
 	if err := object.Meta.SaveToFirestore(app.App, object); err != nil {

@@ -587,7 +587,7 @@ func copyDir(src, dest string) error {
 
 	println("copying", src, dest)
 
-	os.MkdirAll(dest, 0777)
+	//os.MkdirAll(dest, 0777)
 
 	files, err := f.ReadDir(src)
 	if err != nil {
