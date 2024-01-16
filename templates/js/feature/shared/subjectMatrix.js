@@ -102,14 +102,19 @@ export function {{titlecase .Object.Name}}Matrix(props) {
 		})
 	}
 
+	const cellStyle = {
+		border: "1px solid"
+	}
+
 	return (
 	<>
 	{
 		!list && <Loading/>
 	}
-		<table className='w-full' style={ {border:"1px solid"} }><tbody>
+		<table className='w-full' style={cellStyle}><tbody>
 			<tr>
-				{{range .Object.Fields}}<td className='font-bold px-2' style={ {border:"1px solid"} }>{{lowercase .Name}}</td>{{end}}
+				<td className='font-bold px-2' style={cellStyle}>#</td>
+				{{range .Object.Fields}}<td className='font-bold px-2' style={cellStyle}>{{lowercase .Name}}</td>{{end}}
 			</tr>
 			{
 				list && list.map(function (row, i) {

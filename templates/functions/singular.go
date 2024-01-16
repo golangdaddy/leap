@@ -71,7 +71,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 		updates := []firestore.Update{
 			{
 				Path: "Meta.Modified",
-				Value: app.TimeNow(),
+				Value: app.TimeNow().Unix(),
 			},
 			{
 				Path: fmt.Sprintf("fields.%s", field),
@@ -112,7 +112,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 			updates := []firestore.Update{
 				{
 					Path: "Meta.Modified",
-					Value: app.TimeNow(),
+					Value: app.TimeNow().Unix(),
 				},
 				{{range .Object.Fields}}{
 					Path: "fields.{{lowercase .Name}}",

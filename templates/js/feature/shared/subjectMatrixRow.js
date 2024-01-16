@@ -22,9 +22,16 @@ export function {{titlecase .Object.Name}}MatrixRow(props) {
 		props.save(props.id, id, e.target.value)
 	}
 
+	const cellStyle = {
+		border: "1px solid"
+	}
+
 	return (
 	<tr>
-		{{range .Object.Fields}}<td className='text-sm' style={ {border:"1px solid"} }>
+		<td className='text-sm' style={cellStyle}>
+			{props.id}
+		</td>
+		{{range .Object.Fields}}<td className='text-sm' style={cellStyle}>
 			<div className='flex flex-row w-full ' >
 				<input id="{{lowercase .Name}}" onFocus={cellEdit} onBlur={cellSave} className="w-full px-2" type="text" defaultValue={ props.row.fields["{{lowercase .Name}}"] }/>
 			</div>
