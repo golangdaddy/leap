@@ -143,7 +143,7 @@ func (app *App) Upload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.
 	return
 }
 
-func (app *App) UploadArchive{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request, parent *Internals) {
+func (app *App) ArchiveUpload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request, parent *Internals) {
 
 	log.Println("PARSING FORM")
 	if err := r.ParseMultipartForm(300 << 20); err != nil {

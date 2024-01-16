@@ -11,6 +11,7 @@ import (
 )
 
 //go:embed build.sh
+//go:embed dev.sh
 //go:embed _fields/*
 //go:embed _objects/*
 var f embed.FS
@@ -155,12 +156,23 @@ func Prepare(tree *Stack) error {
 		}
 	}
 
-	b, err := f.ReadFile("build.sh")
-	if err != nil {
-		return err
+	{
+		b, err := f.ReadFile("build.sh")
+		if err != nil {
+			return err
+		}
+		if err := os.WriteFile("build.sh", b, 0775); err != nil {
+			return err
+		}
 	}
-	if err := os.WriteFile("build.sh", b, 0775); err != nil {
-		return err
+	{
+		b, err := f.ReadFile("dev.sh")
+		if err != nil {
+			return err
+		}
+		if err := os.WriteFile("dev.sh", b, 0775); err != nil {
+			return err
+		}
 	}
 
 	return nil

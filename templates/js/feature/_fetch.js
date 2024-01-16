@@ -40,10 +40,16 @@ export function {{titlecase .Object.Name}}FunctionPOST(user, id, func) {
     return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function="+func+"&id="+id)
 }
 
-export function {{titlecase .Object.Name}}FileUpload(user, id, formData) {
+// file handling
+
+export function {{titlecase .Object.Name}}Upload(user, id, formData) {
     return AxiosPOST(user, "api/{{lowercase .Object.Name}}?function=upload&id="+id, formData)
 }
-{{if .Object.Options.File}}
-export function {{titlecase .Object.Name}}ArchiveUpload(user, parentID, formData) {
-    return AxiosPOST(user, "api/{{lowercase .Object.Name}}s?function=archiveupload&parent="+parentID, formData)
-}{{end}}
+
+export function {{titlecase .Object.Name}}InitUpload(user, parentID, formData) {
+    return AxiosPOST(user, "api/{{lowercase .Object.Name}}s?function=initupload&parent="+parentID, formData)
+}
+
+export function {{titlecase .Object.Name}}InitUploads(user, parentID, formData) {
+    return AxiosPOST(user, "api/{{lowercase .Object.Name}}s?function=inituploads&parent="+parentID, formData)
+}
