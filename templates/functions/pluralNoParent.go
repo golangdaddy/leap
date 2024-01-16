@@ -1,3 +1,4 @@
+{{ $obj := .Object }}
 package main
 
 import (

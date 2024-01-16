@@ -1,3 +1,4 @@
+{{ $obj := .Object }}
 package main
 
 import (
@@ -61,19 +62,19 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 			}
 
 			fields := Fields{{uppercase .Object.Name}}{}
-			{{lowercase .Object.Name}} := New{{uppercase .Object.Name}}(parent, fields)
-			if !{{lowercase .Object.Name}}.ValidateInput(w, m) {
+			object := New{{uppercase .Object.Name}}(parent, fields)
+			if !object.ValidateInput(w, m) {
 				return
 			}
 
 			// reuse document init create code
-			if err := app.CreateDocument{{uppercase .Object.Name}}(parent, {{lowercase .Object.Name}}); err != nil {
+			if err := app.CreateDocument{{uppercase .Object.Name}}(parent, object); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return				
 			}
 
 			// finish the request
-			if err := cloudfunc.ServeJSON(w, {{lowercase .Object.Name}}); err != nil {
+			if err := cloudfunc.ServeJSON(w, object); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
