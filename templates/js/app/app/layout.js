@@ -5,8 +5,8 @@ import { UserProvider } from "@/context/user";
 import { LocalProvider } from "@/context/local";
 import { MessagingProvider } from "@/context/messaging";
 import { Inter } from 'next/font/google'
-import Header from "./header.js"
-import Footer from "./footer.js"
+import Header from "../components/header.js"
+import Footer from "../components/footer.js"
 
 const inter = Inter({ subsets: ['latin'] })
 /*

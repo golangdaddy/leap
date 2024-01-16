@@ -26,7 +26,7 @@ func getInputs(object *models.Object, field *models.Field) (string, error) {
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "number":
 		const s = `<Input id="{{lowercase .Name}}" type='number' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
-		output = fmt.Sprintf(s, object.Name, object.Name)
+		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "textarea":
 		const s = `<Textarea id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
@@ -74,7 +74,7 @@ func getEditInputs(object *models.Object, field *models.Field) (string, error) {
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "number":
 		const s = `<Input id="{{lowercase .Name}}" type='number' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
-		output = fmt.Sprintf(s, object.Name, object.Name)
+		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "textarea":
 		const s = `<Textarea id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`

@@ -54,7 +54,7 @@ export function {{titlecase .Object.Name}}(props) {
 			{ !subject && <Loading/> }
 			{
 				subject && <div>
-					<div className='text-2xl'>{ subject.fields.name }</div>
+					<div className='text-2xl'>{ subject.Meta.Class } / { subject.fields.name }</div>
 					<div className='flex flex-row'>
 						{
 							image && <div className="m-4" style={ {maxWidth:"40vw"} }>

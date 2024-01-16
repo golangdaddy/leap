@@ -87,10 +87,14 @@ func Build(stack *models.Stack) error {
 		return err
 	}
 
-	// add the site name
-	if err := doTemplate("build/app/app/header.js", stack); err != nil {
+	// update the headers and footers
+	if err := doTemplate("build/app/components/header.js", stack); err != nil {
 		return err
 	}
+	if err := doTemplate("build/app/components/footer.js", stack); err != nil {
+		return err
+	}
+
 	// dynamic backend url
 	if err := doTemplate("build/app/app/fetch.js", stack); err != nil {
 		return err
@@ -361,6 +365,20 @@ func Build(stack *models.Stack) error {
 		}
 		{
 			path := fmt.Sprintf(
+				"build/app/features/%ss/shared/%sMatrix.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Lower(language.English).String(object.Name),
+			)
+			copyFile(
+				"templates/js/feature/shared/subjectMatrix.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				return err
+			}
+		}
+		{
+			path := fmt.Sprintf(
 				"build/app/features/%ss/new%s.js",
 				cases.Lower(language.English).String(object.Name),
 				cases.Title(language.English).String(object.Name),
@@ -401,7 +419,7 @@ func Build(stack *models.Stack) error {
 				return err
 			}
 		}
-		if object.Options.File {
+		{
 			path := fmt.Sprintf(
 				"build/app/features/%ss/initUpload%s.js",
 				cases.Lower(language.English).String(object.Name),
@@ -415,7 +433,7 @@ func Build(stack *models.Stack) error {
 				return err
 			}
 		}
-		if object.Options.File {
+		{
 			path := fmt.Sprintf(
 				"build/app/features/%ss/initUpload%ss.js",
 				cases.Lower(language.English).String(object.Name),
@@ -429,7 +447,7 @@ func Build(stack *models.Stack) error {
 				return err
 			}
 		}
-		if object.Options.File {
+		{
 			path := fmt.Sprintf(
 				"build/app/features/%ss/upload%s.js",
 				cases.Lower(language.English).String(object.Name),

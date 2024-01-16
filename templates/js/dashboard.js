@@ -78,7 +78,7 @@ export default function Dashboard(props) {
 
 	return (
 		userdata && <div className='flex flex-col'>
-			<div className='items-center flex w-full bg-gray-600 text-white px-2 py-2 text-xl shadow-xl'>
+			<div className='items-center flex w-full bg-gray-600 text-white px-4 py-2 text-xl shadow-xl'>
 				{
 					localdata?.tab && <div className='flex flex-col justify-start px-4 pl-6'>
 						{ 

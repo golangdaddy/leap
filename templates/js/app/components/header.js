@@ -28,9 +28,13 @@ export default function Header() {
             </div>
             }
             {
-            !userdata && <div className='flex flex-col'>
-                <a href="/otp">
-                    <div id='account' className='cursor-pointer text-sm mt-2 font-bold'>Login</div>
+            !userdata && <div className='flex flex-row items-center'>
+                <a href="/login">
+                    <div className='cursor-pointer text-sm m-2 font-bold'>Login</div>
+                </a>
+                <div className='m-2'>|</div>
+                <a href="/register"> 
+                    <div className='cursor-pointer text-sm m-2 font-bold'>Register</div>
                 </a>
             </div>
             }
