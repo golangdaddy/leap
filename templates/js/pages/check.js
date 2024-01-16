@@ -2,8 +2,6 @@ import { useRouter } from 'next/navigation'
 
 import Layout from '@/app/layout';
 
-import Loading from "@/app/loading"
-
 export default function PageCheck({ data }) {
 
 	//const router = useRouter()
@@ -12,7 +10,6 @@ export default function PageCheck({ data }) {
 	return (
 		<Layout className="flex flex-col items-center h-full">
 			<div style={{minWidth:"40vw"}} className='bg-gray-200 flex flex-col items-center p-8'>
-			<Loading/>
 			<div className='m-8 font-bold text-xl'>Check your email: {data.email}</div>
 			</div>
 		</Layout>
