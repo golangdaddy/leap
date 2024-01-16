@@ -74,7 +74,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 				Value: app.TimeNow().Unix(),
 			},
 			{
-				Path: fmt.Sprintf("fields.%s", field),
+				Path: fmt.Sprintf("fields.%s", strings.ToLower(field)),
 				Value: m["value"],
 			},
 		}
