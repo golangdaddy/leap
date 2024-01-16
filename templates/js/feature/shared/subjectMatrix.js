@@ -16,7 +16,7 @@ import {
 	{{titlecase .Object.Name}}MoveUpPOST,
 	{{titlecase .Object.Name}}MoveDownPOST,
 } from '../_fetch';
-import ObjectPATCH from '@/app/fetch'
+import { ObjectPATCH } from '@/app/fetch'
 
 
 export function {{titlecase .Object.Name}}Matrix(props) {
