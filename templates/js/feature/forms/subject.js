@@ -10,6 +10,7 @@ import InputChange from '@/inputs/inputChange';
 import Checkbox from '@/inputs/checkbox';
 import Select from '@/inputs/select';
 import CollectionSelect from '@/inputs/collectionSelect';
+import Color from '@/inputs/color';
 
 export function {{titlecase .Object.Name}}Form(props) {
 

@@ -10,12 +10,12 @@
         {
             "name": "foreground_color",
             "required": false,
-            "json": "string_10"
+            "json": "color"
         },
         {
             "name": "background_color",
             "required": false,
-            "json": "string_10"
+            "json": "color"
         }
     ]
 }

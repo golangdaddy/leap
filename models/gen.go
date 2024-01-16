@@ -10,6 +10,7 @@ import (
 	"github.com/kr/pretty"
 )
 
+//go:embed Dockerfile
 //go:embed build.sh
 //go:embed dev.sh
 //go:embed _fields/*
@@ -171,6 +172,15 @@ func Prepare(tree *Stack) error {
 			return err
 		}
 		if err := os.WriteFile("dev.sh", b, 0775); err != nil {
+			return err
+		}
+	}
+	{
+		b, err := f.ReadFile("Dockerfile")
+		if err != nil {
+			return err
+		}
+		if err := os.WriteFile("Dockerfile", b, 0775); err != nil {
 			return err
 		}
 	}

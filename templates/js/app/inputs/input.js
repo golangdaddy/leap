@@ -8,13 +8,13 @@ export default function Input(props) {
 		if (props.type == "number") {
 			value = parseFloat(value)
 		}
-		const data =       {
+		const data = {
 			"id": id,
 			"type": props.type,
 			"value": value,
 			"required": props.required,
 		}
-		console.log("ONLOAD", data)
+		console.log("ONLOAD", props.type, data)
 		props.inputChange(
 			data
 		)
@@ -43,7 +43,7 @@ export default function Input(props) {
 				<div className="m-2"></div>
 				{
 					props.type == "number" && <div>
-						<input disabled={(props.disabled == true)} className="p-4 border" id={props.id} type={props.type} defaultValue={props.value} onChange={changeEvent} onLoad={changeEventOnload} placeholder={props.placeholder} />
+						<input disabled={(props.disabled == true)} className="p-4 border" id={props.id} type={props.type} defaultValue={props.value} onChange={changeEvent} onLoad={changeEventOnload}/>
 					</div>
 				}
 				{

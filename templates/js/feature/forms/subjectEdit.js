@@ -3,10 +3,15 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 
 import Spacer from '@/inputs/spacer';
-import Select from '@/inputs/select';
 import Submit from '@/inputs/submit';
 import Input from '@/inputs/input';
+import Color from '@/inputs/color';
+import Checkbox from '@/inputs/checkbox';
+import Select from '@/inputs/select';
+import CollectionSelect from '@/inputs/collectionSelect';
+
 import InputChange from '@/inputs/inputChange';
+
 
 export function {{titlecase .Object.Name}}Edit(props) {
 
