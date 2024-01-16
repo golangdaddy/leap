@@ -50,19 +50,19 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 		case "init":
 
 			fields := Fields{{uppercase .Object.Name}}{}
-			{{lowercase .Object.Name}} := New{{uppercase .Object.Name}}(nil, fields)
-			if !{{lowercase .Object.Name}}.ValidateInput(w, m) {
+			object := New{{uppercase .Object.Name}}(nil, fields)
+			if !object.ValidateInput(w, m) {
 				return
 			}
 
 			// reuse document init create code
-			if err := app.CreateDocument{{uppercase .Object.Name}}(nil, {{lowercase .Object.Name}}); err != nil {
+			if err := app.CreateDocument{{uppercase .Object.Name}}(nil, object); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return				
 			}
 
 			// finish the request
-			if err := cloudfunc.ServeJSON(w, {{lowercase .Object.Name}}); err != nil {
+			if err := cloudfunc.ServeJSON(w, object); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
@@ -135,12 +135,12 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 					log.Println(err)
 					break
 				}
-				{{lowercase .Object.Name}} := &{{uppercase .Object.Name}}{}
-				if err := doc.DataTo({{lowercase .Object.Name}}); err != nil {
+				object := &{{uppercase .Object.Name}}{}
+				if err := doc.DataTo(object); err != nil {
 					log.Println(err)
 					continue
 				}
-				list = append(list, {{lowercase .Object.Name}})
+				list = append(list, object)
 			}
 
 			if err := cloudfunc.ServeJSON(w, list); err != nil {

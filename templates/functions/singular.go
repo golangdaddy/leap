@@ -4,8 +4,10 @@ package main
 import (
 	"bytes"
 	"errors"
+	"context"
 	"fmt"
 	"io"
+	"strings"
 	"log"
 	"net/http"
 
@@ -78,10 +80,26 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 				Value: m["value"],
 			},
 		}
-		if _, err := object.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
+
+		for _, update := range updates {
+			println(update.Path, update.Value)
+		}
+
+		if _, err := object.Meta.Firestore(app.App).Update(context.Background(), updates); err != nil {
 			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 			return
 		}
+
+		if err := utils.GetDocument(app.App, id, object); err != nil {
+			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			return
+		}
+
+		if err := cloudfunc.ServeJSON(w, object); err != nil {
+			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			return
+		}
+
 		return
 
 
@@ -120,7 +138,21 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 				},{{end}}
 			}
 
+			for _, update := range updates {
+				println(update.Path, update.Value)
+			}
+
 			if _, err := object.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+				return
+			}
+
+			if err := utils.GetDocument(app.App, id, object); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+				return
+			}
+	
+			if err := cloudfunc.ServeJSON(w, object); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
