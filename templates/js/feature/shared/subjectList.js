@@ -3,14 +3,13 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 import { useState, useEffect } from 'react';
 
-import { {{titlecase .Object.Name}}DELETE, {{titlecase .Object.Name}}sListGET, {{titlecase .Object.Name}}MoveUpPOST, {{titlecase .Object.Name}}MoveDownPOST } from '../_fetch';
-
 import VisitTab from '@/features/interfaces';
-
-import Loading from '@/app/loading';
-import { Preview } from './{{lowercase .Object.Name}}';
-import Spacer from '@/inputs/spacer';
 import { titlecase } from '../_interfaces';
+import Loading from '@/app/loading'
+import Spacer from '@/inputs/spacer';
+
+import { {{titlecase .Object.Name}}ListRow } from './{{lowercase .Object.Name}}ListRow';
+import { {{titlecase .Object.Name}}DELETE, {{titlecase .Object.Name}}sListGET, {{titlecase .Object.Name}}MoveUpPOST, {{titlecase .Object.Name}}MoveDownPOST } from '../_fetch';
 
 export function {{titlecase .Object.Name}}List(props) {
 
@@ -100,7 +99,7 @@ export function {{titlecase .Object.Name}}List(props) {
 
 			return (
 				<div key={i}>
-					<Preview id={i} listLength={list.length} item={item} select={selectItem} moveUp={moveUp} moveDown={moveDown} delete={deleteItem}/>
+					<{{titlecase .Object.Name}}ListRow id={i} listLength={list.length} item={item} select={selectItem} moveUp={moveUp} moveDown={moveDown} delete={deleteItem}/>
 					<Spacer/>
 				</div>
 			)

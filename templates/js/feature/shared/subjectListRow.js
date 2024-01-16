@@ -7,8 +7,9 @@ import { RowThumbnail } from "@/components/rowThumbnail"
 import { RowDelete } from "@/components/rowDelete"
 import { RowEdit } from "@/components/rowEdit"
 import { RowOrder } from "@/components/rowOrder"
+import { titlecase } from "../_interfaces"
 
-export function Preview(props) {
+export function {{titlecase .Object.Name}}ListRow(props) {
 
 	const [userdata, setUserdata] = useUserContext()
 

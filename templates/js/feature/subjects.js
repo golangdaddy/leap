@@ -13,6 +13,8 @@ export function {{titlecase .Object.Name}}s(props) {
 	const [ parent ] = useState(localdata.tab.context.object)
 
 	return (
-		<{{titlecase .Object.Name}}List subject={parent} />
+		<div style={ {padding:"30px 60px 30px 60px"} }>
+			<{{titlecase .Object.Name}}List subject={parent} />
+		</div>
 	)
 }

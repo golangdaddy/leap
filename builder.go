@@ -337,20 +337,6 @@ func Build(stack *models.Stack) error {
 		}
 		{
 			path := fmt.Sprintf(
-				"build/app/features/%ss/shared/%s.js",
-				cases.Lower(language.English).String(object.Name),
-				cases.Lower(language.English).String(object.Name),
-			)
-			copyFile(
-				"templates/js/feature/shared/subject.js",
-				path,
-			)
-			if err := doTemplate(path, container); err != nil {
-				return err
-			}
-		}
-		{
-			path := fmt.Sprintf(
 				"build/app/features/%ss/shared/%sList.js",
 				cases.Lower(language.English).String(object.Name),
 				cases.Lower(language.English).String(object.Name),
@@ -365,12 +351,54 @@ func Build(stack *models.Stack) error {
 		}
 		{
 			path := fmt.Sprintf(
+				"build/app/features/%ss/shared/%sListRow.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Lower(language.English).String(object.Name),
+			)
+			copyFile(
+				"templates/js/feature/shared/subjectListRow.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				return err
+			}
+		}
+		{
+			path := fmt.Sprintf(
+				"build/app/features/%ss/%ssMatrix.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Lower(language.English).String(object.Name),
+			)
+			copyFile(
+				"templates/js/feature/subjectsMatrix.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				return err
+			}
+		}
+		{
+			path := fmt.Sprintf(
 				"build/app/features/%ss/shared/%sMatrix.js",
 				cases.Lower(language.English).String(object.Name),
 				cases.Lower(language.English).String(object.Name),
 			)
 			copyFile(
 				"templates/js/feature/shared/subjectMatrix.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				return err
+			}
+		}
+		{
+			path := fmt.Sprintf(
+				"build/app/features/%ss/shared/%sMatrixRow.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Lower(language.English).String(object.Name),
+			)
+			copyFile(
+				"templates/js/feature/shared/subjectMatrixRow.js",
 				path,
 			)
 			if err := doTemplate(path, container); err != nil {

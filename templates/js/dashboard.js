@@ -90,6 +90,16 @@ export default function Dashboard(props) {
 					</div>
 				}
 				{
+					localdata?.tab && localdata.tab.hasSpreadsheetButton && <div className="m-2 flex flex-col justify-center">
+						<div id={'new'+localdata.tab.name.substr(0, localdata.tab.name.length-1).toLowerCase()}
+						onClick={updateTabEvent} className="flex flex-col justify-center items-center m-2 cursor-pointer" style={{width:"20px",height:"20px"}}>
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+							<path strokeLinecap="round" strokeLinejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125Z" />
+							</svg>
+						</div>
+					</div>
+				}
+				{
 					localdata?.tab && localdata.tab.hasNewButton && <div className="m-2 flex flex-col justify-center">
 						<div id={'new'+localdata.tab.name.substr(0, localdata.tab.name.length-1).toLowerCase()}
 						onClick={updateTabEvent} className="flex flex-col justify-center items-center m-2 cursor-pointer" style={{width:"20px",height:"20px"}}>
@@ -177,10 +187,10 @@ export default function Dashboard(props) {
 			</div>
 			{ 
 				localdata?.tab && <div className='flex flex-col min-h-full w-full bg-white'>
-					<Subsublinks></Subsublinks>
-					<div className='' style={{padding:"30px 60px 30px 60px"}}>
-						{ localdata && localdata.tab && (localdata.tab.component) }
-					</div>
+					<Subsublinks></Subsublinks>			
+					{ 
+						localdata && localdata.tab && localdata.tab.component
+					}
 				</div>
 			}
 		</div>

@@ -16,7 +16,7 @@ export default function Home(props) {
 	}
 
 	return (
-		<div className='flex flex-col text-sm cursor-pointer'>
+		<div className='flex flex-col text-sm cursor-pointer' style={ {padding:"30px 60px 30px 60px"} }>
 			{{range .Entrypoints}}
 			<div id="{{lowercase .}}s" className='text-xl font-bold' onClick={updateTabEvent}>
 			{{titlecase .}}s

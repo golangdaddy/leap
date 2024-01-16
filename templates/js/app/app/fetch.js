@@ -4,7 +4,7 @@ export const host = "{{.HostAPI}}"
 
 export function PublicFetch(method, url, body) {
 
-    console.log(">>>", method, url, body);
+    console.log("PublicFetch >>>", method, url, body);
     console.log(url)
 
     return fetch(
@@ -29,11 +29,11 @@ export function AxiosPOST(user, url, formData) {
 
 export default function SessionFetch(user, method, url, body) {
 
-    console.log(">>>", method, url, body);
+    console.log("SessionFetch >>>", method, url, body);
     console.log(url)
 
     if (user == null) {
-        console.error("fuck");
+        console.error("userdata context needs to be provided");
         return
     }
 
@@ -49,7 +49,7 @@ export default function SessionFetch(user, method, url, body) {
 
 export function OTPFetch(url) {
 
-    console.log(">>>", url);
+    console.log("OTPFetch >>>", url);
     console.log(url)
 
     return fetch(host + url, {"method":"POST"})
@@ -85,4 +85,17 @@ export function UsernameGET(user, targetUserID) {
 
 export function UserObjectGET(user, targetUserID) {
     return SessionFetch(user, "GET", "api/user?function=object&id="+targetUserID)
+}
+
+export function ObjectPATCH(user, object, field, value) {
+    console.log("BEFORE")
+    const c = object.Meta.Class.substring(0, (object.Meta.Class.length-1))
+    console.log("AFTER")
+    console.log(c)
+    const payload = {
+        "field": field,
+        "value": value
+    }
+    console.log("PATCHING OBJECT", payload)
+    return SessionFetch(user, "PATCH", "api/"+c+"?id="+object.Meta.ID, payload)
 }

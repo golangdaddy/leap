@@ -29,7 +29,7 @@ export function Delete{{titlecase .Object.Name}}(props) {
 	}
 
 	return (
-		<div className='p-2 flex flex-col items-center'>
+		<div className='p-2 flex flex-col items-center' style={ {padding:"30px 60px 30px 60px"} }>
 			{
 				loading && <Loading/>
 			}

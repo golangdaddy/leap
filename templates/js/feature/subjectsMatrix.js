@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 import { {{titlecase .Object.Name}}Matrix } from './shared/{{lowercase .Object.Name}}Matrix';
 
-export function {{titlecase .Object.Name}}s(props) {
+export function {{titlecase .Object.Name}}sMatrix(props) {
 
 	const [ userdata, setUserdata] = useUserContext()
 	const [ localdata, setLocaldata] = useLocalContext()

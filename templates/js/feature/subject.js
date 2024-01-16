@@ -50,7 +50,7 @@ export function {{titlecase .Object.Name}}(props) {
 	}, [])
 
     return (
-        <>
+        <div style={ {padding:"30px 60px 30px 60px"} }>
 			{ !subject && <Loading/> }
 			{
 				subject && <div>
@@ -83,7 +83,7 @@ export function {{titlecase .Object.Name}}(props) {
             {{range .Object.Children}}
 			<{{titlecase .Name}}List title="{{titlecase .Name}}" subject={subject} limit={4} />
 			{{end}}
-        </>
+        </div>
     )
 
 }

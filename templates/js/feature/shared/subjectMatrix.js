@@ -3,14 +3,21 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 import { useState, useEffect } from 'react';
 
-import { {{titlecase .Object.Name}}DELETE, {{titlecase .Object.Name}}sListGET, {{titlecase .Object.Name}}MoveUpPOST, {{titlecase .Object.Name}}MoveDownPOST } from '../_fetch';
-
 import VisitTab from '@/features/interfaces';
+import { titlecase } from '../_interfaces';
 
 import Loading from '@/app/loading';
-import { Preview } from './{{lowercase .Object.Name}}';
 import Spacer from '@/inputs/spacer';
-import { titlecase } from '../_interfaces';
+
+import { {{titlecase .Object.Name}}MatrixRow } from './{{lowercase .Object.Name}}MatrixRow';
+import {
+	{{titlecase .Object.Name}}DELETE,
+	{{titlecase .Object.Name}}sListGET,
+	{{titlecase .Object.Name}}MoveUpPOST,
+	{{titlecase .Object.Name}}MoveDownPOST,
+} from '../_fetch';
+import ObjectPATCH from '@/app/fetch'
+
 
 export function {{titlecase .Object.Name}}Matrix(props) {
 
@@ -33,6 +40,17 @@ export function {{titlecase .Object.Name}}Matrix(props) {
 	useEffect(() => {
 		updateList()
 	}, [])
+
+	function saveUpdate(rowID, fieldID, value) {
+		const row = list[rowID]
+		console.log("SAVEUPDATE", row, fieldID, value)
+		row.fields[fieldID] = value
+		ObjectPATCH(userdata, row, fieldID, value)
+		.catch(function (e) {
+			console.error("FAILED TO SEND", e)
+		})
+		setList(list)
+	}
 
 	// update tabs handles the updated context and sends the user to a new interface
 	function selectItem(id) {
@@ -85,31 +103,25 @@ export function {{titlecase .Object.Name}}Matrix(props) {
 	}
 
 	return (
-	<div className='flex flex-col my-4'>
-	{
-		props.title && <div className='py-4 my-4 text-xl font-bold'>{props.title}s:</div>
-	}
-	{
-		props.title && <hr/>
-	}
+	<>
 	{
 		!list && <Loading/>
 	}
-		<table className='w-full'><tbody>
-		{
-			list && list.map(function (item, i) {
-
-				return (
-					<tr key={i}>
-						{{range .Object.Fields}}<td>{ item.fields["{{lowercase .Name}}"] }</td>{{end}}
-					</tr>
-				)
-			})
-		}
+		<table className='w-full' style={ {border:"1px solid"} }><tbody>
+			<tr>
+				{{range .Object.Fields}}<td className='font-bold px-2' style={ {border:"1px solid"} }>{{lowercase .Name}}</td>{{end}}
+			</tr>
+			{
+				list && list.map(function (row, i) {
+					return (
+						<{{titlecase .Object.Name}}MatrixRow id={i} key={i} row={row} save={saveUpdate}/>
+					)
+				})
+			}
 		</tbody></table>
 		<Spacer/>
 
-	</div>
+	</>
 	)
 
 }

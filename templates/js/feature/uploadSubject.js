@@ -46,7 +46,7 @@ export function Upload{{titlecase .Object.Name}}(props) {
 	}
 
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col" style={ {padding:"30px 60px 30px 60px"} }>
 			    {
 					loading && <Loading/>
 				}

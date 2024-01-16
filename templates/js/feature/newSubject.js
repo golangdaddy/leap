@@ -33,6 +33,8 @@ export function New{{titlecase .Object.Name}}(props) {
 	}
 
 	return (
-		<{{titlecase .Object.Name}}Form submit={submitNew}/>
+		<div style={ {padding:"30px 60px 30px 60px"} }>
+			<{{titlecase .Object.Name}}Form submit={submitNew}/>
+		</div>
 	);
 }

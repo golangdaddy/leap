@@ -45,10 +45,10 @@ export function Edit{{titlecase .Object.Name}}(props) {
 	}
 
 	return (
-		<>
+		<div style={ {padding:"30px 60px 30px 60px"} }>
 		{
 			subject && <{{titlecase .Object.Name}}Edit subject={subject} submit={submitEdit}/>
 		}
-		</>
+		</div>
   	);
 }

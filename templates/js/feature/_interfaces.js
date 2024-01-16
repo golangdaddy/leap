@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { {{titlecase .Object.Name}}Matrix } from './shared/{{lowercase .Object.Name}}Matrix'
+import { {{titlecase .Object.Name}}sMatrix } from './{{lowercase .Object.Name}}sMatrix'
 import { {{titlecase .Object.Name}}s } from './{{lowercase .Object.Name}}s'
 import { {{titlecase .Object.Name}} } from './{{lowercase .Object.Name}}'
 import { New{{titlecase .Object.Name}} } from './new{{titlecase .Object.Name}}'
@@ -47,13 +47,14 @@ export var {{titlecase .Object.Name}}Interfaces = {
 		level: {{parentcount .Object}}+1,
 		name: "{{titlecase .Object.Name}}s", 
 		component: (<{{titlecase .Object.Name}}s />),
-		subsublinks: ["new{{lowercase .Object.Name}}"{{if .Object.Options.File}}, "initupload{{lowercase .Object.Name}}", "initupload{{lowercase .Object.Name}}s"{{end}}],
+		subsublinks: ["{{lowercase .Object.Name}}smatrix", "new{{lowercase .Object.Name}}"{{if .Object.Options.File}}, "initupload{{lowercase .Object.Name}}", "initupload{{lowercase .Object.Name}}s"{{end}}],
 		hasNewButton: true,
+		hasSpreadsheetButton: true,
 	},
 	"{{lowercase .Object.Name}}smatrix": {
-		level: {{parentcount .Object}}+1,
-		name: "{{titlecase .Object.Name}}s", 
-		component: (<{{titlecase .Object.Name}}Matrix />),
+		level: {{parentcount .Object}}+2,
+		name: "{{titlecase .Object.Name}}s Matrix", 
+		component: (<{{titlecase .Object.Name}}sMatrix />),
 		subsublinks: ["new{{lowercase .Object.Name}}"{{if .Object.Options.File}}, "initupload{{lowercase .Object.Name}}", "initupload{{lowercase .Object.Name}}s"{{end}}],
 		hasNewButton: true,
 	},
