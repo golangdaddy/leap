@@ -4,10 +4,8 @@ package main
 import (
 	"bytes"
 	"errors"
-	"context"
 	"fmt"
 	"io"
-	"strings"
 	"log"
 	"net/http"
 
@@ -70,6 +68,29 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 			return
 		}
 
+		bb, err := app.MarshalJSON(object.Fields)
+		if err != nil {
+			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			return
+		}
+		fields := map[string]interface{}{}
+		if err := app.UnmarshalJSON(bb, &fields);err != nil {
+			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			return
+		}
+		fields[field] = m["value"]
+
+		updateBytes, err := app.MarshalJSON(fields)
+		if err != nil {
+			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			return
+		}
+		if err := app.UnmarshalJSON(updateBytes, &object.Fields); err != nil {
+			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			return
+		}
+
+		/*
 		updates := []firestore.Update{
 			{
 				Path: "Meta.Modified",
@@ -80,26 +101,20 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 				Value: m["value"],
 			},
 		}
-
 		for _, update := range updates {
 			println(update.Path, update.Value)
 		}
-
 		if _, err := object.Meta.Firestore(app.App).Update(context.Background(), updates); err != nil {
 			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 			return
 		}
+		*/
 
-		if err := utils.GetDocument(app.App, id, object); err != nil {
+		object.Meta.Modify()
+		if err := object.Meta.SaveToFirestore(app.App, object); err != nil {
 			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 			return
 		}
-
-		if err := cloudfunc.ServeJSON(w, object); err != nil {
-			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-			return
-		}
-
 		return
 
 
@@ -127,6 +142,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 				return
 			}
 
+			/*
 			updates := []firestore.Update{
 				{
 					Path: "Meta.Modified",
@@ -137,25 +153,25 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 					Value: object.Fields.{{titlecase .Name}},
 				},{{end}}
 			}
-
 			for _, update := range updates {
 				println(update.Path, update.Value)
 			}
-
 			if _, err := object.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
+			*/
 
-			if err := utils.GetDocument(app.App, id, object); err != nil {
+			if err := object.Meta.SaveToFirestore(app.App, object); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
-	
+
 			if err := cloudfunc.ServeJSON(w, object); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
+			return
 
 		case "upload":
 

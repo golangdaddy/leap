@@ -113,7 +113,9 @@ export function {{titlecase .Object.Name}}Matrix(props) {
 	}
 		<table className='w-full' style={cellStyle}><tbody>
 			<tr>
-				<td className='font-bold px-2' style={cellStyle}>#</td>
+				<td className='flex flex-row justify-center font-bold px-2' style={cellStyle}>
+					<div>#</div>
+			</td>
 				{{range .Object.Fields}}<td className='font-bold px-2' style={cellStyle}>{{lowercase .Name}}</td>{{end}}
 			</tr>
 			{

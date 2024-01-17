@@ -57,6 +57,7 @@ export var {{titlecase .Object.Name}}Interfaces = {
 		component: (<{{titlecase .Object.Name}}sMatrix />),
 		subsublinks: ["new{{lowercase .Object.Name}}"{{if .Object.Options.File}}, "initupload{{lowercase .Object.Name}}", "initupload{{lowercase .Object.Name}}s"{{end}}],
 		hasNewButton: true,
+		hasListButton: true,
 	},
 	"{{lowercase .Object.Name}}": {
 		level: {{parentcount .Object}}+2,

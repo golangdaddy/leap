@@ -57,5 +57,35 @@ func (x *{{uppercase .Object.Name}}) ValidateInput(w http.ResponseWriter, m map[
 		return false
 	}{{end}}{{end}}
 
+	x.Meta.Modify()
+
 	return true
+}
+
+func (x *{{uppercase .Object.Name}}) ValidateByCount(w http.ResponseWriter, m map[string]interface{}, count int) bool {
+
+	var counter int
+	var exists bool
+	{{range .Object.Fields}}
+	x.Fields.{{titlecase .Name}}, exists = Assert{{uppercase .Type}}(w, m, "{{lowercase .Name}}")
+	if exists {
+		counter++
+	}
+
+	// ignore this, a mostly redundant artifact
+	{{if .Range}}{
+		exp := "{{.Regexp}}"
+		if len(exp) > 0 {
+			if !RegExp(exp, x.Fields.{{titlecase .Name}}) {
+				return false
+			}
+		}
+	}
+	if !AssertRange(w, {{.Range.Min}}, {{.Range.Max}}, x.Fields.{{titlecase .Name}}) {
+		return false
+	}{{end}}{{end}}
+
+	x.Meta.Modify()
+
+	return counter == count
 }
