@@ -70,7 +70,7 @@ export default function VisitTab(localdata, tabname, context) {
 		}
 	}
 
-	console.log("VISIT TAB", tabname)
+	console.log("VISIT TAB", tabname, context)
 	var crumbs = [];
 
 	var tab = Object.assign({}, GetInterfaces()[tabname])

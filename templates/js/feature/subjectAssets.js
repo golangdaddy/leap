@@ -8,6 +8,8 @@ import VisitTab from '../interfaces'
 import { GoBack } from '../interfaces'
 import Loading from '@/app/loading'
 
+import { AssetUser } from '@/app/fetch'
+
 import { {{titlecase .Object.Name}}ObjectGET } from './_fetch'
 
 export function {{titlecase .Object.Name}}Assets(props) {  
@@ -31,7 +33,7 @@ export function {{titlecase .Object.Name}}Assets(props) {
 	}
 
 	function getAssets() {
-		AssetUser(userdata)
+		AssetUser(userdata, subject.Meta.ID)
 		.then((res) => res.json())
 		.then((data) => {
 			console.log(data)

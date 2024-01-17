@@ -46,6 +46,7 @@ type Internals struct {
 	Class      string
 	URIs       []string
 	Asset      string
+	Wallet     string
 	Context    Context
 	Moderation Moderation
 	Updated    bool

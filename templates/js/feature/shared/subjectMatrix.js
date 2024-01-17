@@ -41,6 +41,10 @@ export function {{titlecase .Object.Name}}Matrix(props) {
 		updateList()
 	}, [])
 
+	function newobject() {
+		setLocaldata(VisitTab(localdata, "new{{lowercase .Object.Name}}", localdata.tab.context))
+	}
+
 	function saveUpdate(rowID, fieldID, value) {
 		const row = list[rowID]
 		console.log("SAVEUPDATE", row, fieldID, value)
@@ -111,11 +115,11 @@ export function {{titlecase .Object.Name}}Matrix(props) {
 	{
 		!list && <Loading/>
 	}
-		<table className='w-full' style={cellStyle}><tbody>
+		<table className='w-full'><tbody>
 			<tr>
 				<td className='flex flex-row justify-center font-bold px-2' style={cellStyle}>
 					<div>#</div>
-			</td>
+				</td>
 				{{range .Object.Fields}}<td className='font-bold px-2' style={cellStyle}>{{lowercase .Name}}</td>{{end}}
 			</tr>
 			{
@@ -125,6 +129,12 @@ export function {{titlecase .Object.Name}}Matrix(props) {
 					)
 				})
 			}
+			<tr>
+				<td className='flex flex-row justify-center font-bold px-2 bg-gray-200' style={cellStyle}>
+					<div className='cursor-pointer' onClick={newobject}>+</div>
+				</td>
+				{{range .Object.Fields}}<td className='font-bold px-2'></td>{{end}}
+			</tr>
 		</tbody></table>
 		<Spacer/>
 
