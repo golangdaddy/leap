@@ -25,6 +25,7 @@ type Options struct {
 
 type Permissions struct {
 	AdminsOnly bool
+	AdminsEdit bool
 }
 
 type Assetlayer struct {
