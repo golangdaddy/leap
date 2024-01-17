@@ -3,6 +3,7 @@ import * as React from 'react'
 import { {{titlecase .Object.Name}}sMatrix } from './{{lowercase .Object.Name}}sMatrix'
 import { {{titlecase .Object.Name}}s } from './{{lowercase .Object.Name}}s'
 import { {{titlecase .Object.Name}} } from './{{lowercase .Object.Name}}'
+import { {{titlecase .Object.Name}}Assets } from './{{lowercase .Object.Name}}Assets'
 import { New{{titlecase .Object.Name}} } from './new{{titlecase .Object.Name}}'
 import { Edit{{titlecase .Object.Name}} } from './edit{{titlecase .Object.Name}}'
 import { Delete{{titlecase .Object.Name}} } from './delete{{titlecase .Object.Name}}'
@@ -67,5 +68,10 @@ export var {{titlecase .Object.Name}}Interfaces = {
 		component: (<{{titlecase .Object.Name}} />),
 		hasDeleteButton: true,
 		hasEditButton: true,
+	},
+	"{{lowercase .Object.Name}}assets": {
+		level: {{parentcount .Object}}+2,
+		name: "{{titlecase .Object.Name}} Assets",
+		component: (<{{titlecase .Object.Name}}Assets />),
 	},
 }

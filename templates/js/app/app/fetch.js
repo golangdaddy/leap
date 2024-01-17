@@ -87,6 +87,10 @@ export function UserObjectGET(user, targetUserID) {
 	return SessionFetch(user, "GET", "api/user?function=object&id="+targetUserID)
 }
 
+export function AssetUser(user) {
+	return SessionFetch(user, "GET", "api/assetlayer?function=list")
+}
+
 export function ObjectPATCH(user, object, field, value) {
 	const c = object.Meta.Class.substring(0, (object.Meta.Class.length-1))
 	const payload = {

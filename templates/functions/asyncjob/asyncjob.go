@@ -14,7 +14,7 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-// api-asyncjobs
+// api-asyncjob
 func (app *App) EntrypointASYNCJOB(w http.ResponseWriter, r *http.Request) {
 
 	if cloudfunc.HandleCORS(w, r, "*") {

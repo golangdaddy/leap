@@ -5,34 +5,24 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/richardboase/npgpublic/sdk/assetlayer"
 	"github.com/richardboase/npgpublic/sdk/common"
 )
 
 type App struct {
 	*common.App
-	Assetlayer  *assetlayer.Client
 	connections map[string]*websocket.Conn
 	sync.RWMutex
 }
 
 func NewApp() *App {
 	app := &App{
-		App: common.NewApp(),
-		Assetlayer: assetlayer.NewClient(
-			os.Getenv("ASSETLAYERAPPID"),
-			os.Getenv("ASSETLAYERSECRET"),
-			os.Getenv("DIDTOKEN"),
-		),
+		App:         common.NewApp(),
 		connections: map[string]*websocket.Conn{},
 	}
-	app.UseGCP("{{.ProjectID}}")
-	app.UseGCPFirestore("{{.DatabaseID}}")
 	return app
 }
 

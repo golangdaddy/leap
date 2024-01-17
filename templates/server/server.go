@@ -19,8 +19,13 @@ func main() {
 	app := NewApp()
 	app.UseGCP("{{.ProjectID}}")
 	app.UseGCPFirestore("{{.DatabaseID}}")
+	app.UseAssetlayer(
+		os.Getenv("ASSETLAYERAPPID"),
+		os.Getenv("ASSETLAYERSECRET"),
+		os.Getenv("DIDTOKEN"),
+	)
 
-	slotID, err := app.Assetlayer.EnsureSlotExists("{{.DatabaseID}}-models", "description...", "")
+	slotID, err := app.Assetlayer().EnsureSlotExists("{{.DatabaseID}}-models", "description...", "")
 	if err != nil {
 		panic(err)
 	}
@@ -28,7 +33,7 @@ func main() {
 
 	{{range .Objects}}
 	{
-		collectionID, err := app.Assetlayer.EnsureCollectionExists(slotID, "Unique", "{{lowercase .Name}}s", "description...", "", 1000000, nil)
+		collectionID, err := app.Assetlayer().EnsureCollectionExists(slotID, "Unique", "{{lowercase .Name}}s", "description...", "", 1000000, nil)
 		if err != nil {
 			panic(err)
 		}
@@ -36,13 +41,15 @@ func main() {
 	}{{end}}
 
 	{{range .Wallets}}
-	if err := app.Assetlayer.NewAppWallet("{{.}}"); err != nil {
+	if err := app.Assetlayer().NewAppWallet("{{.}}"); err != nil {
 		log.Println(err)
 	}{{end}}
 
 	http.HandleFunc("/api/user", app.UserEntrypoint)
 	http.HandleFunc("/api/users", app.UsersEntrypoint)
 	http.HandleFunc("/api/auth", app.AuthEntrypoint)
+	http.HandleFunc("/api/assetlayer", app.EntrypointASSETLAYER)
+	http.HandleFunc("/api/asyncjob", app.EntrypointASYNCJOB)
 	{{range .Objects}}
 	http.HandleFunc("/api/{{lowercase .Name}}", app.Entrypoint{{uppercase .Name}})
 	http.HandleFunc("/api/{{lowercase .Name}}s", app.Entrypoint{{uppercase .Name}}S)

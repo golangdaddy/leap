@@ -40,7 +40,7 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			var result int = 0
-			email = strings.TrimSpace(email)
+			email = strings.TrimSpace(strings.ToLower(email))
 			iter := app.Firestore().Collection("users").Where("email", "==", email).Documents(app.Context())
 			for {
 				_, err = iter.Next()

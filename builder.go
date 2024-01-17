@@ -80,6 +80,9 @@ func Build(stack *models.Stack) error {
 	if err := doTemplate("build/model_ASYNCJOB.go", stack); err != nil {
 		return err
 	}
+	if err := copyFile("templates/functions/assetlayer/assetlayer.go", "build/api_assetlayer.go"); err != nil {
+		return err
+	}
 	if err := copyFile("templates/functions/asyncjob/asyncjob.go", "build/api_asyncjob.go"); err != nil {
 		return err
 	}
@@ -329,6 +332,20 @@ func Build(stack *models.Stack) error {
 			)
 			copyFile(
 				"templates/js/feature/forms/subjectEdit.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				return err
+			}
+		}
+		{
+			path := fmt.Sprintf(
+				"build/app/features/%ss/%sAssets.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Lower(language.English).String(object.Name),
+			)
+			copyFile(
+				"templates/js/feature/subjectAssets.js",
 				path,
 			)
 			if err := doTemplate(path, container); err != nil {
