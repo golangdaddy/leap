@@ -28,8 +28,8 @@ export function {{titlecase .Object.Name}}MatrixRow(props) {
 
 	return (
 	<tr>
-		<td className='flex flex-row justify-center text-sm' style={cellStyle}>
-			<div>{props.id}</div>
+		<td className='flex flex-row justify-center text-sm max-w-8' style={cellStyle}>
+			<div className='font-bold'>{props.id}</div>
 		</td>
 		{{range .Object.Fields}}<td className='text-sm' style={cellStyle}>
 			<div className='flex flex-row w-full ' >
