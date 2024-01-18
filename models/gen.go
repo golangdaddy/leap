@@ -10,9 +10,7 @@ import (
 	"github.com/kr/pretty"
 )
 
-//go:embed Dockerfile
-//go:embed build.sh
-//go:embed dev.sh
+//go:embed _scripts/*
 //go:embed _fields/*
 //go:embed _objects/*
 var f embed.FS
@@ -158,7 +156,7 @@ func Prepare(tree *Stack) error {
 	}
 
 	{
-		b, err := f.ReadFile("build.sh")
+		b, err := f.ReadFile("_scripts/build.sh")
 		if err != nil {
 			return err
 		}
@@ -167,7 +165,7 @@ func Prepare(tree *Stack) error {
 		}
 	}
 	{
-		b, err := f.ReadFile("dev.sh")
+		b, err := f.ReadFile("_scripts/dev.sh")
 		if err != nil {
 			return err
 		}
@@ -176,7 +174,7 @@ func Prepare(tree *Stack) error {
 		}
 	}
 	{
-		b, err := f.ReadFile("Dockerfile")
+		b, err := f.ReadFile("_scripts/Dockerfile")
 		if err != nil {
 			return err
 		}
@@ -184,6 +182,10 @@ func Prepare(tree *Stack) error {
 			return err
 		}
 	}
+
+	os.RemoveAll("build/server")
+	os.RemoveAll("build/functions")
+	os.RemoveAll("build/models")
 
 	return nil
 }

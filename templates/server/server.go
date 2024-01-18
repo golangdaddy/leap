@@ -41,7 +41,7 @@ func main() {
 	}{{end}}
 
 	{{range .Wallets}}
-	if err := app.Assetlayer().NewAppWallet("{{.}}"); err != nil {
+	if _, err := app.Assetlayer().NewAppWallet("{{.}}"); err != nil {
 		log.Println(err)
 	}{{end}}
 

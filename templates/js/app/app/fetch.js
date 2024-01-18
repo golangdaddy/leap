@@ -87,8 +87,12 @@ export function UserObjectGET(user, targetUserID) {
 	return SessionFetch(user, "GET", "api/user?function=object&id="+targetUserID)
 }
 
-export function AssetUser(user, id) {
-	return SessionFetch(user, "GET", "api/assetlayer?function=list&parent="+id)
+export function AssetsUser(user, id) {
+	return SessionFetch(user, "GET", "api/assetlayer?function=assets&parent="+id)
+}
+
+export function AssetsWallet(user, id) {
+	return SessionFetch(user, "GET", "api/assetlayer?function=walletassets&parent="+id)
 }
 
 export function ObjectPATCH(user, object, field, value) {

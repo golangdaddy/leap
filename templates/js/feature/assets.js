@@ -8,11 +8,12 @@ import VisitTab from '../interfaces'
 import { GoBack } from '../interfaces'
 import Loading from '@/app/loading'
 
-import { AssetUser } from '@/app/fetch'
+import { {{titlecase .Object.Name}}Assets } from './shared/{{lowercase .Object.Name}}Assets'
 
+import { AssetsUser, AssetsWallet } from '@/app/fetch'
 import { {{titlecase .Object.Name}}ObjectGET } from './_fetch'
 
-export function {{titlecase .Object.Name}}Assets(props) {  
+export function Assets(props) {  
 
 	const [userdata, setUserdata] = useUserContext()
 	const [localdata, setLocaldata] = useLocalContext() 
@@ -33,7 +34,7 @@ export function {{titlecase .Object.Name}}Assets(props) {
 	}
 
 	function getAssets() {
-		AssetUser(userdata, subject.Meta.ID)
+		AssetsWallet(userdata, subject.Meta.ID)
 		.then((res) => res.json())
 		.then((data) => {
 			console.log(data)
@@ -52,7 +53,7 @@ export function {{titlecase .Object.Name}}Assets(props) {
 
 	return (
 		<div style={ {padding:"30px 60px 30px 60px"} }>
-
+			<{{titlecase .Object.Name}}Assets subject={subject}/>
 		</div>
 	)
 
