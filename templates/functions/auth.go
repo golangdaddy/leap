@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/richardboase/npgpublic/sdk/cloudfunc"
+	"github.com/golangdaddy/leap/sdk/cloudfunc"
 	"github.com/richardboase/npgpublic/utils"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"

@@ -12,11 +12,11 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
+	"github.com/golangdaddy/leap/sdk/common"
 	"github.com/google/uuid"
-	"github.com/richardboase/npgpublic/sdk/common"
 	"google.golang.org/api/iterator"
 
-	"github.com/richardboase/npgpublic/sdk/assetlayer"
+	"github.com/golangdaddy/leap/sdk/assetlayer"
 )
 
 func Internal(id string) *Internals {

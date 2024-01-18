@@ -8,7 +8,7 @@ import (
 
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/gin-gonic/gin"
-	"github.com/richardboase/npgpublic/sdk/assetlayer"
+	"github.com/golangdaddy/leap/sdk/assetlayer"
 )
 
 func (app *App) newClients() Clients {

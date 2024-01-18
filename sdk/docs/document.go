@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/richardboase/npgpublic/sdk/common"
+	"github.com/golangdaddy/leap/sdk/common"
 	"golang.org/x/crypto/sha3"
 )
 

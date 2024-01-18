@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/richardboase/npgpublic/sdk/assetlayer"
-	"github.com/richardboase/npgpublic/sdk/cloudfunc"
+	"github.com/golangdaddy/leap/sdk/assetlayer"
+	"github.com/golangdaddy/leap/sdk/cloudfunc"
 	"github.com/richardboase/npgpublic/utils"
 )
 

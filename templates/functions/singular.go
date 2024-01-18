@@ -12,7 +12,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
 
-	"github.com/richardboase/npgpublic/sdk/cloudfunc"
+	"github.com/golangdaddy/leap/sdk/cloudfunc"
 	"github.com/richardboase/npgpublic/utils"
 )
 

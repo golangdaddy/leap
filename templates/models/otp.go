@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/richardboase/npgpublic/sdk/common"
+	"github.com/golangdaddy/leap/sdk/common"
 )
 
 type OTP struct {

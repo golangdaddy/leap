@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/golangdaddy/leap/sdk/common"
 	"github.com/gorilla/websocket"
-	"github.com/richardboase/npgpublic/sdk/common"
 )
 
 type App struct {

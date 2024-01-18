@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/richardboase/npgpublic/sdk/cloudfunc"
+	"github.com/golangdaddy/leap/sdk/cloudfunc"
 	"github.com/richardboase/npgpublic/utils"
 )
 

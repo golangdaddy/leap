@@ -9,7 +9,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/pubsub"
-	"github.com/richardboase/npgpublic/sdk/cloudfunc"
+	"github.com/golangdaddy/leap/sdk/cloudfunc"
 	"github.com/richardboase/npgpublic/utils"
 	"google.golang.org/api/iterator"
 )

@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/richardboase/npgpublic/sdk/cloudfunc"
-	"github.com/richardboase/npgpublic/sdk/common"
+	"github.com/golangdaddy/leap/sdk/cloudfunc"
+	"github.com/golangdaddy/leap/sdk/common"
 )
 
 func getTime() int64 {

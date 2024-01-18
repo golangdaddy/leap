@@ -6,7 +6,7 @@ COPY ./go.mod /app/
 COPY ./go.sum /app/
 COPY ./build/* /app/
 
-RUN GONOPROXY=github.com/golangdaddy,github.com/richardboase go get -d
+RUN GONOPROXY=github.com/golangdaddy go get -d
 
 RUN GOPROXY=direct CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /main .
 
