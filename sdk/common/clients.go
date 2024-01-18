@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
+	"github.com/ayush6624/go-chatgpt"
 	"github.com/gin-gonic/gin"
 	"github.com/golangdaddy/leap/sdk/assetlayer"
 )
@@ -23,6 +24,7 @@ type Clients struct {
 	httpClient *http.Client
 	algolia    *search.Client
 	assetlayer *assetlayer.Client
+	chatgpt    *chatgpt.Client
 	sync.RWMutex
 }
 
@@ -76,4 +78,8 @@ func (clients *Clients) Algolia() *search.Client {
 
 func (clients *Clients) Assetlayer() *assetlayer.Client {
 	return clients.assetlayer
+}
+
+func (clients *Clients) ChatGPT() *chatgpt.Client {
+	return clients.chatgpt
 }

@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
+	"github.com/ayush6624/go-chatgpt"
 	"github.com/fxamacker/cbor/v2"
 	"github.com/golangdaddy/leap/sdk/assetlayer"
 )
@@ -60,4 +61,15 @@ func (app *App) UseAssetlayer(appID, appSecret, didToken string) {
 		appSecret,
 		didToken,
 	)
+}
+
+// UseGin enables a Gin instance
+func (app *App) UseChatGPT(openaiKey string) {
+	app.Clients.Lock()
+	defer app.Clients.Unlock()
+	var err error
+	app.Clients.chatgpt, err = chatgpt.NewClient(openaiKey)
+	if err != nil {
+		panic(err)
+	}
 }
