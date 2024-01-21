@@ -10,7 +10,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/richardboase/npgpublic/utils"
+	"github.com/golangdaddy/leap/utils"
 	"google.golang.org/api/iterator"
 )
 

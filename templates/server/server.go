@@ -24,6 +24,7 @@ func main() {
 		os.Getenv("ASSETLAYERSECRET"),
 		os.Getenv("DIDTOKEN"),
 	)
+	app.UseChatGPT(os.Getenv("OPENAI_KEY"))
 
 	slotID, err := app.Assetlayer().EnsureSlotExists("{{.DatabaseID}}-models", "description...", "")
 	if err != nil {

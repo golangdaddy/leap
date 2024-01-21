@@ -13,7 +13,7 @@ import (
 	"google.golang.org/api/iterator"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/richardboase/npgpublic/utils"
+	"github.com/golangdaddy/leap/utils"
 )
 
 // api-{{lowercase $obj.Name}}

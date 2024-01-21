@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/richardboase/npgpublic/utils"
+	"github.com/golangdaddy/leap/utils"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"google.golang.org/api/iterator"

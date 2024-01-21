@@ -7,7 +7,7 @@ import (
 
 	"github.com/golangdaddy/leap/sdk/assetlayer"
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/richardboase/npgpublic/utils"
+	"github.com/golangdaddy/leap/utils"
 )
 
 type AssetlayerWallet struct {

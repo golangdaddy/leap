@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/richardboase/npgpublic/utils"
+	"github.com/golangdaddy/leap/utils"
 )
 
 // api-user

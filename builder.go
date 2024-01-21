@@ -89,6 +89,12 @@ func Build(stack *models.Stack) error {
 	if err := doTemplate("build/api_asyncjob.go", stack); err != nil {
 		return err
 	}
+	if err := copyFile("templates/functions/chatgpt/chatgpt.go", "build/api_chatgpt.go"); err != nil {
+		return err
+	}
+	if err := doTemplate("build/api_chatgpt.go", stack); err != nil {
+		return err
+	}
 
 	// update the headers and footers
 	if err := doTemplate("build/app/components/header.js", stack); err != nil {
@@ -304,6 +310,20 @@ func Build(stack *models.Stack) error {
 			)
 			copyFile(
 				"templates/js/feature/_interfaces.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				return err
+			}
+		}
+		{
+			path := fmt.Sprintf(
+				"build/app/features/%ss/forms/%s.js",
+				cases.Lower(language.English).String(object.Name),
+				"ai",
+			)
+			copyFile(
+				"templates/js/feature/forms/ai.js",
 				path,
 			)
 			if err := doTemplate(path, container); err != nil {
