@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
-	"github.com/ayush6624/go-chatgpt"
 	"github.com/fxamacker/cbor/v2"
 	"github.com/golangdaddy/leap/sdk/assetlayer"
+	"github.com/sashabaranov/go-openai"
 )
 
 // UseGCP grants the conditions for the GCP services clients
@@ -65,11 +65,10 @@ func (app *App) UseAssetlayer(appID, appSecret, didToken string) {
 
 // UseGin enables a Gin instance
 func (app *App) UseChatGPT(openaiKey string) {
+	if len(openaiKey) == 0 {
+		panic("OPENAI key not present")
+	}
 	app.Clients.Lock()
 	defer app.Clients.Unlock()
-	var err error
-	app.Clients.chatgpt, err = chatgpt.NewClient(openaiKey)
-	if err != nil {
-		panic(err)
-	}
+	app.Clients.openai = openai.NewClient(openaiKey)
 }
