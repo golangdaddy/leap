@@ -1,21 +1,16 @@
 package main
 
 import (
-	"context"
 	"errors"
 	"fmt"
-	"io"
-	"log"
 	"net/http"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
 	"github.com/golangdaddy/leap/utils"
-	"github.com/richardboase/npgpublic/models"
-	"github.com/sashabaranov/go-openai"
 )
 
-// api-chatgpt
-func (app *App) EntrypointCHATGPT(w http.ResponseWriter, r *http.Request) {
+// api-openai
+func (app *App) EntrypointOPENAI(w http.ResponseWriter, r *http.Request) {
 
 	if cloudfunc.HandleCORS(w, r, "*") {
 		return
@@ -54,42 +49,14 @@ func (app *App) EntrypointCHATGPT(w http.ResponseWriter, r *http.Request) {
 
 		case "collectionprompt":
 
-			m := map[string]interface{}{}
-			if err := cloudfunc.ParseJSON(r, &m); err != nil {
+			// get function
+			collection, err := cloudfunc.QueryParam(r, "collection")
+			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusBadRequest)
 				return
 			}
 
-			prompt, ok := models.AssertKeyValueSTRING(w, m, "prompt")
-			if !ok {
-				return
-			}
-
-			resp, err := app.ChatGPT().CreateChatCompletion(
-				context.Background(),
-				openai.ChatCompletionRequest{
-					Model: openai.GPT3Dot5Turbo,
-					Messages: []openai.ChatCompletionMessage{
-						{
-							Role:    openai.ChatMessageRoleUser,
-							Content: prompt,
-						},
-					},
-				},
-			)
-
-			log.Println(parent)
-
-			data, err := io.ReadAll(resp.Body)
-			if err != nil {
-				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-				return
-			}
-
-			if err := cloudfunc.ServeJSON(w, data); err != nil {
-				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-				return
-			}
+			app.chatgpt_modifyList(w, r, parent, collection)
 
 		default:
 			err := fmt.Errorf("function not found: %s", function)

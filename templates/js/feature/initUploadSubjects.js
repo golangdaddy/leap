@@ -29,7 +29,8 @@ export function InitUpload{{titlecase .Object.Name}}s(props) {
 		formData.append('file', file);
 		formData.append('fileName', file.name);
 
-		{{titlecase .Object.Name}}InitUploads(userdata, element.Meta.ID, formData).then((response) => {
+		{{titlecase .Object.Name}}InitUploads(userdata, element.Meta.ID, formData)
+		.then((response) => {
 			console.log(response.data);
 			if (props.done) {
 				props.done()

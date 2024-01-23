@@ -89,13 +89,18 @@ func Build(stack *models.Stack) error {
 	if err := doTemplate("build/api_asyncjob.go", stack); err != nil {
 		return err
 	}
-	if err := copyFile("templates/functions/chatgpt/chatgpt.go", "build/api_chatgpt.go"); err != nil {
+	if err := copyFile("templates/functions/openai/openai.go", "build/api_openai.go"); err != nil {
 		return err
 	}
-	if err := doTemplate("build/api_chatgpt.go", stack); err != nil {
+	if err := doTemplate("build/api_openai.go", stack); err != nil {
 		return err
 	}
-
+	if err := copyFile("templates/functions/openai/chatgpt_modifyList.go", "build/chatgpt_modifyList.go"); err != nil {
+		return err
+	}
+	if err := doTemplate("build/chatgpt_modifyList.go", stack); err != nil {
+		return err
+	}
 	// update the headers and footers
 	if err := doTemplate("build/app/components/header.js", stack); err != nil {
 		return err

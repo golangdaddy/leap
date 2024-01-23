@@ -12,11 +12,15 @@ import Select from '@/inputs/select';
 import CollectionSelect from '@/inputs/collectionSelect';
 import Color from '@/inputs/color';
 
+import { {{titlecase .Object.Name}}ChatGPTModifyPOST } from '../_fetch'
+import { {{titlecase .Object.Name}}ChatGPTInitPOST } from '../_fetch'
+
 export function AI(props) {
 
 	const [userdata, _] = useUserContext()
 	const [localdata, setLocaldata] = useLocalContext()
-	const [subject] = useState(localdata.tab.context.object)
+
+    console.log("AI SUBJECT", props.subject)
 
     const [toggle, setToggle] = useState(false)
 
@@ -24,10 +28,27 @@ export function AI(props) {
         setToggle(!toggle)
     }
 
-	const [inputs, setInputs] = useState({})
-	function handleInputChange(obj) {
-		InputChange(inputs, setInputs, obj)
+	const [select, setSelect] = useState('create')
+	function updateSelect(e) {
+        setSelect(e.target.value)
 	}
+
+    function sendPrompt() {
+        props.updateList(false)
+        const payload = {
+            "prompt": document.getElementById("prompt").value,
+        }
+        {{titlecase .Object.Name}}ChatGPTModifyPOST(userdata, props.subject.Meta.ID, props.collection, payload)
+        .then((res) => res.json())
+		.then((data) => {
+			console.log(data)
+            props.updateList(true)
+		}) 
+		.catch((e) => {
+			console.error(e)
+			props.updateList(true)
+		})
+    }
 
 	return (
 		<div className='flex flex-col'>
@@ -41,7 +62,17 @@ export function AI(props) {
                 </div>
             }
 			{
-                toggle && <Textarea placeholder="your prompt..." onBlur={toggleState}></Textarea>
+                toggle && <>
+                    <select onChange={updateSelect}>
+                        <option value="create">Create</option>
+                        <option value="modify">Modify</option>
+                    </select>
+                    <Spacer/>
+                    <textarea id='prompt' placeholder="your prompt..."></textarea>
+                    <div>
+                        <button onClick={sendPrompt} className="my-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Send</button>
+                    </div>
+                </>
             }
 		</div>
 	);

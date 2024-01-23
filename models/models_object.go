@@ -1,9 +1,9 @@
 package models
 
 type Object struct {
-	JSON string `json:"json"`
-	Mode string `json:"mode"`
-
+	JSON        string    `json:"json"`
+	Mode        string    `json:"mode"`
+	Context     string    `json:"context"`
 	Parents     []string  `json:"parents,omitempty"`
 	ParentCount int       `json:"parentCount,omitempty"`
 	Children    []*Object `json:"children,omitempty"`

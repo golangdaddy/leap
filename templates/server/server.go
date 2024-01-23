@@ -51,6 +51,7 @@ func main() {
 	http.HandleFunc("/api/auth", app.AuthEntrypoint)
 	http.HandleFunc("/api/assetlayer", app.EntrypointASSETLAYER)
 	http.HandleFunc("/api/asyncjob", app.EntrypointASYNCJOB)
+	http.HandleFunc("/api/openai", app.EntrypointOPENAI)
 	{{range .Objects}}
 	http.HandleFunc("/api/{{lowercase .Name}}", app.Entrypoint{{uppercase .Name}})
 	http.HandleFunc("/api/{{lowercase .Name}}s", app.Entrypoint{{uppercase .Name}}S)

@@ -53,3 +53,13 @@ export function {{titlecase .Object.Name}}InitUpload(user, parentID, formData) {
 export function {{titlecase .Object.Name}}InitUploads(user, parentID, formData) {
     return AxiosPOST(user, "api/{{lowercase .Object.Name}}s?function=inituploads&parent="+parentID, formData)
 }
+
+// misc
+
+export function {{titlecase .Object.Name}}ChatGPTModifyPOST(user, parentID, collectionID, payload) {
+    return SessionFetch(user, "POST", "api/openai?function=collectionprompt&collection="+collectionID+"&parent="+parentID, payload)
+}
+
+export function {{titlecase .Object.Name}}ChatGPTInitPOST(user, parentID, collectionID, payload) {
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}s?function=prompt&parent="+parentID, payload)
+}

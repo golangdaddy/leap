@@ -2,6 +2,7 @@
 package main
 
 import (
+	"errors"
 	"net/http"
 )
 
@@ -60,6 +61,33 @@ func (x *{{uppercase .Object.Name}}) ValidateInput(w http.ResponseWriter, m map[
 	x.Meta.Modify()
 
 	return true
+}
+
+func (x *{{uppercase .Object.Name}}) ValidateObject(m map[string]interface{}) error {
+
+	var err error
+	{{range .Object.Fields}}
+	x.Fields.{{titlecase .Name}}, err = assert{{uppercase .Type}}(m, "{{lowercase .Name}}")
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	// ignore this, a mostly redundant artifact
+	{{if .Range}}{
+		exp := "{{.Regexp}}"
+		if len(exp) > 0 {
+			if !RegExp(exp, x.Fields.{{titlecase .Name}}) {
+				return errors.New("failed to regexp")
+			}
+		}
+	}
+	if err := assertRange({{.Range.Min}}, {{.Range.Max}}, x.Fields.{{titlecase .Name}}); err != nil {
+		return err
+	}{{end}}{{end}}
+
+	x.Meta.Modify()
+
+	return nil
 }
 
 func (x *{{uppercase .Object.Name}}) ValidateByCount(w http.ResponseWriter, m map[string]interface{}, count int) bool {

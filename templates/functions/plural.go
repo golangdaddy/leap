@@ -53,6 +53,26 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 
 		switch function {
 
+		case "prompt":
+
+			m := map[string]interface{}{}
+			if err := cloudfunc.ParseJSON(r, &m); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
+
+			prompt, ok := AssertSTRING(w, m, "prompt")
+			if !ok {
+				return
+			}
+
+			if err := app.{{lowercase .Object.Name}}ChatGPT(parent, prompt); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+				return
+			}
+
+			return
+
 		case "init":
 
 			m := map[string]interface{}{}
