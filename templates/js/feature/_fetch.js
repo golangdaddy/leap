@@ -60,6 +60,6 @@ export function {{titlecase .Object.Name}}ChatGPTModifyPOST(user, parentID, coll
     return SessionFetch(user, "POST", "api/openai?function=collectionprompt&collection="+collectionID+"&parent="+parentID, payload)
 }
 
-export function {{titlecase .Object.Name}}ChatGPTInitPOST(user, parentID, collectionID, payload) {
+export function {{titlecase .Object.Name}}ChatGPTInitPOST(user, parentID, payload) {
     return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}s?function=prompt&parent="+parentID, payload)
 }

@@ -20,60 +20,73 @@ export function AI(props) {
 	const [userdata, _] = useUserContext()
 	const [localdata, setLocaldata] = useLocalContext()
 
-    console.log("AI SUBJECT", props.subject)
+	console.log("AI SUBJECT", props.subject)
 
-    const [toggle, setToggle] = useState(false)
+	const [toggle, setToggle] = useState(false)
 
-    function toggleState() {
-        setToggle(!toggle)
-    }
+	function toggleState() {
+		setToggle(!toggle)
+	}
 
 	const [select, setSelect] = useState('create')
 	function updateSelect(e) {
-        setSelect(e.target.value)
+		setSelect(e.target.value)
 	}
 
-    function sendPrompt() {
-        props.updateList(false)
-        const payload = {
-            "prompt": document.getElementById("prompt").value,
-        }
-        {{titlecase .Object.Name}}ChatGPTModifyPOST(userdata, props.subject.Meta.ID, props.collection, payload)
-        .then((res) => res.json())
-		.then((data) => {
-			console.log(data)
-            props.updateList(true)
-		}) 
-		.catch((e) => {
-			console.error(e)
-			props.updateList(true)
-		})
-    }
+	function sendPrompt() {
+		props.updateList(false)
+		const payload = {
+			"prompt": document.getElementById("prompt").value,
+		}
+		if (select == "create") {
+			{{titlecase .Object.Name}}ChatGPTInitPOST(userdata, props.subject.Meta.ID, payload)
+			.then((res) => res.json())
+			.then((data) => {
+				console.log(data)
+				props.updateList(true)
+			}) 
+			.catch((e) => {
+				console.error(e)
+				props.updateList(true)
+			})
+		} else {
+			{{titlecase .Object.Name}}ChatGPTModifyPOST(userdata, props.subject.Meta.ID, props.collection, payload)
+			.then((res) => res.json())
+			.then((data) => {
+				console.log(data)
+				props.updateList(true)
+			}) 
+			.catch((e) => {
+				console.error(e)
+				props.updateList(true)
+			})
+		}
+	}
 
 	return (
 		<div className='flex flex-col'>
-            {
-                !toggle && <div className="flex flex-col justify-center rounded-l-lg bg-gray-400" onClick={toggleState}>
-                    <div id="home" className="flex flex-col justify-center items-center m-4 cursor-pointer" style={ {width:"36px",height:"36px"} }>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" style={ {pointerEvents:"none"} }>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />
-                        </svg>
-                    </div>
-                </div>
-            }
 			{
-                toggle && <>
-                    <select onChange={updateSelect}>
-                        <option value="create">Create</option>
-                        <option value="modify">Modify</option>
-                    </select>
-                    <Spacer/>
-                    <textarea id='prompt' placeholder="your prompt..."></textarea>
-                    <div>
-                        <button onClick={sendPrompt} className="my-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Send</button>
-                    </div>
-                </>
-            }
+				!toggle && <div className="flex flex-col justify-center rounded-l-lg bg-gray-400" onClick={toggleState}>
+					<div id="home" className="flex flex-col justify-center items-center m-4 cursor-pointer" style={ {width:"36px",height:"36px"} }>
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" style={ {pointerEvents:"none"} }>
+						<path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />
+						</svg>
+					</div>
+				</div>
+			}
+			{
+				toggle && <>
+					<select onChange={updateSelect} className='border-solid'>
+						<option value="create">Create</option>
+						<option value="modify">Modify</option>
+					</select>
+					<Spacer/>
+					<textarea id='prompt' placeholder="your prompt..." className='border-solid'></textarea>
+					<div>
+						<button onClick={sendPrompt} className="my-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Send</button>
+					</div>
+				</>
+			}
 		</div>
 	);
 }

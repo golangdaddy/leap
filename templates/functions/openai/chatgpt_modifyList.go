@@ -19,6 +19,7 @@ func (app *App) chatgpt_modifyList(w http.ResponseWriter, r *http.Request, paren
 
 	println("grabbing results for prompt:", collection)
 
+	idList := []string{}
 	var list []map[string]interface{}
 	iter := parent.Firestore(app.App).Collection(collection).OrderBy("Meta.Created", firestore.Asc).Documents(app.Context())
 	for {
@@ -35,13 +36,19 @@ func (app *App) chatgpt_modifyList(w http.ResponseWriter, r *http.Request, paren
 			log.Println(err)
 			continue
 		}
-		m["_"] = m["Meta"].(map[string]interface{})["ID"].(string)
+
+		idList = append(idList, m["Meta"].(map[string]interface{})["ID"].(string))
 		// prune metadata
 		delete(m, "Meta")
 
-		pretty.Println(m)
+		cleaned := map[string]interface{}{}
+		for k, v := range m["fields"].(map[string]interface{}) {
+			cleaned[k] = v
+		}
 
-		list = append(list, m)
+		pretty.Println(cleaned)
+
+		list = append(list, cleaned)
 	}
 
 	m := map[string]interface{}{}
@@ -63,11 +70,12 @@ func (app *App) chatgpt_modifyList(w http.ResponseWriter, r *http.Request, paren
 		return
 	}
 
-	prompt = fmt.Sprintf(`
-This JSON represents the current state of items in a database table:
+	prompt = fmt.Sprintf(`ATTENTION! YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE VALID JSON...
+
+	This JSON represents the current state of items in a database table:
 %s
 
-MY PROMPT: %s
+MY MUTATION PROMPT: %s
 
 REPLY ONLY WITH A JSON ENCODED ARRAY OF THE END RESULT
 `,
@@ -104,16 +112,15 @@ REPLY ONLY WITH A JSON ENCODED ARRAY OF THE END RESULT
 		return
 	}
 
-	for _, result := range newResults {
-		item := result.(map[string]interface{})
+	for n, result := range newResults {
 		updates := []firestore.Update{}
-		for field, value := range item["fields"].(map[string]interface{}) {
+		for field, value := range result.(map[string]interface{}) {
 			updates = append(updates, firestore.Update{
 				Path:  "fields." + strings.ToLower(field),
 				Value: value,
 			})
 		}
-		docID := item["_"].(string)
+		docID := idList[n]
 		log.Println("updating firestore doc:", docID)
 		pretty.Println(updates)
 		if updateInfo, err := parent.Firestore(app.App).Collection(collection).Doc(docID).Update(

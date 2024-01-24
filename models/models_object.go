@@ -43,8 +43,9 @@ func (object *Object) HasParent() bool {
 }
 
 type Field struct {
-	JSON string `json:"json"`
-	Name string `json:"name"`
+	Context string `json:"context"`
+	JSON    string `json:"json"`
+	Name    string `json:"name"`
 	// go primative types
 	Type string `json:"type"`
 	// define frontend options

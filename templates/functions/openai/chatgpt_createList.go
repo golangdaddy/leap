@@ -72,6 +72,8 @@ REPLY ONLY WITH A JSON ENCODED ARRAY OF THE GENERATED OBJECTS.
 	for _, result := range newResults {
 		item := result.(map[string]interface{})
 		
+		{{lowercase .Object.Name}} := 
+
 		parent.New
 
 		if updateInfo, err := parent.Firestore(app.App).Collection(collection).Doc(docID).Update(

@@ -269,16 +269,19 @@ func (app *App) {{lowercase .Object.Name}}ChatGPT(parent *Internals, prompt stri
 	fmt.Println("prompt with parent", parent.ID, prompt)
 
 	prompt = fmt.Sprintf(`
+ATTENTION! YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE VALID JSON...
+
 We want to create one or more of these data objects: {{.Object.Context}}
 
 Its schema is:
 {
-{{range .Object.Fields}}{{lowercase .Name}} ({{lowercase .Type}}){{end}}
+{{range .Object.Fields}}// {{.Context}}
+{{lowercase .Name}} ({{lowercase .Type}}){{end}}
 }
 
 MY PROMPT: %s
 
-REPLY ONLY WITH A JSON ENCODED ARRAY OF THE GENERATED OBJECTS.
+YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE VALID JSON, REPLY ONLY WITH A JSON ENCODED ARRAY OF THE GENERATED OBJECTS.
 `,
 		prompt,
 	)
