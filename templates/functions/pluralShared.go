@@ -275,8 +275,10 @@ We want to create one or more of these data objects: {{.Object.Context}}
 
 Its schema is:
 {
-{{range .Object.Fields}}// {{.Context}}
-{{lowercase .Name}} ({{lowercase .Type}}){{end}}
+{{range .Object.Fields}}
+	// {{.Context}}
+	{{lowercase .Name}} ({{lowercase .Type}})
+{{end}}
 }
 
 MY PROMPT: %s

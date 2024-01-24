@@ -32,7 +32,7 @@ func New{{uppercase $obj.Name}}(parent *Internals, fields Fields{{uppercase $obj
 }
 
 type Fields{{uppercase .Object.Name}} struct {
-	{{range .Object.Fields}}{{titlecase .Name}} {{.Type}} `json:"{{lowercase .Name}}" firestore:"{{lowercase .Name}}`
+	{{range .Object.Fields}}{{titlecase .Name}} {{.Type}} `json:"{{lowercase .Name}}" firestore:"{{lowercase .Name}}"`
 	{{end}}
 }
 
