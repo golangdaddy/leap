@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/golangdaddy/leap/utils"
 )
 
 // api-user
@@ -27,7 +26,7 @@ func (app *App) UserEntrypoint(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := &User{}
-	if err := utils.GetDocument(app.App, userID, user); err != nil {
+	if err := GetDocument(app.App, userID, user); err != nil {
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return
 	}

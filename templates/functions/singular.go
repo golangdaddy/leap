@@ -13,7 +13,6 @@ import (
 	"google.golang.org/api/iterator"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/golangdaddy/leap/utils"
 )
 
 // api-{{lowercase $obj.Name}}
@@ -23,7 +22,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 		return
 	}
 
-	_, err := utils.GetSessionUser(app.App, r)
+	_, err := GetSessionUser(app.App, r)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 		return
@@ -36,7 +35,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 		return
 	}
 	object := &{{uppercase $obj.Name}}{}
-	if err := utils.GetDocument(app.App, id, object); err != nil {
+	if err := GetDocument(app.App, id, object); err != nil {
 		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 		return
 	}

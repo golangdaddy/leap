@@ -62,8 +62,10 @@ func Build(stack *models.Stack) error {
 	if err := copyFile("templates/js/editProfile.js", "build/app/features/editProfile.js"); err != nil {
 		return err
 	}
-	println("copied editP")
 	if err := copyFile("templates/js/dashboard.js", "build/app/features/dashboard.js"); err != nil {
+		return err
+	}
+	if err := doTemplate("build/app/features/dashboard.js", stack); err != nil {
 		return err
 	}
 	if err := copyFile("templates/js/interfaces.js", "build/app/features/interfaces.js"); err != nil {
@@ -83,24 +85,28 @@ func Build(stack *models.Stack) error {
 	if err := copyFile("templates/functions/assetlayer/assetlayer.go", "build/api_assetlayer.go"); err != nil {
 		return err
 	}
+
 	if err := copyFile("templates/functions/asyncjob/asyncjob.go", "build/api_asyncjob.go"); err != nil {
 		return err
 	}
 	if err := doTemplate("build/api_asyncjob.go", stack); err != nil {
 		return err
 	}
+
 	if err := copyFile("templates/functions/openai/openai.go", "build/api_openai.go"); err != nil {
 		return err
 	}
 	if err := doTemplate("build/api_openai.go", stack); err != nil {
 		return err
 	}
+
 	if err := copyFile("templates/functions/openai/chatgpt_modifyList.go", "build/chatgpt_modifyList.go"); err != nil {
 		return err
 	}
 	if err := doTemplate("build/chatgpt_modifyList.go", stack); err != nil {
 		return err
 	}
+
 	// update the headers and footers
 	if err := doTemplate("build/app/components/header.js", stack); err != nil {
 		return err
@@ -173,100 +179,61 @@ func Build(stack *models.Stack) error {
 			fmt.Sprintf(`<Submit text="Save" inputs={inputs} submit={props.submit} assert={%s}/>`, string(b)),
 		)
 
-		//		copyFile("templates/models")
-		if err := execTemplate(
-			"models",
-			"model.go",
-			"model_"+strings.ToUpper(object.Name)+".go",
-			container,
-		); err != nil {
+		// sorting out the models
+		if err := execTemplate("models", "model.go", "model_"+strings.ToUpper(object.Name)+".go", container); err != nil {
 			return err
 		}
 
-		if err := execTemplate(
-			"functions",
-			"pluralShared.go",
-			"api_"+object.Name+"shared.go",
-			container,
-		); err != nil {
+		// sort handler functions
+		if err := execTemplate("functions", "singular.go", "api_"+strings.ToLower(object.Name)+".go", container); err != nil {
 			return err
 		}
-
+		if err := execTemplate("functions", "pluralShared.go", "api_"+object.Name+"shared.go", container); err != nil {
+			return err
+		}
 		if object.HasParent() {
-			if err := execTemplate(
-				"functions",
-				"plural.go",
-				"api_"+strings.ToLower(object.Name)+"s.go",
-				container,
-			); err != nil {
+			if err := execTemplate("functions", "plural.go", "api_"+strings.ToLower(object.Name)+"s.go", container); err != nil {
 				return err
 			}
 		} else {
-			if err := execTemplate(
-				"functions",
-				"pluralNoParent.go",
-				"api_"+strings.ToLower(object.Name)+"s.go",
-				container,
-			); err != nil {
+			if err := execTemplate("functions", "pluralNoParent.go", "api_"+strings.ToLower(object.Name)+"s.go", container); err != nil {
 				return err
 			}
 		}
 
-		if err := execTemplate(
-			"functions",
-			"singular.go",
-			"api_"+strings.ToLower(object.Name)+".go",
-			container,
-		); err != nil {
-			return err
-		}
 		// boilerplater functions
-		if err := execTemplate(
-			"functions",
-			"user.go",
-			"api_"+"user.go",
-			container,
-		); err != nil {
+		if err := execTemplate("functions/user", "user.go", "api_"+"user.go", container); err != nil {
 			return err
 		}
-		if err := execTemplate(
-			"functions",
-			"users.go",
-			"api_"+"users.go",
-			container,
-		); err != nil {
+		if err := execTemplate("functions/user", "user_models.go", "api_"+"user_models.go", container); err != nil {
 			return err
 		}
-		if err := execTemplate(
-			"functions",
-			"auth.go",
-			"api_"+"auth.go",
-			container,
-		); err != nil {
+		if err := execTemplate("functions/user", "users.go", "api_"+"users.go", container); err != nil {
 			return err
 		}
-		if err := execTemplate(
-			"functions",
-			"app.go",
-			"app.go",
-			container,
-		); err != nil {
+		if err := execTemplate("functions/auth", "auth.go", "api_"+"auth.go", container); err != nil {
 			return err
 		}
-
-		os.MkdirAll(fmt.Sprintf(
-			"build/app/features/%ss",
-			cases.Lower(language.English).String(object.Name),
-		), 0777)
-		os.MkdirAll(fmt.Sprintf(
-			"build/app/features/%ss/forms",
-			cases.Lower(language.English).String(object.Name),
-		), 0777)
-		os.MkdirAll(fmt.Sprintf(
-			"build/app/features/%ss/shared",
-			cases.Lower(language.English).String(object.Name),
-		), 0777)
-
+		if err := execTemplate("functions/app", "app.go", "app.go", container); err != nil {
+			return err
+		}
+		if err := execTemplate("functions/app", "websocket.go", "websocket.go", container); err != nil {
+			return err
+		}
+		/*
+			os.MkdirAll(fmt.Sprintf(
+				"build/app/features/%ss",
+				cases.Lower(language.English).String(object.Name),
+			), 0777)
+			os.MkdirAll(fmt.Sprintf(
+				"build/app/features/%ss/forms",
+				cases.Lower(language.English).String(object.Name),
+			), 0777)
+			os.MkdirAll(fmt.Sprintf(
+				"build/app/features/%ss/shared",
+				cases.Lower(language.English).String(object.Name),
+			), 0777)
+		*/
 		{
 			path := fmt.Sprintf(
 				"build/app/features/%ss/%s.js",
@@ -580,10 +547,14 @@ func Build(stack *models.Stack) error {
 		return err
 	}
 
-	copyFile("templates/models/internals.go", "build/internals.go")
+	copyFile("templates/models/internals.go", "build/models_internals.go")
+	copyFile("templates/models/firestore.go", "build/models_firestore.go")
 	copyFile("templates/models/pkg.go", "build/models.go")
 	copyFile("templates/models/user.go", "build/user.go")
 	copyFile("templates/models/otp.go", "build/models_otp.go")
+	copyFile("templates/models/robots.go", "build/models_robots.go")
+	copyFile("templates/models/session.go", "build/models_session.go")
+	copyFile("templates/models/username.go", "build/models_username.go")
 
 	return nil
 }

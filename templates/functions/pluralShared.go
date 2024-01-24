@@ -264,7 +264,7 @@ func (app *App) write{{titlecase .Object.Name}}File(bucketName, objectName strin
 	return err
 }
 
-func (app *App) {{lowercase .Object.Name}}ChatGPT(parent *Internals, prompt string) error {
+func (app *App) {{lowercase .Object.Name}}ChatGPT(user *User, parent *Internals, prompt string) error {
 
 	fmt.Println("prompt with parent", parent.ID, prompt)
 
@@ -323,6 +323,7 @@ YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE VALID JSON, REPLY ONLY WITH A JS
 		if err := app.CreateDocument{{uppercase .Object.Name}}(parent, object); err != nil {
 			return err
 		}
+		app.SendMessageToUser(user, &Message{Type: "async-create", Body: object})
 	}
 
 	return nil

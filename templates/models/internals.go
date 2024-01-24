@@ -19,6 +19,10 @@ import (
 	"github.com/golangdaddy/leap/sdk/assetlayer"
 )
 
+type Generic struct {
+	Meta Internals
+}
+
 func Internal(id string) *Internals {
 	return &Internals{ID: id}
 }

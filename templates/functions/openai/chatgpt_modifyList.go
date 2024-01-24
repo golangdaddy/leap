@@ -41,7 +41,9 @@ func (app *App) chatgpt_modifyList(w http.ResponseWriter, r *http.Request, paren
 		// prune metadata
 		delete(m, "Meta")
 
-		cleaned := map[string]interface{}{}
+		cleaned := map[string]interface{}{
+			"_id": len(list),
+		}
 		for k, v := range m["fields"].(map[string]interface{}) {
 			cleaned[k] = v
 		}
@@ -113,16 +115,38 @@ REPLY ONLY WITH A JSON ENCODED ARRAY OF THE END RESULT
 	}
 
 	for n, result := range newResults {
-		updates := []firestore.Update{}
-		for field, value := range result.(map[string]interface{}) {
+		updates := []firestore.Update{
+			{
+				Path:  "Meta.Modified",
+				Value: app.TimeNow().Unix(),
+			},
+			{
+				Path:  "Meta.Context.Order",
+				Value: n,
+			},
+		}
+		data := result.(map[string]interface{})
+		id, ok := data["_id"].(float64)
+		if !ok {
+			err := fmt.Errorf("no _id present: %d", n)
+			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			return
+		}
+		if n != int(id) {
+			log.Println("order doesn't match:", n, id)
+		}
+		delete(data, "_id")
+
+		for field, value := range data {
 			updates = append(updates, firestore.Update{
 				Path:  "fields." + strings.ToLower(field),
 				Value: value,
 			})
 		}
-		docID := idList[n]
+		docID := idList[int(id)]
 		log.Println("updating firestore doc:", docID)
 		pretty.Println(updates)
+
 		if updateInfo, err := parent.Firestore(app.App).Collection(collection).Doc(docID).Update(
 			app.Context(),
 			updates,

@@ -1,21 +1,16 @@
-package utils
+package main
 
 import (
 	"context"
 
 	"github.com/golangdaddy/leap/sdk/common"
-	"github.com/richardboase/npgpublic/models"
 )
 
-type Generic struct {
-	Meta models.Internals
-}
-
-func GetMetadata(app *common.App, id string) (*models.Internals, error) {
+func GetMetadata(app *common.App, id string) (*Internals, error) {
 
 	dst := &Generic{}
 
-	i := models.Internal(id)
+	i := Internal(id)
 	path := i.DocPath()
 
 	println("GET DOCUMENT", path)
@@ -29,7 +24,7 @@ func GetMetadata(app *common.App, id string) (*models.Internals, error) {
 
 func GetDocument(app *common.App, id string, dst interface{}) error {
 
-	i := models.Internal(id)
+	i := Internal(id)
 	path := i.DocPath()
 
 	println("GET DOCUMENT", path)

@@ -10,7 +10,6 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/golangdaddy/leap/utils"
 	"google.golang.org/api/iterator"
 )
 
@@ -35,7 +34,7 @@ func (app *App) UsersEntrypoint(w http.ResponseWriter, r *http.Request) {
 
 		case "session":
 
-			user, err := utils.GetSessionUser(app.App, r)
+			user, err := GetSessionUser(app.App, r)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 				return

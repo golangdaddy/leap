@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/golangdaddy/leap/utils"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"google.golang.org/api/iterator"
@@ -70,7 +69,7 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 
 			email = strings.ToLower(strings.TrimSpace(email))
 
-			user, err := utils.GetUserByEmail(app.App, email)
+			user, err := GetUserByEmail(app.App, email)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusBadRequest)
 				return
@@ -154,7 +153,7 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 			}
 
 			// find if email is conflicting
-			if _, err := utils.GetUserByEmail(app.App, user.Email); err == nil {
+			if _, err := GetUserByEmail(app.App, user.Email); err == nil {
 				cloudfunc.HttpError(w, err, http.StatusConflict)
 				return
 			}
@@ -181,13 +180,13 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 		case "login":
 
 			// get and delete(?) otp
-			otp, err := utils.DebugGetOTP(app.App, r)
+			otp, err := DebugGetOTP(app.App, r)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusBadRequest)
 				return
 			}
 
-			secret, expires, err := utils.CreateSessionSecret(app.App, otp)
+			secret, expires, err := CreateSessionSecret(app.App, otp)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return

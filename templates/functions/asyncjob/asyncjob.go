@@ -9,9 +9,9 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/pubsub"
-	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/golangdaddy/leap/utils"
 	"google.golang.org/api/iterator"
+
+	"github.com/golangdaddy/leap/sdk/cloudfunc"
 )
 
 // api-asyncjob
@@ -21,7 +21,7 @@ func (app *App) EntrypointASYNCJOB(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := utils.GetSessionUser(app.App, r)
+	_, err := GetSessionUser(app.App, r)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 		return

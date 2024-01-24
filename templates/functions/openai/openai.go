@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/golangdaddy/leap/utils"
 )
 
 // api-openai
@@ -16,7 +15,7 @@ func (app *App) EntrypointOPENAI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := utils.GetSessionUser(app.App, r)
+	_, err := GetSessionUser(app.App, r)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 		return

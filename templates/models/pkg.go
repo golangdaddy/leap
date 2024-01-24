@@ -7,31 +7,10 @@ import (
 	"time"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/golangdaddy/leap/sdk/common"
 )
 
 func getTime() int64 {
 	return time.Now().UTC().Unix()
-}
-
-type Generic struct {
-	Meta Internals
-}
-
-func GetMetadata(app *common.App, id string) (*Internals, error) {
-
-	dst := &Generic{}
-
-	i := Internal(id)
-	path := i.DocPath()
-
-	println("GET DOCUMENT", path)
-
-	doc, err := app.Firestore().Doc(path).Get(app.Context())
-	if err != nil {
-		return nil, err
-	}
-	return &dst.Meta, doc.DataTo(dst)
 }
 
 func AssertRange(w http.ResponseWriter, min, max float64, value interface{}) bool {
