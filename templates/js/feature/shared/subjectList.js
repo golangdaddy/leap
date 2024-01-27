@@ -42,6 +42,10 @@ export function {{titlecase .Object.Name}}List(props) {
 		setLocaldata(VisitTab(localdata, "{{lowercase .Object.Name}}", context))
 	}
 
+	function selectChild() {
+		setLocaldata(VisitTab(localdata, "{{lowercase .Object.Name}}s", context))
+	}
+
 	function moveUp(id) {
 		const object = list[parseInt(id)]
 		console.log("MOVE UP", object)
@@ -84,7 +88,7 @@ export function {{titlecase .Object.Name}}List(props) {
 	return (
 	<div className='flex flex-col my-4'>
 	{
-		props.title && <div className='py-4 my-4 text-xl font-bold'>{props.title}s:</div>
+		props.title && <div className='py-4 my-4 text-xl font-bold cursor-pointer' onclick={selectChild}>{props.title}s:</div>
 	}
 	{
 		props.title && <hr/>

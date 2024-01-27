@@ -13,15 +13,23 @@ func getTime() int64 {
 	return time.Now().UTC().Unix()
 }
 
-func AssertRange(w http.ResponseWriter, min, max float64, value interface{}) bool {
-	if err := assertRange(min, max, value); err != nil {
+func AssertRangeMin(w http.ResponseWriter, min float64, value interface{}) bool {
+	if err := assertRangeMin(min, value); err != nil {
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return false
 	}
 	return true
 }
 
-func assertRange(min, max float64, value interface{}) error {
+func AssertRangeMax(w http.ResponseWriter, max float64, value interface{}) bool {
+	if err := assertRangeMax(max, value); err != nil {
+		cloudfunc.HttpError(w, err, http.StatusBadRequest)
+		return false
+	}
+	return true
+}
+
+func assertRangeMin(minimum float64, value interface{}) error {
 
 	var val float64
 	switch v := value.(type) {
@@ -35,11 +43,29 @@ func assertRange(min, max float64, value interface{}) error {
 		log.Println("assertRange: ignoring range assertion for unknown type")
 	}
 
-	err := fmt.Errorf("assertRange: value %v exceeded value of range min: %v max: %v ", value, min, max)
-	if val < min {
+	err := fmt.Errorf("assertRange: value %v exceeded value of range min: %v", value, minimum)
+	if val < minimum {
 		return err
 	}
-	if val > max {
+	return nil
+}
+
+func assertRangeMax(maximum float64, value interface{}) error {
+
+	var val float64
+	switch v := value.(type) {
+	case int:
+		val = float64(v)
+	case float64:
+		val = v
+	case string:
+		val = float64(len(v))
+	default:
+		log.Println("assertRange: ignoring range assertion for unknown type")
+	}
+
+	err := fmt.Errorf("assertRange: value %v exceeded value of range max: %v", value, maximum)
+	if val > maximum {
 		return err
 	}
 	return nil

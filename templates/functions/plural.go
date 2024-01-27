@@ -65,7 +65,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 				return
 			}
 
-			if err := app.{{lowercase .Object.Name}}ChatGPT(user, parent, prompt); err != nil {
+			if err := app.{{lowercase .Object.Name}}ChatGPTCreate(user, parent, prompt); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}

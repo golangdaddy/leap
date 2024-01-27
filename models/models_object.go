@@ -53,7 +53,7 @@ type Field struct {
 	InputOptions []string `json:"inputOptions,omitempty"`
 	Required     bool     `json:"required"`
 	Range        *Range   `json:"range"`
-	Regexp       string   `json:"regexp`
+	Regexp       string   `json:"regexp"`
 }
 
 type Range struct {

@@ -139,6 +139,7 @@ func Prepare(tree *Stack) error {
 				return errors.New("FIELD NOT FOUND " + name)
 			}
 			f := *app.jsonFields[name]
+			f.Context = field.Context
 			f.Name = field.Name
 			f.Required = field.Required
 			*tree.Objects[n].Fields[x] = f
@@ -182,10 +183,6 @@ func Prepare(tree *Stack) error {
 			return err
 		}
 	}
-
-	os.RemoveAll("build/server")
-	os.RemoveAll("build/functions")
-	os.RemoveAll("build/models")
 
 	return nil
 }

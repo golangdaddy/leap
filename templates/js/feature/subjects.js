@@ -3,6 +3,8 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 import { useState, useEffect } from 'react';
 
+import Loading from '@/app/loading'
+
 import { AI } from './forms/ai';
 import { {{titlecase .Object.Name}}List } from './shared/{{lowercase .Object.Name}}List';
 
@@ -22,6 +24,9 @@ export function {{titlecase .Object.Name}}s(props) {
 	return (
 		<div style={ {padding:"30px 60px 30px 60px"} }>
 			<AI subject={subject} updateList={updateList} collection="{{lowercase .Object.Name}}s"/>
+			{
+				!promptToggle && <Loading/>
+			}
 			{
 				promptToggle && <{{titlecase .Object.Name}}List subject={subject} />
 			}

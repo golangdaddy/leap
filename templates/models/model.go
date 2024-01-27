@@ -2,8 +2,11 @@
 package main
 
 import (
+	"fmt"
 	"errors"
 	"net/http"
+
+	"github.com/golangdaddy/leap/sdk/cloudfunc"
 )
 
 type {{uppercase .Object.Name}} struct {
@@ -37,53 +40,45 @@ type Fields{{uppercase .Object.Name}} struct {
 }
 
 func (x *{{uppercase .Object.Name}}) ValidateInput(w http.ResponseWriter, m map[string]interface{}) bool {
-
-	var exists bool
-	{{range .Object.Fields}}
-	x.Fields.{{titlecase .Name}}, exists = Assert{{uppercase .Type}}(w, m, "{{lowercase .Name}}")
-	if !exists {
+	if err := x.ValidateObject(m); err != nil {
+		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return false
 	}
-
-	// ignore this, a mostly redundant artifact
-	{{if .Range}}{
-		exp := "{{.Regexp}}"
-		if len(exp) > 0 {
-			if !RegExp(exp, x.Fields.{{titlecase .Name}}) {
-				return false
-			}
-		}
-	}
-	if !AssertRange(w, {{.Range.Min}}, {{.Range.Max}}, x.Fields.{{titlecase .Name}}) {
-		return false
-	}{{end}}{{end}}
-
-	x.Meta.Modify()
-
 	return true
 }
 
 func (x *{{uppercase .Object.Name}}) ValidateObject(m map[string]interface{}) error {
 
 	var err error
+	var exists bool
 	{{range .Object.Fields}}
-	x.Fields.{{titlecase .Name}}, err = assert{{uppercase .Type}}(m, "{{lowercase .Name}}")
-	if err != nil {
-		return errors.New(err.Error())
-	}
 
-	// ignore this, a mostly redundant artifact
-	{{if .Range}}{
-		exp := "{{.Regexp}}"
-		if len(exp) > 0 {
-			if !RegExp(exp, x.Fields.{{titlecase .Name}}) {
-				return errors.New("failed to regexp")
+	_, exists = m["{{lowercase .Name}}"]
+	if {{.Required}} && !exists {
+		return errors.New("required field '{{lowercase .Name}}' not supplied")
+	}
+	if exists {
+		x.Fields.{{titlecase .Name}}, err = assert{{uppercase .Type}}(m, "{{lowercase .Name}}")
+		if err != nil {
+			return errors.New(err.Error())
+		} else {
+			exp := "{{.Regexp}}"
+			if len(exp) > 0 {
+				if !RegExp(exp, fmt.Sprintf("%v", x.Fields.{{titlecase .Name}})) {
+					return errors.New("failed to regexp")
+				}
 			}
+			{{if .Range}}
+			if err := assertRangeMin({{.Range.Min}}, x.Fields.{{titlecase .Name}}); err != nil {
+				return err
+			}
+			if err := assertRangeMax({{.Range.Max}}, x.Fields.{{titlecase .Name}}); err != nil {
+				return err
+			}
+			{{end}}
 		}
 	}
-	if err := assertRange({{.Range.Min}}, {{.Range.Max}}, x.Fields.{{titlecase .Name}}); err != nil {
-		return err
-	}{{end}}{{end}}
+	{{end}}
 
 	x.Meta.Modify()
 
@@ -109,9 +104,15 @@ func (x *{{uppercase .Object.Name}}) ValidateByCount(w http.ResponseWriter, m ma
 			}
 		}
 	}
-	if !AssertRange(w, {{.Range.Min}}, {{.Range.Max}}, x.Fields.{{titlecase .Name}}) {
+	{{if .Required}}
+	if !AssertRangeMin(w, {{.Range.Min}}, x.Fields.{{titlecase .Name}}) {
 		return false
-	}{{end}}{{end}}
+	}
+	{{end}}
+	if !AssertRangeMax(w, {{.Range.Max}}, x.Fields.{{titlecase .Name}}) {
+		return false
+	}
+	{{end}}{{end}}
 
 	x.Meta.Modify()
 

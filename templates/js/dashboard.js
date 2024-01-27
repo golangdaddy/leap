@@ -20,6 +20,8 @@ export default function Dashboard(props) {
 	const [localdata, setLocaldata] = useLocalContext()
 	const [messaging, setMessaging] = useMessagingContext()
 
+	const [feed, setFeed] = useState([])
+
 	const router = useRouter();
 	console.log("USERDATA", userdata)
 
@@ -39,20 +41,22 @@ export default function Dashboard(props) {
 					console.log('Connected to WebSocket server');
 				});
 				messaging.socket.addEventListener('message', (event) => {
-					console.log('Received message:', event.data);
 
 					var msg = JSON.parse(event.data)
-					if (messaging[msg.Test] == null) {
-						messaging[msg.Test] = []
+					console.log('Received message:', msg);
+
+					if (msg.Type == "shout") {
+						console.log("skipping", msg)
+						return
 					}
-					messaging[msg.Test].push(event.data)
-					setUserdata(user)
+
+					setFeed([...feed, msg.Body]);
 				});
 
 			})
 			.catch((e) => {
 				console.log(e)
-				router.push("/otp")
+//				router.push("/login")
 			})
 		}
 	}, [])
@@ -202,12 +206,27 @@ export default function Dashboard(props) {
 					</div>
 				}
 			</div>
+			{
+				localdata?.tab && <Subsublinks></Subsublinks>
+			}
 			{ 
-				localdata?.tab && <div className='flex flex-col min-h-full w-full bg-white'>
-					<Subsublinks></Subsublinks>			
+				localdata?.tab && <div className='flex flex-row min-h-full w-full bg-white'>
+					<div className='flex flex-col min-h-full w-full bg-white'>		
 					{ 
 						localdata && localdata.tab && localdata.tab.component
 					}
+					</div>
+					<div className='flex flex-col bg-gray-200' style={ {width:"30vw"} }>
+						{
+							feed.map(function (item, i) {
+								return (
+									<div key={i}>
+										New {item.Meta.Class}
+									</div>
+								)
+							})
+						}
+					</div>
 				</div>
 			}
 		</div>

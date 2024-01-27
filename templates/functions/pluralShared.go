@@ -5,6 +5,7 @@ import (
 	"log"
 	"archive/zip"
 	"bytes"
+	"errors"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
@@ -264,26 +265,31 @@ func (app *App) write{{titlecase .Object.Name}}File(bucketName, objectName strin
 	return err
 }
 
-func (app *App) {{lowercase .Object.Name}}ChatGPT(user *User, parent *Internals, prompt string) error {
+func (app *App) {{lowercase .Object.Name}}ChatGPTCreate(user *User, parent *Internals, prompt string) error {
 
 	fmt.Println("prompt with parent", parent.ID, prompt)
 
 	prompt = fmt.Sprintf(`
-ATTENTION! YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE VALID JSON...
+ATTENTION! YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE A VALID JSON...
 
-We want to create one or more of these data objects: {{.Object.Context}}
-
-Its schema is:
+We want to create one or more of these data objects: 
 {
 {{range .Object.Fields}}
-	// {{.Context}}
+	// {{.Context}} {{if .Required}} (THIS FIELD IS REQUIRED){{end}}
 	{{lowercase .Name}} ({{lowercase .Type}})
 {{end}}
 }
 
-MY PROMPT: %s
+The purpose of the object is to represent: {{.Object.Context}}
 
-YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE VALID JSON, REPLY ONLY WITH A JSON ENCODED ARRAY OF THE GENERATED OBJECTS.
+RULES:
+1: USE THIS PROMPT TO GENERATE THE OBJECT OR OBJECT ARRAY: %s
+2: GENERATE DATA FOR REQUIRED FIELDS
+3: UNLESS SPECIFICALLY TOLD NOT TO, GENERATE ALL FIELDS... DON'T BE LAZY.
+4: OMIT ANY NON-REQUIRED FIELDS WHEN NO DATA FOR THE FIELD IS GENERATED.
+5: DON'T INCLUDE FIELDS WITH EMPTY STRINGS.
+6: RESPECT ANY VALIDATION INFORMATION SPECIFIED FOR FIELDS, SUCH AS MIN AND MAX LENGTHS.
+7: REPLY ONLY WITH A JSON ENCODED ARRAY OF THE GENERATED OBJECTS (NO NESTED OBJECTS, JUST OBJECTS IN A JSON ARRAY).
 `,
 		prompt,
 	)
@@ -315,9 +321,102 @@ YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE VALID JSON, REPLY ONLY WITH A JS
 		return err
 	}
 
-	for _, result := range newResults {
+	for _, r := range newResults {
+		result, ok := r.(map[string]interface{})
+		if !ok {
+			return errors.New("array item is not a map")
+		}
+		// remove any empty fields
+		for k, v := range result {
+			vv, ok := v.(string)
+			if ok && vv == "" {
+				delete(result, k)
+			}
+		}
 		object := New{{uppercase .Object.Name}}(parent, Fields{{uppercase .Object.Name}}{})
-		if err := object.ValidateObject(result.(map[string]interface{})); err != nil {
+		if err := object.ValidateObject(result); err != nil {
+			return err
+		}
+		if err := app.CreateDocument{{uppercase .Object.Name}}(parent, object); err != nil {
+			return err
+		}
+		app.SendMessageToUser(user, &Message{Type: "async-create", Body: object})
+	}
+
+	return nil
+}
+
+func (app *App) {{lowercase .Object.Name}}ChatGPTEdit(user *User, parent *Internals, object *{{uppercase .Object.Name}}, prompt string) error {
+
+	fmt.Println("prompt with parent", parent.ID, prompt)
+
+	objectBytes, err := app.MarshalJSON(object)
+	if err != nil {
+		return err
+	}
+
+	prompt = fmt.Sprintf(`ATTENTION! YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE A VALID JSON...
+
+Here is the object we need to edit:
+%s
+
+The purpose of the object is to represent: {{.Object.Context}}
+
+RULES:
+1: USE THIS PROMPT TO GENERATE THE MUTATION: %s
+2: GENERATE DATA FOR REQUIRED FIELDS
+3: UNLESS SPECIFICALLY TOLD NOT TO, GENERATE ALL FIELDS... DON'T BE LAZY.
+4: OMIT ANY NON-REQUIRED FIELDS WHEN NO DATA FOR THE FIELD IS GENERATED.
+5: DON'T INCLUDE FIELDS WITH EMPTY STRINGS.
+6: RESPECT ANY VALIDATION INFORMATION SPECIFIED FOR FIELDS, SUCH AS MIN AND MAX LENGTHS.
+7: REPLY ONLY WITH THE JSON ENCODED MUTATED OBJECT
+`,
+		string(objectBytes),
+		prompt,
+	)
+
+	println(prompt)
+
+
+	resp, err := app.ChatGPT().CreateChatCompletion(
+		app.Context(),
+		openai.ChatCompletionRequest{
+			Model: openai.GPT3Dot5Turbo,
+			Messages: []openai.ChatCompletionMessage{
+				{
+					Role:    openai.ChatMessageRoleUser,
+					Content: prompt,
+				},
+			},
+		},
+	)
+	if err != nil {
+		err = fmt.Errorf("ChatCompletion error: %v\n", err)
+		return err
+	}
+
+	reply := resp.Choices[0].Message.Content
+	log.Println("reply >>", reply)
+
+	newResults := []interface{}{}
+	if err := json.Unmarshal([]byte(reply), &newResults); err != nil {
+		return err
+	}
+
+	for _, r := range newResults {
+		result, ok := r.(map[string]interface{})
+		if !ok {
+			return errors.New("array item is not a map")
+		}
+		// remove any empty fields
+		for k, v := range result {
+			vv, ok := v.(string)
+			if ok && vv == "" {
+				delete(result, k)
+			}
+		}
+		object := New{{uppercase .Object.Name}}(parent, Fields{{uppercase .Object.Name}}{})
+		if err := object.ValidateObject(result); err != nil {
 			return err
 		}
 		if err := app.CreateDocument{{uppercase .Object.Name}}(parent, object); err != nil {

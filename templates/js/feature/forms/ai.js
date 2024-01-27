@@ -40,9 +40,8 @@ export function AI(props) {
 		}
 		if (select == "create") {
 			{{titlecase .Object.Name}}ChatGPTInitPOST(userdata, props.subject.Meta.ID, payload)
-			.then((res) => res.json())
-			.then((data) => {
-				console.log(data)
+			.then((res) => {
+				console.log(res)
 				props.updateList(true)
 			}) 
 			.catch((e) => {
@@ -51,9 +50,8 @@ export function AI(props) {
 			})
 		} else {
 			{{titlecase .Object.Name}}ChatGPTModifyPOST(userdata, props.subject.Meta.ID, props.collection, payload)
-			.then((res) => res.json())
-			.then((data) => {
-				console.log(data)
+			.then((res) => {
+				console.log(res)
 				props.updateList(true)
 			}) 
 			.catch((e) => {
@@ -76,12 +74,12 @@ export function AI(props) {
 			}
 			{
 				toggle && <>
-					<select onChange={updateSelect} className='border-solid'>
+					<select onChange={updateSelect} className='border p-2'>
 						<option value="create">Create</option>
 						<option value="modify">Modify</option>
 					</select>
 					<Spacer/>
-					<textarea id='prompt' placeholder="your prompt..." className='border-solid'></textarea>
+					<textarea id='prompt' placeholder="your prompt..." className='border p-2'></textarea>
 					<div>
 						<button onClick={sendPrompt} className="my-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Send</button>
 					</div>
