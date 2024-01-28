@@ -287,9 +287,9 @@ RULES:
 2: GENERATE DATA FOR REQUIRED FIELDS
 3: UNLESS SPECIFICALLY TOLD NOT TO, GENERATE ALL FIELDS... DON'T BE LAZY.
 4: OMIT ANY NON-REQUIRED FIELDS WHEN NO DATA FOR THE FIELD IS GENERATED.
-5: DON'T INCLUDE FIELDS WITH EMPTY STRINGS.
+5: DON'T INCLUDE FIELDS WITH EMPTY STRINGS, AND OMIT FIELDS WITH NULL VALUE.
 6: RESPECT ANY VALIDATION INFORMATION SPECIFIED FOR FIELDS, SUCH AS MIN AND MAX LENGTHS.
-7: REPLY ONLY WITH A JSON ENCODED ARRAY OF THE GENERATED OBJECTS (NO NESTED OBJECTS, JUST OBJECTS IN A JSON ARRAY).
+7: REPLY ONLY WITH A JSON ENCODED ARRAY OF THE GENERATED OBJECT(S) WITH NO NESTED OBJECTS, JUST OBJECTS IN A JSON ARRAY.
 `,
 		prompt,
 	)
@@ -317,7 +317,14 @@ RULES:
 	log.Println("reply >>", reply)
 
 	newResults := []interface{}{}
-	if err := json.Unmarshal([]byte(reply), &newResults); err != nil {
+	replyBytes := []byte(reply)
+	if err := json.Unmarshal(replyBytes, &newResults); err != nil {
+		log.Println(err)
+		newResult := map[string]interface{}{}
+		if err := json.Unmarshal(replyBytes, &newResult); err != nil {
+			return err
+		}
+		newResults = append(newResults, newResult)
 		return err
 	}
 
