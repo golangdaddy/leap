@@ -191,6 +191,17 @@ func Build(stack *models.Stack) error {
 		if err := execTemplate("functions", "pluralShared.go", "api_"+object.Name+"shared.go", container); err != nil {
 			return err
 		}
+		// chatgpt methods
+		if err := execTemplate("functions", "pluralShared_ChatGPTCreate.go", "api_"+object.Name+"shared_ChatGPTCreate.go", container); err != nil {
+			return err
+		}
+		if err := execTemplate("functions", "pluralShared_ChatGPTEdit.go", "api_"+object.Name+"shared_ChatGPTEdit.go", container); err != nil {
+			return err
+		}
+		if err := execTemplate("functions", "pluralShared_ChatGPTPrompt.go", "api_"+object.Name+"shared_ChatGPTPrompt.go", container); err != nil {
+			return err
+		}
+		// plural switch
 		if object.HasParent() {
 			if err := execTemplate("functions", "plural.go", "api_"+strings.ToLower(object.Name)+"s.go", container); err != nil {
 				return err

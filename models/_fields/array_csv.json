@@ -2,7 +2,7 @@
     "type": "string",
     "input": "text",
     "range": {
-        "min": 1,
+        "min": 0,
         "max": 1000000
     },
     "regexpHex": "5E283F3A283F3A225B5E225D2A227C5B5E2C5D2B292C292A283F3A225B5E225D2A227C5B5E2C5D2B2924"

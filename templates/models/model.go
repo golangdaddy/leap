@@ -93,7 +93,9 @@ func (x *{{uppercase .Object.Name}}) ValidateObject(m map[string]interface{}) er
 		}
 		{{if .Range}}
 		if err := assertRangeMin({{.Range.Min}}, x.Fields.{{titlecase .Name}}); err != nil {
+			{{if .Required}}
 			return err
+			{{end}}
 		}
 		if err := assertRangeMax({{.Range.Max}}, x.Fields.{{titlecase .Name}}); err != nil {
 			return err
