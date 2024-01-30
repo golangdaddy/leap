@@ -62,12 +62,24 @@ export function {{titlecase .Object.Name}}(props) {
 							</div>
 						}
 						<div>
-							<table className='m-4'>
+							<table className='m-4 w-full'>
 								<tbody>{{range .Object.Fields}}
-									<tr>
-										<td className='font-bold'>{{.Name}}</td>
-										<td><div className='px-4'></div></td>
-										<td>{ subject.fields["{{lowercase .Name}}"] }</td>
+									<tr className='flex flex-row'>
+										<td className='flex flex-col justify-start'>
+											<div className='w-full flex flex-row justify-end'>
+												<div className='font-bold'>{{.Name}}</div>
+											</div>
+										</td>
+										<td className='flex flex-col justify-start'>
+											<div className='w-full flex flex-row justify-end'>
+												<div className='px-2'>:</div>
+											</div>
+										</td>
+										<td className='flex flex-col justify-start'>
+											<div className='w-full flex flex-row justify-end'>
+												<div className=''>{ subject.fields["{{lowercase .Name}}"] }</div>
+											</div>
+										</td>
 									</tr>
 								{{end}}</tbody>
 							</table>

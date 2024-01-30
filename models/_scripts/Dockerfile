@@ -5,6 +5,7 @@ WORKDIR /app/
 COPY ./go.mod /app/
 COPY ./go.sum /app/
 COPY ./build/* /app/
+RUN rm -r /app/app
 
 RUN GONOPROXY=github.com/golangdaddy go get -d
 

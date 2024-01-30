@@ -61,9 +61,11 @@ func (app *App) CreateDocument{{uppercase .Object.Name}}(parent *Internals, obje
 			return err
 		}
 		object.Meta.Asset = assetID
+		{{if eq false .Object.Options.Assetlayer.Wallet}}
 		if err := app.Assetlayer().SendAsset(assetID, "$"+object.Meta.AssetlayerWalletID()); err != nil {
 			return err
 		}
+		{{end}}
 	}
 	{{if eq false .Object.Options.Assetlayer.Token}}*/{{end}}
 	
@@ -269,8 +271,7 @@ func (app *App) {{lowercase .Object.Name}}ChatGPTCreate(user *User, parent *Inte
 
 	fmt.Println("prompt with parent", parent.ID, prompt)
 
-	prompt = fmt.Sprintf(`
-ATTENTION! YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE A VALID JSON...
+	system := `Your role is a helpful preprocessor that follows rules to create one or more JSON objects, ultimately outputting raw valid JSON array.
 
 We want to create one or more of these data objects: 
 {
@@ -283,24 +284,27 @@ We want to create one or more of these data objects:
 The purpose of the object is to represent: {{.Object.Context}}
 
 RULES:
-1: USE THIS PROMPT TO GENERATE THE OBJECT OR OBJECT ARRAY: %s
-2: GENERATE DATA FOR REQUIRED FIELDS
-3: UNLESS SPECIFICALLY TOLD NOT TO, GENERATE ALL FIELDS... DON'T BE LAZY.
-4: OMIT ANY NON-REQUIRED FIELDS WHEN NO DATA FOR THE FIELD IS GENERATED.
-5: DON'T INCLUDE FIELDS WITH EMPTY STRINGS, AND OMIT FIELDS WITH NULL VALUE.
-6: RESPECT ANY VALIDATION INFORMATION SPECIFIED FOR FIELDS, SUCH AS MIN AND MAX LENGTHS.
-7: REPLY ONLY WITH A JSON ENCODED ARRAY OF THE GENERATED OBJECT(S) WITH NO NESTED OBJECTS, JUST OBJECTS IN A JSON ARRAY.
-`,
-		prompt,
-	)
+1: USER PROPMPTS SHOULD GENERATE DATA FOR REQUIRED FIELDS OF ONE OR MORE ABOVE OBJECTS
+2: UNLESS SPECIFICALLY TOLD NOT TO, GENERATE ALL FIELDS... DON'T BE LAZY.
+3: OMIT ANY NON-REQUIRED FIELDS WHEN NO DATA FOR THE FIELD IS GENERATED.
+4: DON'T INCLUDE FIELDS WITH EMPTY STRINGS, AND OMIT FIELDS WITH NULL VALUE.
+5: RESPECT ANY VALIDATION INFORMATION SPECIFIED FOR FIELDS, SUCH AS MIN AND MAX LENGTHS.
+6: REPLY WITH OUTPUT JSON DATA TO THE USER PROMPT
+7: RECHECK AND FIX ANY INVALID OUTPUT JSON BEFORE FINISHING RESPONDING TO THE PROMPT
+8: MAKE SURE THE RESPONSE IS NON-ENCAPSULATED RAW JSON WHICH IS READY TO BE PARSED BY AN APPLICATION
+`
 
 	println(prompt)
 
 	resp, err := app.ChatGPT().CreateChatCompletion(
 		app.Context(),
 		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
+			Model: openai.GPT3Dot5Turbo1106,
 			Messages: []openai.ChatCompletionMessage{
+				{
+					Role:    openai.ChatMessageRoleSystem,
+					Content: system,
+				},
 				{
 					Role:    openai.ChatMessageRoleUser,
 					Content: prompt,
@@ -362,7 +366,7 @@ func (app *App) {{lowercase .Object.Name}}ChatGPTEdit(user *User, parent *Intern
 		return err
 	}
 
-	prompt = fmt.Sprintf(`ATTENTION! YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE A VALID JSON...
+	system := fmt.Sprintf(`ATTENTION! YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE A VALID JSON...
 
 Here is the object we need to edit:
 %s
@@ -370,26 +374,29 @@ Here is the object we need to edit:
 The purpose of the object is to represent: {{.Object.Context}}
 
 RULES:
-1: USE THIS PROMPT TO GENERATE THE MUTATION: %s
-2: GENERATE DATA FOR REQUIRED FIELDS
-3: UNLESS SPECIFICALLY TOLD NOT TO, GENERATE ALL FIELDS... DON'T BE LAZY.
-4: OMIT ANY NON-REQUIRED FIELDS WHEN NO DATA FOR THE FIELD IS GENERATED.
-5: DON'T INCLUDE FIELDS WITH EMPTY STRINGS.
-6: RESPECT ANY VALIDATION INFORMATION SPECIFIED FOR FIELDS, SUCH AS MIN AND MAX LENGTHS.
-7: REPLY ONLY WITH THE JSON ENCODED MUTATED OBJECT
+1: GENERATE DATA FOR REQUIRED FIELDS
+2: UNLESS SPECIFICALLY TOLD NOT TO, GENERATE ALL FIELDS... DON'T BE LAZY.
+3: OMIT ANY NON-REQUIRED FIELDS WHEN NO DATA FOR THE FIELD IS GENERATED.
+4: DON'T INCLUDE FIELDS WITH EMPTY STRINGS.
+5: RESPECT ANY VALIDATION INFORMATION SPECIFIED FOR FIELDS, SUCH AS MIN AND MAX LENGTHS.
+6: REPLY TO THE USER PROMPT ONLY WITH THE JSON ENCODED MUTATED OBJECT
 `,
 		string(objectBytes),
-		prompt,
 	)
 
+	println(system)
 	println(prompt)
 
 
 	resp, err := app.ChatGPT().CreateChatCompletion(
 		app.Context(),
 		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
+			Model: openai.GPT3Dot5Turbo1106,
 			Messages: []openai.ChatCompletionMessage{
+				{
+					Role:    openai.ChatMessageRoleSystem,
+					Content: system,
+				},
 				{
 					Role:    openai.ChatMessageRoleUser,
 					Content: prompt,

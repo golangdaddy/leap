@@ -2,12 +2,20 @@
 package main
 
 import (
+	"log"
 	"fmt"
 	"errors"
 	"net/http"
+	"encoding/hex"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
 )
+
+func init() {
+	// template race fix
+	log.Flags()
+	hex.DecodeString("FF")
+}
 
 type {{uppercase .Object.Name}} struct {
 	Meta    Internals
@@ -61,22 +69,36 @@ func (x *{{uppercase .Object.Name}}) ValidateObject(m map[string]interface{}) er
 		x.Fields.{{titlecase .Name}}, err = assert{{uppercase .Type}}(m, "{{lowercase .Name}}")
 		if err != nil {
 			return errors.New(err.Error())
-		} else {
+		}
+		{
 			exp := "{{.Regexp}}"
 			if len(exp) > 0 {
 				if !RegExp(exp, fmt.Sprintf("%v", x.Fields.{{titlecase .Name}})) {
-					return errors.New("failed to regexp")
+					return fmt.Errorf("failed to regexp: %s >> %s", exp, x.Fields.{{titlecase .Name}})
 				}
 			}
-			{{if .Range}}
-			if err := assertRangeMin({{.Range.Min}}, x.Fields.{{titlecase .Name}}); err != nil {
-				return err
-			}
-			if err := assertRangeMax({{.Range.Max}}, x.Fields.{{titlecase .Name}}); err != nil {
-				return err
-			}
-			{{end}}
 		}
+		{
+			exp := "{{.RegexpHex}}"
+			if len(exp) > 0 {
+				log.Println("EXPR", exp)
+				b, err := hex.DecodeString(exp)
+				if err != nil {
+					log.Println(err)
+				}
+				if !RegExp(string(b), fmt.Sprintf("%v", x.Fields.{{titlecase .Name}})) {
+					return fmt.Errorf("failed to regexpHex: %s >> %s", string(b), x.Fields.{{titlecase .Name}})
+				}
+			}
+		}
+		{{if .Range}}
+		if err := assertRangeMin({{.Range.Min}}, x.Fields.{{titlecase .Name}}); err != nil {
+			return err
+		}
+		if err := assertRangeMax({{.Range.Max}}, x.Fields.{{titlecase .Name}}); err != nil {
+			return err
+		}
+		{{end}}
 	}
 	{{end}}
 
@@ -84,7 +106,7 @@ func (x *{{uppercase .Object.Name}}) ValidateObject(m map[string]interface{}) er
 
 	return nil
 }
-
+/*
 func (x *{{uppercase .Object.Name}}) ValidateByCount(w http.ResponseWriter, m map[string]interface{}, count int) bool {
 
 	var counter int
@@ -95,15 +117,29 @@ func (x *{{uppercase .Object.Name}}) ValidateByCount(w http.ResponseWriter, m ma
 		counter++
 	}
 
-	// ignore this, a mostly redundant artifact
-	{{if .Range}}{
+	{
 		exp := "{{.Regexp}}"
 		if len(exp) > 0 {
-			if !RegExp(exp, x.Fields.{{titlecase .Name}}) {
-				return false
+			if !RegExp(exp, fmt.Sprintf("%v", x.Fields.{{titlecase .Name}})) {
+				return fmt.Errorf("failed to regexp: %s >> %s", exp, x.Fields.{{titlecase .Name}})
 			}
 		}
 	}
+	{
+		exp := "{{.RegexpHex}}"
+		if len(exp) > 0 {
+			log.Println("EXPR", exp)
+			b, err := hex.DecodeString(exp)
+			if err != nil {
+				log.Println(err)
+			}
+			if !RegExp(string(b), fmt.Sprintf("%v", x.Fields.{{titlecase .Name}})) {
+				return fmt.Errorf("failed to regexpHex: %s >> %s", string(b), x.Fields.{{titlecase .Name}})
+			}
+		}
+	}
+
+	{{if .Range}}
 	{{if .Required}}
 	if !AssertRangeMin(w, {{.Range.Min}}, x.Fields.{{titlecase .Name}}) {
 		return false
@@ -118,3 +154,4 @@ func (x *{{uppercase .Object.Name}}) ValidateByCount(w http.ResponseWriter, m ma
 
 	return counter == count
 }
+*/

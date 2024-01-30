@@ -54,6 +54,7 @@ type Field struct {
 	Required     bool     `json:"required"`
 	Range        *Range   `json:"range"`
 	Regexp       string   `json:"regexp"`
+	RegexpHex    string   `json:"regexpHex"`
 }
 
 type Range struct {

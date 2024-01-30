@@ -248,8 +248,10 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 					},
 				}
 				println("UPDATING", item.Meta.ID, item.Meta.Context.Order)
-				if _, err := item.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
+				if updateInfo, err := item.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
 					log.Println(err)
+				} else {
+					log.Println("info:", updateInfo)
 				}
 			}
 
@@ -287,8 +289,10 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 					},
 				}
 				println("UPDATING", item.Meta.ID, item.Meta.Context.Order)
-				if _, err := item.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
+				if updateInfo, err := item.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
 					log.Println(err)
+				} else {
+					log.Println("info:", updateInfo)
 				}
 			}
 
