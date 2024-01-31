@@ -40,6 +40,10 @@ export function {{titlecase .Object.Name}}FunctionPOST(user, id, func) {
     return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function="+func+"&id="+id)
 }
 
+export function {{titlecase .Object.Name}}JobPOST(user, id, job) {
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=job&job="+job+"&id="+id)
+}
+
 // file handling
 
 export function {{titlecase .Object.Name}}Upload(user, id, formData) {

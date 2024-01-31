@@ -70,7 +70,7 @@ func (app *App) CreateDocument{{uppercase .Object.Name}}(parent *Internals, obje
 		return err
 	}
 
-	{{if eq false .Object.Options.UseCreateTopic}}/*{{end}}
+	{{if eq nil .Object.Options.TopicCreate}}/*{{end}}
 	b, err := app.MarshalJSON(object)
 	if err != nil {
 		return err
@@ -85,7 +85,7 @@ func (app *App) CreateDocument{{uppercase .Object.Name}}(parent *Internals, obje
 		return err
 	}
 	log.Println("PUBLISHED JOB TO TOPIC", topicID, msgID)
-	{{if eq false .Object.Options.UseCreateTopic}}*/{{end}}
+	{{if eq nil .Object.Options.TopicCreate}}*/{{end}}
 
 	return nil
 }

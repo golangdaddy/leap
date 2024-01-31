@@ -6,11 +6,13 @@ import Spacer from '@/inputs/spacer';
 import Submit from '@/inputs/submit';
 import Input from '@/inputs/input';
 import Textarea from '@/inputs/textarea';
-import InputChange from '@/inputs/inputChange';
 import Checkbox from '@/inputs/checkbox';
 import Select from '@/inputs/select';
 import CollectionSelect from '@/inputs/collectionSelect';
 import Color from '@/inputs/color';
+import Object from '@/inputs/object';
+
+import InputChange from '@/inputs/inputChange';
 
 export function {{titlecase .Object.Name}}Form(props) {
 

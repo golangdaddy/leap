@@ -13,14 +13,19 @@ type Object struct {
 }
 
 type Options struct {
-	Order          bool        `json:"order"`
-	File           bool        `json:"file"`
-	Image          bool        `json:"image"`
-	Font           bool        `json:"font"`
-	UseCreateTopic bool        `json:"useCreateTopic"`
-	TopicCreate    string      `json:"topicCreate"`
-	Assetlayer     Assetlayer  `json:"assetlayer"`
-	Permissions    Permissions `json:"permissions"`
+	Order       bool        `json:"order"`
+	File        bool        `json:"file"`
+	Image       bool        `json:"image"`
+	Font        bool        `json:"font"`
+	TopicCreate *string     `json:"topicCreate"`
+	Topics      []*JobTopic `json:"topics"`
+	Assetlayer  Assetlayer  `json:"assetlayer"`
+	Permissions Permissions `json:"permissions"`
+}
+
+type JobTopic struct {
+	Name  string `json:"name"`
+	Topic string `json:"topic"`
 }
 
 type Permissions struct {

@@ -9,6 +9,7 @@ import Color from '@/inputs/color';
 import Checkbox from '@/inputs/checkbox';
 import Select from '@/inputs/select';
 import CollectionSelect from '@/inputs/collectionSelect';
+import Object from '@/inputs/object';
 
 import InputChange from '@/inputs/inputChange';
 

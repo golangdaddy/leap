@@ -128,6 +128,30 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 
 		switch function {
 
+		case "job":
+
+			// get function
+			job, err := cloudfunc.QueryParam(r, "job")
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
+
+			b, err := app.MarshalJSON(object)
+			if err != nil {
+				return err
+			}
+			result := app.PubSub().Topic(job).Publish(
+				app.Context(),
+				&pubsub.Message{Data: b},
+			)
+			msgID, err := result.Get(app.Context())
+			if err != nil {
+				return err
+			}
+			log.Println("PUBLISHED JOB TO TOPIC", topicID, msgID)
+			return
+
 		case "prompt":
 
 			m := map[string]interface{}{}
