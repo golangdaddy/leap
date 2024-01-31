@@ -1,23 +1,3 @@
-package main
-
-import (
-	"crypto/sha256"
-	"encoding/hex"
-	"errors"
-	"fmt"
-	"log"
-	"os"
-	"regexp"
-	"strings"
-	"time"
-
-	"cloud.google.com/go/firestore"
-	"github.com/golangdaddy/leap/sdk/common"
-	"github.com/google/uuid"
-	"google.golang.org/api/iterator"
-
-	"github.com/golangdaddy/leap/sdk/assetlayer"
-)
 
 type Generic struct {
 	Meta Internals

@@ -30,7 +30,7 @@ export function AI(props) {
 
 	const [select, setSelect] = useState('create')
 	function updateSelect(e) {
-		setSelect(e.target.value)
+		setSelect(e.target.id)
 	}
 
 	function sendPrompt() {
@@ -74,12 +74,12 @@ export function AI(props) {
 			}
 			{
 				toggle && <>
-					<select onChange={updateSelect} className='border p-2'>
-						<option value="create">Create</option>
-						<option value="modify">Modify</option>
-					</select>
-					<Spacer/>
-					<textarea id='prompt' placeholder="your prompt..." className='border p-2'></textarea>
+					<div className='flex flex-row'>
+						<button id="prompt" onClick={updateSelect} className="my-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Prompt</button>
+						<button id="create"  onClick={updateSelect} className="my-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Create</button>
+						<button id="modify" onClick={updateSelect} className="my-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Modify</button>
+					</div>
+					<textarea id='prompt' placeholder={"your "+select+" prompt..."} className='border p-2'></textarea>
 					<div>
 						<button onClick={sendPrompt} className="my-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Send</button>
 					</div>

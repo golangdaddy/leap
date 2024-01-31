@@ -61,8 +61,15 @@ func (app *App) EntrypointASYNCJOB(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			fields := FieldsASYNCJOB{}
-			asyncjob := NewASYNCJOB(parent, fields)
+			asyncjob := NewASYNCJOB(
+				parent,
+				&Stage{
+					Name: "prepare",
+				},
+				&Stage{
+					Name: "generate",
+				},
+			)
 
 			// reuse document init create code
 			if err := app.CreateDocumentASYNCJOB(parent, asyncjob); err != nil {

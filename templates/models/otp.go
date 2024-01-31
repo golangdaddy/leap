@@ -1,11 +1,3 @@
-package main
-
-import (
-	"context"
-	"time"
-
-	"github.com/golangdaddy/leap/sdk/common"
-)
 
 type OTP struct {
 	Email     string `json:"email" firestore:"email"`

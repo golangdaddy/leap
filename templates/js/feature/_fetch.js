@@ -63,3 +63,7 @@ export function {{titlecase .Object.Name}}ChatGPTModifyPOST(user, parentID, coll
 export function {{titlecase .Object.Name}}ChatGPTInitPOST(user, parentID, payload) {
     return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}s?function=prompt&parent="+parentID, payload)
 }
+
+export function {{titlecase .Object.Name}}ChatGPTPromptPOST(user, id, payload) {
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=prompt&id="+id, payload)
+}

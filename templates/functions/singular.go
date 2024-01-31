@@ -128,6 +128,30 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 
 		switch function {
 
+		case "prompt":
+
+			m := map[string]interface{}{}
+			if err := cloudfunc.ParseJSON(r, &m); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
+
+			prompt, ok := AssertSTRING(w, m, "prompt")
+			if !ok {
+				return
+			}
+
+			reply, err := app.{{lowercase .Object.Name}}ChatGPTPrompt(object, prompt)
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+				return
+			}
+
+			if err := cloudfunc.ServeJSON(w, reply); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+				return
+			}
+
 		// update the subject
 		case "update":
 

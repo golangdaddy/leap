@@ -69,7 +69,6 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
-
 			return
 
 		case "init":

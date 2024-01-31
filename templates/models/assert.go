@@ -1,13 +1,3 @@
-package main
-
-import (
-	"fmt"
-	"log"
-	"net/http"
-	"time"
-
-	"github.com/golangdaddy/leap/sdk/cloudfunc"
-)
 
 func getTime() int64 {
 	return time.Now().UTC().Unix()

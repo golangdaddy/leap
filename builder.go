@@ -36,7 +36,6 @@ type Container struct {
 //go:embed templates/js/feature/*
 //go:embed templates/js/pages/*
 //go:embed templates/models/*
-//go:embed templates/models/asyncjob/*
 //go:embed templates/server/*
 var f embed.FS
 
@@ -50,11 +49,24 @@ func Build(stack *models.Stack) error {
 	if err := os.MkdirAll("build/app/app", 0777); err != nil {
 		return err
 	}
-
 	if err := copyDir("templates/js/app", "build/app/"); err != nil {
 		return err
 	}
 	if err := copyDir("templates/js/pages", "build/app/pages/"); err != nil {
+		return err
+	}
+
+	// create models lib and file
+	if err := copyFile("templates/models/models.main", "build/models.go"); err != nil {
+		return err
+	}
+	if err := concatModels("build/models.go", stack); err != nil {
+		return err
+	}
+	if err := copyFile("templates/models/models.package", "build/lib/models.go"); err != nil {
+		return err
+	}
+	if err := concatModels("build/lib/models.go", stack); err != nil {
 		return err
 	}
 
@@ -75,13 +87,7 @@ func Build(stack *models.Stack) error {
 		return err
 	}
 
-	// static golang
-	if err := copyFile("templates/models/asyncjob/ASYNCJOB.go", "build/model_ASYNCJOB.go"); err != nil {
-		return err
-	}
-	if err := doTemplate("build/model_ASYNCJOB.go", stack); err != nil {
-		return err
-	}
+	// static go
 	if err := copyFile("templates/functions/assetlayer/assetlayer.go", "build/api_assetlayer.go"); err != nil {
 		return err
 	}
@@ -178,11 +184,6 @@ func Build(stack *models.Stack) error {
 			container.EditInputs,
 			fmt.Sprintf(`<Submit text="Save" inputs={inputs} submit={props.submit} assert={%s}/>`, string(b)),
 		)
-
-		// sorting out the models
-		if err := execTemplate("models", "model.go", "model_"+strings.ToUpper(object.Name)+".go", container); err != nil {
-			return err
-		}
 
 		// sort handler functions
 		if err := execTemplate("functions", "singular.go", "api_"+strings.ToLower(object.Name)+".go", container); err != nil {
@@ -539,6 +540,7 @@ func Build(stack *models.Stack) error {
 		if object.Mode == "root" {
 			stack.Entrypoints = append(stack.Entrypoints, object.Name)
 		}
+
 	}
 
 	copyFile(
@@ -557,15 +559,6 @@ func Build(stack *models.Stack) error {
 	); err != nil {
 		return err
 	}
-
-	copyFile("templates/models/internals.go", "build/models_internals.go")
-	copyFile("templates/models/firestore.go", "build/models_firestore.go")
-	copyFile("templates/models/pkg.go", "build/models.go")
-	copyFile("templates/models/user.go", "build/user.go")
-	copyFile("templates/models/otp.go", "build/models_otp.go")
-	copyFile("templates/models/robots.go", "build/models_robots.go")
-	copyFile("templates/models/session.go", "build/models_session.go")
-	copyFile("templates/models/username.go", "build/models_username.go")
 
 	return nil
 }
@@ -655,7 +648,28 @@ func doTemplate(path string, data interface{}) error {
 	return nil
 }
 
+func concatFile(sourcePath, destinationPath string) error {
+	fmt.Printf("File %s concat to %s\n", sourcePath, destinationPath)
+
+	s := strings.Split(destinationPath, "/")
+	os.MkdirAll(filepath.Join(s[:len(s)-1]...), 0777)
+	sourcebytes, err := f.ReadFile(sourcePath)
+	if err != nil {
+		return err
+	}
+
+	destination, err := os.OpenFile(destinationPath, os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+	defer destination.Close()
+
+	_, err = destination.Write(sourcebytes)
+	return err
+}
+
 func copyFile(sourcePath, destinationPath string) error {
+	fmt.Printf("File %s copied to %s\n", sourcePath, destinationPath)
 
 	s := strings.Split(destinationPath, "/")
 	os.MkdirAll(filepath.Join(s[:len(s)-1]...), 0777)
@@ -676,7 +690,6 @@ func copyFile(sourcePath, destinationPath string) error {
 		return err
 	}
 
-	fmt.Printf("File %s copied to %s\n", sourcePath, destinationPath)
 	return nil
 }
 
@@ -717,5 +730,40 @@ func copyDir(src, dest string) error {
 		}
 	}
 
+	return nil
+}
+
+func concatModels(dstPath string, stack *models.Stack) error {
+
+	if err := concatFile("templates/models/internals.go", dstPath); err != nil {
+		return err
+	}
+	if err := concatFile("templates/models/firestore.go", dstPath); err != nil {
+		return err
+	}
+	if err := concatFile("templates/models/assert.go", dstPath); err != nil {
+		return err
+	}
+	if err := concatFile("templates/models/user.go", dstPath); err != nil {
+		return err
+	}
+	if err := concatFile("templates/models/otp.go", dstPath); err != nil {
+		return err
+	}
+	if err := concatFile("templates/models/session.go", dstPath); err != nil {
+		return err
+	}
+	if err := concatFile("templates/models/username.go", dstPath); err != nil {
+		return err
+	}
+	if err := concatFile("templates/models/asyncjob.go", dstPath); err != nil {
+		return err
+	}
+	if err := concatFile("templates/models/model.go", dstPath); err != nil {
+		return err
+	}
+	if err := doTemplate(dstPath, stack); err != nil {
+		return err
+	}
 	return nil
 }

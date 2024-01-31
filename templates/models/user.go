@@ -1,15 +1,3 @@
-package main
-
-import (
-	"errors"
-	"log"
-	"net/http"
-	"regexp"
-	"strings"
-
-	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/golangdaddy/leap/sdk/common"
-)
 
 type Users []*User
 

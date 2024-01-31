@@ -1,10 +1,3 @@
-package main
-
-import (
-	"context"
-
-	"github.com/golangdaddy/leap/sdk/common"
-)
 
 func GetMetadata(app *common.App, id string) (*Internals, error) {
 

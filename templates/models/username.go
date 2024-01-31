@@ -1,6 +1,3 @@
-package main
-
-import "strconv"
 
 func (user *User) GetUsernameRef() *Username {
 	ref := &Username{
