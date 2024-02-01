@@ -1,4 +1,3 @@
-
 type ASYNCJOB struct {
 	Meta Internals
 	// pending:started:completed:failed

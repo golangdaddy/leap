@@ -9,9 +9,9 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-func (app *App) {{lowercase .Object.Name}}ChatGPTCreate(user *User, parent *Internals, prompt string) error {
+func (app *App) {{lowercase .Object.Name}}ChatGPTCreate(user *User, parent *{{uppercase .Object.Name}}, prompt string) error {
 
-	fmt.Println("prompt with parent", parent.ID, prompt)
+	fmt.Println("prompt with parent", parent.Meta.ID, prompt)
 
 	system := `Your role is a helpful preprocessor that follows the prompt to create one or more JSON objects, ultimately outputting raw valid JSON array.
 
@@ -70,11 +70,11 @@ The response should be a raw JSON array with one or more objects, based on the u
 				delete(result, k)
 			}
 		}
-		object := user.New{{uppercase .Object.Name}}(parent, Fields{{uppercase .Object.Name}}{})
+		object := user.New{{uppercase .Object.Name}}(&parent.Meta, Fields{{uppercase .Object.Name}}{})
 		if err := object.ValidateObject(result); err != nil {
 			return err
 		}
-		if err := app.CreateDocument{{uppercase .Object.Name}}(parent, object); err != nil {
+		if err := app.CreateDocument{{uppercase .Object.Name}}(&parent.Meta, object); err != nil {
 			return err
 		}
 		app.SendMessageToUser(user, &Message{Type: "async-create", Body: object})

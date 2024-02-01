@@ -59,23 +59,64 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 
 		switch function {
 
-		case "prompt":
+		case "openai":
+
+			// get openai command
+			mode, err := cloudfunc.QueryParam(r, "mode")
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
 
 			m := map[string]interface{}{}
 			if err := cloudfunc.ParseJSON(r, &m); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusBadRequest)
 				return
 			}
-
 			prompt, ok := AssertSTRING(w, m, "prompt")
 			if !ok {
 				return
 			}
 
-			if err := app.{{lowercase .Object.Name}}ChatGPTCreate(user, parent, prompt); err != nil {
+			object := &{{uppercase .Object.Name}}{}
+			if err := app.GetDocument(parent.ID, object); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
+
+			switch mode {
+			case "prompt":
+
+				reply, err := app.{{lowercase .Object.Name}}ChatGPTPrompt(user, object, prompt)
+				if err != nil {
+					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+					return
+				}
+
+				if err := cloudfunc.ServeJSON(w, reply); err != nil {
+					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+					return
+				}
+
+			case "create":
+
+				if err := app.{{lowercase .Object.Name}}ChatGPTCreate(user, object, prompt); err != nil {
+					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+					return
+				}
+
+			case "modify":
+
+				if err := app.{{lowercase .Object.Name}}ChatGPTModify(user, object, prompt); err != nil {
+					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+					return
+				}
+
+			default:
+				
+				panic("openai")
+			}
+
 			return
 
 		case "init":

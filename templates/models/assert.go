@@ -1,4 +1,3 @@
-
 func getTime() int64 {
 	return time.Now().UTC().Unix()
 }

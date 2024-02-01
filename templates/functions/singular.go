@@ -23,7 +23,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 		return
 	}
 
-	_, err := app.GetSessionUser(r)
+	user, err := app.GetSessionUser(r)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 		return
@@ -38,6 +38,13 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 	object := &{{uppercase $obj.Name}}{}
 	if err := app.GetDocument(id, object); err != nil {
 		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	// security
+	if !app.IsAdmin(&object.Meta, user) {
+		err := fmt.Errorf("USER %s IS NOT AN ADMIN", user.Username)
+		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 		return
 	}
 
@@ -198,7 +205,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 				return
 			}
 
-			reply, err := app.{{lowercase .Object.Name}}ChatGPTPrompt(object, prompt)
+			reply, err := app.{{lowercase .Object.Name}}ChatGPTPrompt(user, object, prompt)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return

@@ -4,24 +4,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"strings"
 
 	"cloud.google.com/go/firestore"
-	"github.com/golangdaddy/leap/sdk/cloudfunc"
 	"github.com/kr/pretty"
-	"github.com/richardboase/npgpublic/models"
 	"github.com/sashabaranov/go-openai"
 	"google.golang.org/api/iterator"
 )
 
-func (app *App) chatgpt_modifyList(w http.ResponseWriter, r *http.Request, parent *Internals, collection string) {
+func (app *App) {{lowercase .Object.Name}}ChatGPTModify(user *User, parent *{{uppercase .Object.Name}}, prompt string) error {
 
-	println("grabbing results for prompt:", collection)
+	println("grabbing results for prompt:", parent.Meta.Name, prompt)
 
 	idList := []string{}
 	var list []map[string]interface{}
-	iter := parent.Firestore(app.App).Collection(collection).OrderBy("Meta.Created", firestore.Asc).Documents(app.Context())
+	iter := parent.Meta.Firestore(app.App).Collection(parent.Meta.Class).OrderBy("Meta.Created", firestore.Asc).Documents(app.Context())
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -53,23 +50,11 @@ func (app *App) chatgpt_modifyList(w http.ResponseWriter, r *http.Request, paren
 		list = append(list, cleaned)
 	}
 
-	m := map[string]interface{}{}
-	if err := cloudfunc.ParseJSON(r, &m); err != nil {
-		cloudfunc.HttpError(w, err, http.StatusBadRequest)
-		return
-	}
-
-	prompt, ok := models.AssertKeyValueSTRING(w, m, "prompt")
-	if !ok {
-		return
-	}
-
-	fmt.Println("prompt with parent", parent.ID, prompt)
+	fmt.Println("prompt with parent", parent.Meta.ID, prompt)
 
 	b, err := json.Marshal(list)
 	if err != nil {
-		cloudfunc.HttpError(w, err, http.StatusBadRequest)
-		return
+		return err
 	}
 
 	prompt = fmt.Sprintf(`ATTENTION! YOUR ENTIRE RESPONSE TO THIS PROMPT NEEDS TO BE VALID JSON...
@@ -100,9 +85,7 @@ REPLY ONLY WITH A JSON ENCODED ARRAY OF THE END RESULT
 		},
 	)
 	if err != nil {
-		err = fmt.Errorf("ChatCompletion error: %v\n", err)
-		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-		return
+		return fmt.Errorf("ChatCompletion error: %v\n", err)
 	}
 
 	reply := resp.Choices[0].Message.Content
@@ -110,8 +93,7 @@ REPLY ONLY WITH A JSON ENCODED ARRAY OF THE END RESULT
 
 	newResults := []interface{}{}
 	if err := json.Unmarshal([]byte(reply), &newResults); err != nil {
-		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-		return
+		return err
 	}
 
 	for n, result := range newResults {
@@ -128,9 +110,7 @@ REPLY ONLY WITH A JSON ENCODED ARRAY OF THE END RESULT
 		data := result.(map[string]interface{})
 		id, ok := data["_id"].(float64)
 		if !ok {
-			err := fmt.Errorf("no _id present: %d", n)
-			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-			return
+			return fmt.Errorf("no _id present: %d", n)
 		}
 		if n != int(id) {
 			log.Println("order doesn't match:", n, id)
@@ -147,20 +127,15 @@ REPLY ONLY WITH A JSON ENCODED ARRAY OF THE END RESULT
 		log.Println("updating firestore doc:", docID)
 		pretty.Println(updates)
 
-		if updateInfo, err := parent.Firestore(app.App).Collection(collection).Doc(docID).Update(
+		if updateInfo, err := parent.Meta.Firestore(app.App).Collection(parent.Meta.Class).Doc(docID).Update(
 			app.Context(),
 			updates,
 		); err != nil {
-			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-			return
+			return err
 		} else {
 			log.Println(updateInfo)
 		}
 	}
 
-	if err := cloudfunc.ServeJSON(w, newResults); err != nil {
-		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-		return
-	}
-
+	return nil
 }

@@ -89,7 +89,7 @@ export function {{titlecase .Object.Name}}List(props) {
 	return (
 	<div className='flex flex-col my-4'>
 	{
-		props.title && <div className='py-4 my-4 text-xl font-bold cursor-pointer' onclick={selectChild}>{props.title}s:</div>
+		props.title && <div className='py-4 my-4 text-xl font-bold cursor-pointer' onClick={selectChild}>{props.title}s:</div>
 	}
 	{
 		props.title && <hr/>

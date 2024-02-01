@@ -3,6 +3,8 @@ import * as React from 'react'
 import { {{titlecase .Object.Name}}sMatrix } from './{{lowercase .Object.Name}}sMatrix'
 import { {{titlecase .Object.Name}}s } from './{{lowercase .Object.Name}}s'
 import { {{titlecase .Object.Name}} } from './{{lowercase .Object.Name}}'
+import { {{titlecase .Object.Name}}Admin } from './{{lowercase .Object.Name}}Admin'
+import { {{titlecase .Object.Name}}Admins } from './{{lowercase .Object.Name}}Admins'
 import { Assets } from './assets'
 import { New{{titlecase .Object.Name}} } from './new{{titlecase .Object.Name}}'
 import { Edit{{titlecase .Object.Name}} } from './edit{{titlecase .Object.Name}}'
@@ -64,10 +66,20 @@ export var {{titlecase .Object.Name}}Interfaces = {
 		level: {{parentcount .Object}}+2,
 		name: "{{titlecase .Object.Name}}",
 		sublinks: [{{if .Object.Options.File}}"upload{{lowercase .Object.Name}}"{{end}}],
-		subsublinks: [{{ range .Object.Children }}"{{lowercase .Name}}s",{{end}}""],
+		subsublinks: [{{ range .Object.Children }}"{{lowercase .Name}}s",{{end}}{{if .Object.Options.Admin}}"{{lowercase .Object.Name}}admins"{{end}}],
 		component: (<{{titlecase .Object.Name}} />),
 		hasDeleteButton: true,
 		hasEditButton: true,
+	},
+	"{{lowercase .Object.Name}}admin": {
+		level: {{parentcount .Object}}+2,
+		name: "{{titlecase .Object.Name}}",
+		component: (<{{titlecase .Object.Name}}Admin />),
+	},
+	"{{lowercase .Object.Name}}admins": {
+		level: {{parentcount .Object}}+2,
+		name: "{{titlecase .Object.Name}}",
+		component: (<{{titlecase .Object.Name}}Admins />),
 	},
 	"{{lowercase .Object.Name}}assets": {
 		level: {{parentcount .Object}}+2,

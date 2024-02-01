@@ -9,11 +9,11 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-func (app *App) {{lowercase .Object.Name}}ChatGPTEdit(user *User, parent *Internals, object *{{uppercase .Object.Name}}, prompt string) error {
+func (app *App) {{lowercase .Object.Name}}ChatGPTEdit(user *User, parent *{{uppercase .Object.Name}}, prompt string) error {
 
-	fmt.Println("prompt with parent", parent.ID, prompt)
+	fmt.Println("prompt with parent", parent.Meta.ID, prompt)
 
-	objectBytes, err := app.MarshalJSON(object)
+	objectBytes, err := app.MarshalJSON(parent)
 	if err != nil {
 		return err
 	}
@@ -78,11 +78,11 @@ PROMPT: `,
 				delete(result, k)
 			}
 		}
-		object := user.New{{uppercase .Object.Name}}(parent, Fields{{uppercase .Object.Name}}{})
+		object := user.New{{uppercase .Object.Name}}(&parent.Meta, Fields{{uppercase .Object.Name}}{})
 		if err := object.ValidateObject(result); err != nil {
 			return err
 		}
-		if err := app.CreateDocument{{uppercase .Object.Name}}(parent, object); err != nil {
+		if err := app.CreateDocument{{uppercase .Object.Name}}(&parent.Meta, object); err != nil {
 			return err
 		}
 		app.SendMessageToUser(user, &Message{Type: "async-create", Body: object})

@@ -19,8 +19,16 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 		}
 	}
 	{{if eq false .Options.Admin}}// this object inherits its admin permissions
-	object.Meta.Moderation.Object = parent.Moderation.Object{{end}}
+	log.Println("OPTIONS ADMIN IS OFF:", parent.Moderation.Object)
+	if len(parent.Moderation.Object) == 0 {
+		log.Println("USING PARENT ID AS MODERATION OBJECT")
+		object.Meta.Moderation.Object = parent.ID
+	} else {
+		log.Println("USING PARENT'S MODERATION OBJECT")
+		object.Meta.Moderation.Object = parent.Moderation.Object
+	}{{end}}
 	{{if .Options.Admin}}// this object is owned by the user that created it
+	log.Println("OPTIONS ADMIN IS ON:", user.Meta.ID)
 	object.Meta.Moderation.Admins = append(
 		object.Meta.Moderation.Admins,
 		user.Meta.ID,

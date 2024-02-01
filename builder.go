@@ -87,21 +87,8 @@ func Build(stack *models.Stack) error {
 		return err
 	}
 
-	// static go
+	// as go
 	if err := copyFile("templates/functions/assetlayer/assetlayer.go", "build/api_assetlayer.go"); err != nil {
-		return err
-	}
-	if err := copyFile("templates/functions/openai/openai.go", "build/api_openai.go"); err != nil {
-		return err
-	}
-	if err := doTemplate("build/api_openai.go", stack); err != nil {
-		return err
-	}
-
-	if err := copyFile("templates/functions/openai/chatgpt_modifyList.go", "build/chatgpt_modifyList.go"); err != nil {
-		return err
-	}
-	if err := doTemplate("build/chatgpt_modifyList.go", stack); err != nil {
 		return err
 	}
 
@@ -189,6 +176,9 @@ func Build(stack *models.Stack) error {
 			return err
 		}
 		if err := execTemplate("functions", "pluralShared_ChatGPTEdit.go", "api_"+object.Name+"shared_ChatGPTEdit.go", container); err != nil {
+			return err
+		}
+		if err := execTemplate("functions", "pluralShared_ChatGPTModify.go", "api_"+object.Name+"shared_ChatGPTModify.go", container); err != nil {
 			return err
 		}
 		if err := execTemplate("functions", "pluralShared_ChatGPTPrompt.go", "api_"+object.Name+"shared_ChatGPTPrompt.go", container); err != nil {
@@ -447,6 +437,34 @@ func Build(stack *models.Stack) error {
 			)
 			copyFile(
 				"templates/js/feature/shared/subjectMatrixRow.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				return err
+			}
+		}
+		{
+			path := fmt.Sprintf(
+				"build/app/features/%ss/%sAdmin.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Title(language.English).String(object.Name),
+			)
+			copyFile(
+				"templates/js/feature/subjectAdmin.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				return err
+			}
+		}
+		{
+			path := fmt.Sprintf(
+				"build/app/features/%ss/%sAdmins.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Title(language.English).String(object.Name),
+			)
+			copyFile(
+				"templates/js/feature/subjectAdmins.js",
 				path,
 			)
 			if err := doTemplate(path, container); err != nil {
@@ -744,13 +762,16 @@ func concatModels(dstPath string, stack *models.Stack) error {
 	if err := concatFile("templates/models/internals.go", dstPath); err != nil {
 		return err
 	}
+	if err := concatFile("templates/models/user.go", dstPath); err != nil {
+		return err
+	}
+	if err := concatFile("templates/models/security.go", dstPath); err != nil {
+		return err
+	}
 	if err := concatFile("templates/models/firestore.go", dstPath); err != nil {
 		return err
 	}
 	if err := concatFile("templates/models/assert.go", dstPath); err != nil {
-		return err
-	}
-	if err := concatFile("templates/models/user.go", dstPath); err != nil {
 		return err
 	}
 	if err := concatFile("templates/models/otp.go", dstPath); err != nil {
