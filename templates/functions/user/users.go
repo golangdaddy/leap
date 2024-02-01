@@ -34,7 +34,7 @@ func (app *App) UsersEntrypoint(w http.ResponseWriter, r *http.Request) {
 
 		case "session":
 
-			user, err := GetSessionUser(app.App, r)
+			user, err := app.GetSessionUser(r)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 				return

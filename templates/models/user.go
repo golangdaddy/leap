@@ -8,12 +8,13 @@ type UserRef struct {
 }
 
 func DemoUser() *User {
-	return NewUser("john@doe.com", "john doe")
+	return NewUser(0, "john@doe.com", "john doe")
 }
 
-func NewUser(email, username string) *User {
+func NewUser(accountType int, email, username string) *User {
 	user := &User{
 		Meta:     (Internals{}).NewInternals("users"),
+		Account:  accountType,
 		Email:    strings.ToLower(strings.TrimSpace(email)),
 		Username: strings.ToLower(strings.TrimSpace(username)),
 	}
@@ -21,8 +22,7 @@ func NewUser(email, username string) *User {
 }
 
 type User struct {
-	Meta Internals
-	// user (0) or practitioner (1) or business (2)
+	Meta     Internals
 	Account  int    `json:"account" firestore:"account"`
 	Email    string `json:"email" firestore:"email"`
 	Username string `json:"username" firestore:"username"`
@@ -101,7 +101,7 @@ func GetOTP(app *common.App, r *http.Request) (*OTP, error) {
 }
 
 // GetOTP gets OTP record from firestore
-func DebugGetOTP(app *common.App, r *http.Request) (*OTP, error) {
+func (app *App) DebugGetOTP(r *http.Request) (*OTP, error) {
 
 	otp, err := cloudfunc.QueryParam(r, "otp")
 	if err != nil {
@@ -123,12 +123,12 @@ func DebugGetOTP(app *common.App, r *http.Request) (*OTP, error) {
 	return otpRecord, nil
 }
 
-func CreateSessionSecret(app *common.App, otp *OTP) (string, int64, error) {
+func (app *App) CreateSessionSecret(otp *OTP) (string, int64, error) {
 
 	secret := app.Token256()
 	hashedSecret := app.SeedDigest(secret)
 
-	user, err := otp.GetUser(app)
+	user, err := otp.GetUser(app.App)
 	if err != nil {
 		return "", 0, err
 	}
@@ -143,7 +143,7 @@ func CreateSessionSecret(app *common.App, otp *OTP) (string, int64, error) {
 	return secret, session.Expires, nil
 }
 
-func GetSessionUser(app *common.App, r *http.Request) (*User, error) {
+func (app *App) GetSessionUser(r *http.Request) (*User, error) {
 
 	apiKey := r.Header.Get("Authorization")
 	if len(apiKey) == 0 {
@@ -173,4 +173,61 @@ func GetSessionUser(app *common.App, r *http.Request) (*User, error) {
 	}
 
 	return user, nil
+}
+
+// UserCollection abstracts the handling of subdata to within the user object
+func (app *App) UserCollection(user *User, collectionID string) *firestore.CollectionRef {
+	return app.UserRefCollection(user.Ref(), collectionID)
+}
+
+func (app *App) UserRefCollection(userRef UserRef, collectionID string) *firestore.CollectionRef {
+	return app.Firestore().Collection("users").Doc(userRef.ID).Collection(collectionID)
+}
+
+// RegionCollection abstracts the handling of subdata to within the country/region
+func (app *App) RegionCollection(user *User, collectionID string) *firestore.CollectionRef {
+	return app.Firestore().Collection("countries").Doc(user.Meta.Context.Country).Collection("regions").Doc(user.Meta.Context.Region).Collection(collectionID)
+}
+
+func (app *App) GetUserByUsername(username string) (*User, error) {
+	doc, err := app.Firestore().Collection("usernames").Doc(username).Get(app.Context())
+	if err != nil {
+		return nil, err
+	}
+	record := &Username{}
+	if err := doc.DataTo(record); err != nil {
+		return nil, err
+	}
+	return app.GetUserByID(record.User.ID)
+}
+
+func (app *App) GetUser(ref UserRef) (*User, error) {
+	return app.GetUserByID(ref.ID)
+}
+
+func (app *App) GetUserByID(id string) (*User, error) {
+	doc, err := app.Firestore().Collection("users").Doc(id).Get(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	user := &User{}
+	return user, doc.DataTo(user)
+}
+
+func (app *App) GetUserByEmail(email string) (*User, error) {
+
+	iter := app.Firestore().Collection("users").Where("email", "==", email).Documents(context.Background())
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+		user := &User{}
+		return user, doc.DataTo(user)
+	}
+
+	return nil, fmt.Errorf("no user forund via email: %s", email)
 }

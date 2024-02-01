@@ -1,11 +1,3 @@
-package main
-
-import (
-	"sync"
-
-	"github.com/golangdaddy/leap/sdk/common"
-	"github.com/gorilla/websocket"
-)
 
 type App struct {
 	*common.App
@@ -18,5 +10,7 @@ func NewApp() *App {
 		App:         common.NewApp(),
 		connections: map[string]*websocket.Conn{},
 	}
+	app.UseGCP(CONST_PROJECT_ID)
+	app.UseGCPFirestore(CONST_FIRESTORE_DB)
 	return app
 }

@@ -19,7 +19,7 @@ func (app *App) EntrypointASSETLAYER(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := GetSessionUser(app.App, r)
+	_, err := app.GetSessionUser(r)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 		return
@@ -31,7 +31,7 @@ func (app *App) EntrypointASSETLAYER(w http.ResponseWriter, r *http.Request) {
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return
 	}
-	parent, err := GetMetadata(app.App, parentID)
+	parent, err := app.GetMetadata(parentID)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusNotFound)
 		return

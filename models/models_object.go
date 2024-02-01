@@ -13,6 +13,8 @@ type Object struct {
 }
 
 type Options struct {
+	Admin       bool        `json:"admin"`
+	Job         bool        `json:"job"`
 	Order       bool        `json:"order"`
 	File        bool        `json:"file"`
 	Image       bool        `json:"image"`

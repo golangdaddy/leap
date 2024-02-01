@@ -29,6 +29,7 @@ type Internals struct {
 	ID         string
 	Class      string
 	URIs       []string
+	Name       string `json:",omitempty"`
 	Asset      string `json:",omitempty"`
 	Wallet     string `json:",omitempty"`
 	Context    Context
@@ -98,7 +99,8 @@ func (i *Internals) SaveToFirestore(app *common.App, src interface{}) error {
 }
 
 func (i *Internals) Firestore(app *common.App) *firestore.DocumentRef {
-	return app.Firestore().Doc(i.DocPath())
+	path := i.DocPath()
+	return app.Firestore().Doc(path)
 }
 
 func (i *Internals) FirestoreDoc(app *common.App, ii Internals) *firestore.DocumentRef {
@@ -204,6 +206,9 @@ type Context struct {
 }
 
 type Moderation struct {
+	// used for an object id too inherit admins for
+	Object string `json:",omitempty"`
+	// list of admin usernames
 	Admins       []string `json:",omitempty"`
 	Blocked      bool     `json:",omitempty"`
 	BlockedTime  int64    `json:",omitempty"`

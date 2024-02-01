@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 	"archive/zip"
 	"bytes"
 	"image"
@@ -90,7 +91,7 @@ func (app *App) CreateDocument{{uppercase .Object.Name}}(parent *Internals, obje
 	return nil
 }
 
-func (app *App) Upload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request, parent *Internals) {
+func (app *App) Upload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request, parent *Internals, user *User) {
 
 	log.Println("PARSING FORM")
 	if err := r.ParseMultipartForm(300 << 20); err != nil {
@@ -127,7 +128,7 @@ func (app *App) Upload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.
 	{{if eq false .Object.Options.Image}}*/{{end}}
 	log.Println("creating new {{lowercase .Object.Name}}:", handler.Filename)
 	fields := Fields{{uppercase .Object.Name}}{}
-	{{lowercase .Object.Name}} := New{{uppercase .Object.Name}}(parent, fields)
+	{{lowercase .Object.Name}} := user.New{{uppercase .Object.Name}}(parent, fields)
 
 	// hidden line here if noparent: {{lowercase .Object.Name}}.Fields.Filename = zipFile.Name
 	{{if .Object.Options.File}}{{lowercase .Object.Name}}.Fields.Filename = handler.Filename{{end}}
@@ -150,7 +151,7 @@ func (app *App) Upload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.
 	return
 }
 
-func (app *App) ArchiveUpload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request, parent *Internals) {
+func (app *App) ArchiveUpload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request, parent *Internals, user *User) {
 
 	log.Println("PARSING FORM")
 	if err := r.ParseMultipartForm(300 << 20); err != nil {
@@ -204,7 +205,7 @@ func (app *App) ArchiveUpload{{uppercase .Object.Name}}(w http.ResponseWriter, r
 		{{if eq false .Object.Options.Image}}*/{{end}}
 		log.Println("creating new {{lowercase .Object.Name}}:", zipFile.Name)
 		fields := Fields{{uppercase .Object.Name}}{}
-		{{lowercase .Object.Name}} := New{{uppercase .Object.Name}}(parent, fields)
+		{{lowercase .Object.Name}} := user.New{{uppercase .Object.Name}}(parent, fields)
 
 		// hidden line here if noparent: {{lowercase .Object.Name}}.Fields.Filename = zipFile.Name
 		{{if .Object.Options.File}}{{lowercase .Object.Name}}.Fields.Filename = zipFile.Name{{end}}
@@ -261,4 +262,61 @@ func (app *App) write{{titlecase .Object.Name}}File(bucketName, objectName strin
 	n, err := writer.Write(content)
 	fmt.Printf("wrote %s %d bytes to bucket: %s \n", objectName, n, bucketName)
 	return err
+}
+
+func (app *App) add{{titlecase .Object.Name}}Admin(object *{{uppercase .Object.Name}}, admin string) error {
+
+	filter := map[string]bool{}
+	for _, username := range strings.Split(admin, ",") {
+		newAdmin, err := app.GetUserByUsername(username)
+		if err != nil {
+			log.Println("could not get username:", username)
+			return err
+		}
+		filter[newAdmin.Meta.ID] = true
+	}
+	for _, admin := range object.Meta.Moderation.Admins {
+		if len(admin) == 0 {
+			continue
+		}
+		filter[admin] = true
+	}
+	object.Meta.Moderation.Admins = make([]string, len(filter))
+	var x int
+	for k, _ := range filter {
+		object.Meta.Moderation.Admins[x] = k
+		x++
+	}
+
+	object.Meta.Modify()
+
+	log.Println("ADMINS", strings.Join(object.Meta.Moderation.Admins, " "))
+
+	return object.Meta.SaveToFirestore(app.App, object)
+}
+
+func (app *App) remove{{titlecase .Object.Name}}Admin(object *{{uppercase .Object.Name}}, admin string) error {
+
+	filter := map[string]bool{}
+	for _, a := range object.Meta.Moderation.Admins {
+		if a == admin {
+			continue
+		}
+		if len(a) == 0 {
+			continue
+		}
+		filter[a] = true
+	}
+	object.Meta.Moderation.Admins = make([]string, len(filter))
+	var x int
+	for k, _ := range filter {
+		object.Meta.Moderation.Admins[x] = k
+		x++
+	}
+
+	object.Meta.Modify()
+
+	log.Println("ADMINS", strings.Join(object.Meta.Moderation.Admins, " "))
+
+	return object.Meta.SaveToFirestore(app.App, object)
 }

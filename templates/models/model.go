@@ -5,7 +5,7 @@ type {{uppercase .Name}} struct {
 	Fields Fields{{uppercase .Name}} `json:"fields" firestore:"fields"`
 }
 
-func New{{uppercase .Name}}(parent *Internals, fields Fields{{uppercase .Name}}) *{{uppercase .Name}} {
+func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{uppercase .Name}}) *{{uppercase .Name}} {
 	var object *{{uppercase .Name}}
 	if parent == nil {
 		object = &{{uppercase .Name}}{
@@ -18,9 +18,16 @@ func New{{uppercase .Name}}(parent *Internals, fields Fields{{uppercase .Name}})
 			Fields: fields,
 		}
 	}
+	{{if eq false .Options.Admin}}// this object inherits its admin permissions
+	object.Meta.Moderation.Object = parent.Moderation.Object{{end}}
+	{{if .Options.Admin}}// this object is owned by the user that created it
+	object.Meta.Moderation.Admins = append(
+		object.Meta.Moderation.Admins,
+		user.Meta.ID,
+	){{end}}
+	// add children to context
 	object.Meta.Context.Children = []string{
-		{{range .Children}}"{{.Name}}",
-		{{end}}
+		{{range .Children}}"{{.Name}}",{{end}}
 	}
 	return object
 }
@@ -86,6 +93,12 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 		{{end}}
 	}
 	{{end}}
+
+	// extract name field if exists
+	name, ok := m["name"].(string)
+	if ok {
+		x.Meta.Name = name	
+	}
 
 	x.Meta.Modify()
 

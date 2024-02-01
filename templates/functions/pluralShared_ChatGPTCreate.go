@@ -70,7 +70,7 @@ The response should be a raw JSON array with one or more objects, based on the u
 				delete(result, k)
 			}
 		}
-		object := New{{uppercase .Object.Name}}(parent, Fields{{uppercase .Object.Name}}{})
+		object := user.New{{uppercase .Object.Name}}(parent, Fields{{uppercase .Object.Name}}{})
 		if err := object.ValidateObject(result); err != nil {
 			return err
 		}

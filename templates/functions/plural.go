@@ -20,7 +20,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 		return
 	}
 
-	user, err := GetSessionUser(app.App, r)
+	user, err := app.GetSessionUser(r)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 		return
@@ -32,9 +32,16 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return
 	}
-	parent, err := GetMetadata(app.App, parentID)
+	parent, err := app.GetMetadata(parentID)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusNotFound)
+		return
+	}
+
+	// security
+	if !app.IsAdmin(parent, user) {
+		err := fmt.Errorf("USER %s IS NOT AN ADMIN", user.Username)
+		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 		return
 	}
 
@@ -80,7 +87,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 			}
 
 			fields := Fields{{uppercase .Object.Name}}{}
-			object := New{{uppercase .Object.Name}}(parent, fields)
+			object := user.New{{uppercase .Object.Name}}(parent, fields)
 			if !object.ValidateInput(w, m) {
 				return
 			}
@@ -101,14 +108,14 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 		{{if eq false .Object.Options.File}}/*{{end}}
 		case "initupload":
 			// reuse code
-			app.Upload{{uppercase .Object.Name}}(w, r, parent)
+			app.Upload{{uppercase .Object.Name}}(w, r, parent, user)
 			return
 		{{if eq false .Object.Options.File}}*/{{end}}
 
 		{{if eq false .Object.Options.File}}/*{{end}}
 		case "inituploads":
 			// reuse code
-			app.ArchiveUpload{{uppercase .Object.Name}}(w, r, parent)
+			app.ArchiveUpload{{uppercase .Object.Name}}(w, r, parent, user)
 			return
 		{{if eq false .Object.Options.File}}*/{{end}}
 

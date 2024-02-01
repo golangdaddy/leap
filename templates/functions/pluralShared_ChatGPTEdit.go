@@ -78,7 +78,7 @@ PROMPT: `,
 				delete(result, k)
 			}
 		}
-		object := New{{uppercase .Object.Name}}(parent, Fields{{uppercase .Object.Name}}{})
+		object := user.New{{uppercase .Object.Name}}(parent, Fields{{uppercase .Object.Name}}{})
 		if err := object.ValidateObject(result); err != nil {
 			return err
 		}

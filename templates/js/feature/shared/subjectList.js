@@ -9,6 +9,7 @@ import Loading from '@/app/loading'
 import Spacer from '@/inputs/spacer';
 
 import { {{titlecase .Object.Name}}ListRow } from './{{lowercase .Object.Name}}ListRow';
+import { {{titlecase .Object.Name}}ListRowJob } from './{{lowercase .Object.Name}}ListRowJob';
 import { {{titlecase .Object.Name}}DELETE, {{titlecase .Object.Name}}sListGET, {{titlecase .Object.Name}}MoveUpPOST, {{titlecase .Object.Name}}MoveDownPOST } from '../_fetch';
 
 export function {{titlecase .Object.Name}}List(props) {
@@ -101,7 +102,12 @@ export function {{titlecase .Object.Name}}List(props) {
 
 			return (
 				<div key={i}>
+					{{if eq false .Object.Options.Job}}
 					<{{titlecase .Object.Name}}ListRow id={i} listLength={list.length} item={item} select={selectItem} moveUp={moveUp} moveDown={moveDown} delete={deleteItem}/>
+					{{end}}
+					{{if .Object.Options.Job}}
+					<{{titlecase .Object.Name}}ListRowJob id={i} listLength={list.length} item={item} select={selectItem} moveUp={moveUp} moveDown={moveDown} delete={deleteItem}/>
+					{{end}}
 					<Spacer/>
 				</div>
 			)

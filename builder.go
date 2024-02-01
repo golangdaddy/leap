@@ -209,16 +209,10 @@ func Build(stack *models.Stack) error {
 		if err := execTemplate("functions/user", "user.go", "api_"+"user.go", container); err != nil {
 			return err
 		}
-		if err := execTemplate("functions/user", "user_models.go", "api_"+"user_models.go", container); err != nil {
-			return err
-		}
 		if err := execTemplate("functions/user", "users.go", "api_"+"users.go", container); err != nil {
 			return err
 		}
 		if err := execTemplate("functions/auth", "auth.go", "api_"+"auth.go", container); err != nil {
-			return err
-		}
-		if err := execTemplate("functions/app", "app.go", "app.go", container); err != nil {
 			return err
 		}
 		if err := execTemplate("functions/app", "websocket.go", "websocket.go", container); err != nil {
@@ -397,6 +391,20 @@ func Build(stack *models.Stack) error {
 			)
 			copyFile(
 				"templates/js/feature/shared/subjectListRow.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				return err
+			}
+		}
+		{
+			path := fmt.Sprintf(
+				"build/app/features/%ss/shared/%sListRowJob.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Lower(language.English).String(object.Name),
+			)
+			copyFile(
+				"templates/js/feature/shared/subjectListRowJob.js",
 				path,
 			)
 			if err := doTemplate(path, container); err != nil {
@@ -727,6 +735,12 @@ func copyDir(src, dest string) error {
 
 func concatModels(dstPath string, stack *models.Stack) error {
 
+	if err := concatFile("templates/models/const.go", dstPath); err != nil {
+		return err
+	}
+	if err := concatFile("templates/models/app.go", dstPath); err != nil {
+		return err
+	}
 	if err := concatFile("templates/models/internals.go", dstPath); err != nil {
 		return err
 	}

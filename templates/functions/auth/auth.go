@@ -69,7 +69,7 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 
 			email = strings.ToLower(strings.TrimSpace(email))
 
-			user, err := GetUserByEmail(app.App, email)
+			user, err := app.GetUserByEmail(email)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusBadRequest)
 				return
@@ -144,7 +144,7 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			user := NewUser(email, username)
+			user := NewUser(1, email, username)
 
 			if !user.IsValid() {
 				err := fmt.Errorf("username failed validation: %s", user.Username)
@@ -153,7 +153,7 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 			}
 
 			// find if email is conflicting
-			if _, err := GetUserByEmail(app.App, user.Email); err == nil {
+			if _, err := app.GetUserByEmail(user.Email); err == nil {
 				cloudfunc.HttpError(w, err, http.StatusConflict)
 				return
 			}
@@ -180,13 +180,13 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 		case "login":
 
 			// get and delete(?) otp
-			otp, err := DebugGetOTP(app.App, r)
+			otp, err := app.DebugGetOTP(r)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusBadRequest)
 				return
 			}
 
-			secret, expires, err := CreateSessionSecret(app.App, otp)
+			secret, expires, err := app.CreateSessionSecret(otp)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return

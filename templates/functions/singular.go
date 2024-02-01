@@ -23,7 +23,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 		return
 	}
 
-	_, err := GetSessionUser(app.App, r)
+	_, err := app.GetSessionUser(r)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 		return
@@ -36,7 +36,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 		return
 	}
 	object := &{{uppercase $obj.Name}}{}
-	if err := GetDocument(app.App, id, object); err != nil {
+	if err := app.GetDocument(id, object); err != nil {
 		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 		return
 	}
@@ -128,6 +128,34 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 		}
 
 		switch function {
+
+		case "addadmin":
+
+			admin, err := cloudfunc.QueryParam(r, "admin")
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
+
+			if err := app.add{{titlecase .Object.Name}}Admin(object, admin); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+				return
+			}
+			return
+
+		case "removeadmin":
+
+			admin, err := cloudfunc.QueryParam(r, "admin")
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
+
+			if err := app.remove{{titlecase .Object.Name}}Admin(object, admin); err != nil {
+				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+				return
+			}
+			return
 
 		case "job":
 

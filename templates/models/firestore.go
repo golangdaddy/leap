@@ -1,5 +1,21 @@
+func (app *App) IsAdmin(parent *Internals, user *User) bool {
+	if len(parent.Moderation.Object) > 0 {
+		var err error
+		parent, err = app.GetMetadata(parent.Moderation.Object)
+		if err != nil {
+			log.Println(err)
+			return false
+		}
+	}
+	for _, userID := range parent.Moderation.Admins {
+		if user.Meta.ID == userID {
+			return true
+		}
+	}
+	return false
+}
 
-func GetMetadata(app *common.App, id string) (*Internals, error) {
+func (app *App) GetMetadata(id string) (*Internals, error) {
 
 	dst := &Generic{}
 
@@ -15,7 +31,7 @@ func GetMetadata(app *common.App, id string) (*Internals, error) {
 	return &dst.Meta, doc.DataTo(dst)
 }
 
-func GetDocument(app *common.App, id string, dst interface{}) error {
+func (app *App) GetDocument(id string, dst interface{}) error {
 
 	i := Internal(id)
 	path := i.DocPath()

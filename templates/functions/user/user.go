@@ -26,7 +26,7 @@ func (app *App) UserEntrypoint(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := &User{}
-	if err := GetDocument(app.App, userID, user); err != nil {
+	if err := app.GetDocument(userID, user); err != nil {
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return
 	}

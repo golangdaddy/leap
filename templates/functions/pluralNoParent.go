@@ -20,7 +20,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 		return
 	}
 
-	_, err := GetSessionUser(app.App, r)
+	user, err := app.GetSessionUser(r)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusUnauthorized)
 		return
@@ -49,7 +49,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 		case "init":
 
 			fields := Fields{{uppercase .Object.Name}}{}
-			object := New{{uppercase .Object.Name}}(nil, fields)
+			object := user.New{{uppercase .Object.Name}}(nil, fields)
 			if !object.ValidateInput(w, m) {
 				return
 			}
@@ -80,7 +80,6 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 			app.ArchiveUpload{{uppercase .Object.Name}}(w, r, parent)
 			return
 		{{if eq false .Object.Options.File}}*/{{end}}
-
 
 		default:
 			err := fmt.Errorf("function not found: %s", function)
