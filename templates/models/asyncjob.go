@@ -2,18 +2,40 @@
 type ASYNCJOB struct {
 	Meta Internals
 	// pending:started:completed:failed
-	Status    string
-	Stage     int
-	Stages    []*Stage
+	Status string
+	Stage  int
+	Stages []ASYNCJOBSTAGE
+	Data   interface{}
+}
+
+type ASYNCJOBSTAGE struct {
+	Name      string
+	Notes     []string
+	Started   int64
+	Failed    int64
 	Completed int64
 }
 
-func (job *ASYNCJOB) SetData(x interface{}) {
-	job.Stages[job.Stage].Data = x
+func NewASYNCJOB(parent *Internals, stages ...ASYNCJOBSTAGE) *ASYNCJOB {
+	return &ASYNCJOB{
+		Meta:   parent.NewInternals("asyncjobs"),
+		Stages: stages,
+		Status: "PENDING",
+	}
 }
 
-func (job *ASYNCJOB) Data() interface{} {
-	return job.Stages[job.Stage].Data
+func NewASYNCJOBSTAGE(name string) ASYNCJOBSTAGE {
+	return ASYNCJOBSTAGE{
+		Name: name,
+	}
+}
+
+func (job *ASYNCJOB) DataTo(dst interface{}) error {
+	b, err := json.Marshal(job.Data)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(b, dst)
 }
 
 func (job *ASYNCJOB) AddNote(note string) {
@@ -23,32 +45,26 @@ func (job *ASYNCJOB) AddNote(note string) {
 	)
 }
 
+func (job *ASYNCJOB) StartStage() {
+	job.Stages[job.Stage].Started = getTime()
+	job.Status = "STARTED"
+}
+
+func (job *ASYNCJOB) FailStage(err error) {
+	job.AddNote(err.Error())
+	job.Stages[job.Stage].Failed = getTime()
+	job.Status = "FAILED"
+}
+
 func (job *ASYNCJOB) CompleteStage() {
 	job.Stages[job.Stage].Completed = getTime()
-	if job.Stage+1 == len(job.Stages) {
-		if job.Completed == 0 {
-			job.Completed = getTime()
-		}
-	} else {
+	if job.Stage+1 < len(job.Stages) {
+		log.Println("JOB STAGE COMPLETED", job.Stage)
+		job.AddNote("COMPLETED STAGE: " + strconv.Itoa(job.Stage))
 		job.Stage++
-	}
-	if job.Stage < len(job.Stages) {
-		job.Status = job.Stages[job.Stage].Name
-	}
-}
-
-type Stage struct {
-	Name      string
-	Data      interface{}
-	Notes     []string
-	Started   int64
-	Completed int64
-	Failed    int64
-}
-
-func NewASYNCJOB(parent *Internals, stages ...*Stage) *ASYNCJOB {
-	return &ASYNCJOB{
-		Meta:   parent.NewInternals("asyncjobs"),
-		Stages: stages,
+	} else {
+		job.Status = "COMPLETED"
+		log.Println("JOB STATUS:", job.Status)
+		job.AddNote("JOB COMPLETED")
 	}
 }

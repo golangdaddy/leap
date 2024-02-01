@@ -50,7 +50,6 @@ func main() {
 	http.HandleFunc("/api/users", app.UsersEntrypoint)
 	http.HandleFunc("/api/auth", app.AuthEntrypoint)
 	http.HandleFunc("/api/assetlayer", app.EntrypointASSETLAYER)
-	http.HandleFunc("/api/asyncjob", app.EntrypointASYNCJOB)
 	http.HandleFunc("/api/openai", app.EntrypointOPENAI)
 	{{range .Objects}}
 	http.HandleFunc("/api/{{lowercase .Name}}", app.Entrypoint{{uppercase .Name}})

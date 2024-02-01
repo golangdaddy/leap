@@ -29,14 +29,14 @@ type Internals struct {
 	ID         string
 	Class      string
 	URIs       []string
-	Asset      string
-	Wallet     string
+	Asset      string `json:",omitempty"`
+	Wallet     string `json:",omitempty"`
 	Context    Context
 	Moderation Moderation
 	Updated    bool
 	Created    int64
 	Modified   int64
-	Stats      map[string]float64
+	Stats      map[string]float64 `json:",omitempty"`
 }
 
 func RegExp(exp, matchString string) bool {
@@ -194,20 +194,21 @@ func (i *Internals) Update() {
 }
 
 type Context struct {
-	Children []string
-	Parent   string
-	Parents  []string
-	Country  string
-	Region   string
-	Order    int
+	Children []string `json:",omitempty"`
+	Parent   string   `json:",omitempty"`
+	Parents  []string `json:",omitempty"`
+	Country  string   `json:",omitempty"`
+	Region   string   `json:",omitempty"`
+	Order    int      `json:",omitempty"`
+	Status   string   `json:",omitempty"`
 }
 
 type Moderation struct {
-	Admins       []string
-	Blocked      bool
-	BlockedTime  int64
-	BlockedBy    string
-	Approved     bool
-	ApprovedTime int64
-	ApprovedBy   string
+	Admins       []string `json:",omitempty"`
+	Blocked      bool     `json:",omitempty"`
+	BlockedTime  int64    `json:",omitempty"`
+	BlockedBy    string   `json:",omitempty"`
+	Approved     bool     `json:",omitempty"`
+	ApprovedTime int64    `json:",omitempty"`
+	ApprovedBy   string   `json:",omitempty"`
 }

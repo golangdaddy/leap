@@ -32,7 +32,8 @@ RULES:
 4: DON'T INCLUDE FIELDS WITH EMPTY STRINGS.
 5: RESPECT ANY VALIDATION INFORMATION SPECIFIED FOR FIELDS, SUCH AS MIN AND MAX LENGTHS.
 6: REPLY TO THE USER PROMPT ONLY WITH THE JSON ENCODED MUTATED OBJECT
-`,
+
+PROMPT: `,
 		string(objectBytes),
 	)
 
@@ -47,11 +48,7 @@ RULES:
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleSystem,
-					Content: system,
-				},
-				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: prompt,
+					Content: system+prompt,
 				},
 			},
 		},

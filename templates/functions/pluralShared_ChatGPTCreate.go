@@ -24,8 +24,7 @@ We want to create one or more of these data objects:
 {{end}}
 }
 
-The response should be a raw JSON array with one or more objects, based on the user prompt.
-`
+The response should be a raw JSON array with one or more objects, based on the user prompt: `
 
 	println(prompt)
 
@@ -36,11 +35,7 @@ The response should be a raw JSON array with one or more objects, based on the u
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleSystem,
-					Content: system,
-				},
-				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: prompt,
+					Content: system+prompt,
 				},
 			},
 		},

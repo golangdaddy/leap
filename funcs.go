@@ -14,6 +14,7 @@ var funcMap = template.FuncMap{
 	"uppercase":   uppercase,
 	"titlecase":   titlecase,
 	"json":        jsonmarshal,
+	"tidy":        tidy,
 }
 
 func jsonmarshal(x interface{}) string {
@@ -31,6 +32,15 @@ func uppercase(s string) string {
 
 func lowercase(s string) string {
 	return strings.ToLower(s)
+}
+
+func tidy(s string) string {
+	s = strings.Replace(s, "[]", "array", -1)
+	s = strings.Replace(s, "[", "", -1)
+	s = strings.Replace(s, "]", "", -1)
+	s = strings.Replace(s, "{", "", -1)
+	s = strings.Replace(s, "}", "", -1)
+	return strings.ToUpper(s)
 }
 
 func parentcount(object *models.Object) int {

@@ -49,7 +49,7 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 		return errors.New("required field '{{lowercase .Name}}' not supplied")
 	}
 	if exists {
-		x.Fields.{{titlecase .Name}}, err = assert{{uppercase .Type}}(m, "{{lowercase .Name}}")
+		x.Fields.{{titlecase .Name}}, err = assert{{tidy .Type}}(m, "{{lowercase .Name}}")
 		if err != nil {
 			return errors.New(err.Error())
 		}

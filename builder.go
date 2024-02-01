@@ -91,14 +91,6 @@ func Build(stack *models.Stack) error {
 	if err := copyFile("templates/functions/assetlayer/assetlayer.go", "build/api_assetlayer.go"); err != nil {
 		return err
 	}
-
-	if err := copyFile("templates/functions/asyncjob/asyncjob.go", "build/api_asyncjob.go"); err != nil {
-		return err
-	}
-	if err := doTemplate("build/api_asyncjob.go", stack); err != nil {
-		return err
-	}
-
 	if err := copyFile("templates/functions/openai/openai.go", "build/api_openai.go"); err != nil {
 		return err
 	}

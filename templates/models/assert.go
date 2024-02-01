@@ -61,6 +61,29 @@ func assertRangeMax(maximum float64, value interface{}) error {
 	return nil
 }
 
+func assertMAPSTRINGINT(m map[string]interface{}, key string) (map[string]int, error) {
+	result := map[string]int{}
+	object := m[key].(map[string]interface{})
+	for k, v := range object {
+		if f, ok := v.(float64); ok {
+			result[k] = int(f)
+		}
+	}
+	if len(object) != len(result) {
+		return nil, fmt.Errorf("assertMAPSTRINGINT: '%s' is required for this request", key)
+	}
+	return result, nil
+}
+
+func AssertMAPSTRINGINT(w http.ResponseWriter, m map[string]interface{}, key string) (map[string]int, bool) {
+	data, err := assertMAPSTRINGINT(m, key)
+	if err != nil {
+		cloudfunc.HttpError(w, err, http.StatusBadRequest)
+		return nil, false
+	}
+	return data, true
+}
+
 func AssertSTRING(w http.ResponseWriter, m map[string]interface{}, key string) (string, bool) {
 	s, err := assertSTRING(m, key)
 	if err != nil {
@@ -78,8 +101,8 @@ func assertSTRING(m map[string]interface{}, key string) (string, error) {
 	return s, nil
 }
 
-func AssertSTRINGS(w http.ResponseWriter, m map[string]interface{}, key string) ([]string, bool) {
-	s, err := assertSTRINGS(m, key)
+func AssertARRAYSTRING(w http.ResponseWriter, m map[string]interface{}, key string) ([]string, bool) {
+	s, err := assertARRAYSTRING(m, key)
 	if err != nil {
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
 		return nil, false
@@ -87,7 +110,7 @@ func AssertSTRINGS(w http.ResponseWriter, m map[string]interface{}, key string) 
 	return s, true
 }
 
-func assertSTRINGS(m map[string]interface{}, key string) ([]string, error) {
+func assertARRAYSTRING(m map[string]interface{}, key string) ([]string, error) {
 	a, ok := m[key].([]interface{})
 	if !ok {
 		return nil, fmt.Errorf("'%s' is required for this request", key)
