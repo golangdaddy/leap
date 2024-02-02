@@ -85,3 +85,7 @@ func (clients *Clients) Assetlayer() *assetlayer.Client {
 func (clients *Clients) ChatGPT() *openai.Client {
 	return clients.openai
 }
+
+func (clients *Clients) Pusher() pusher.Client {
+	return clients.pusher
+}
