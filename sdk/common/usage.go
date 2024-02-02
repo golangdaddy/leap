@@ -7,6 +7,7 @@ import (
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/fxamacker/cbor/v2"
 	"github.com/golangdaddy/leap/sdk/assetlayer"
+	"github.com/pusher/pusher-http-go/v5"
 	"github.com/sashabaranov/go-openai"
 )
 
@@ -44,6 +45,16 @@ func (app *App) UseAlgolia(appID, secretPath string) {
 		log.Fatal(err)
 	}
 	app.Clients.algolia = search.NewClient(appID, string(secretBytes))
+}
+
+// UsePusher initialises the pusher client
+func (app *App) UsePusher(appID, key, secret, cluster string) {
+	app.Clients.algolia = pusher.Client{
+		AppID:   appID,
+		Key:     key,
+		Secret:  secret,
+		Cluster: cluster,
+	}
 }
 
 // UseJWT caches a secret signing key in memory

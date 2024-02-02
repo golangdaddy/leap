@@ -23,7 +23,7 @@ type Clients struct {
 	app        *App
 	gin        *gin.Engine
 	httpClient *http.Client
-	pusher     *pusher.Client
+	pusher     pusher.Client
 	algolia    *search.Client
 	assetlayer *assetlayer.Client
 	openai     *openai.Client
