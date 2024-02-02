@@ -14,6 +14,7 @@
     "axios": "^1.6.2",
     "eslint-config-next": "^14.0.3",
     "next": "^14.0.3",
+    "pusher-js": "^8.4.0-rc2",
     "react": "^18.2.0",
     "react-color-palette": "^7.1.0",
     "react-dom": "^18.2.0",
