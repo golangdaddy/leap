@@ -87,7 +87,7 @@ func Build(stack *models.Stack) error {
 		return err
 	}
 
-	// as go
+	// assetlayer go
 	if err := copyFile("templates/functions/assetlayer/assetlayer.go", "build/api_assetlayer.go"); err != nil {
 		return err
 	}

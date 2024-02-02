@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/kr/pretty"
@@ -125,6 +126,7 @@ func Prepare(tree *Stack) error {
 			*tree.Objects[n] = f
 		}
 
+		log.Println("SETTING INDEX", tree.Objects[n].Name, n)
 		objectIndex[tree.Objects[n].Name] = tree.Objects[n]
 
 		for x, field := range tree.Objects[n].Fields {
@@ -150,6 +152,7 @@ func Prepare(tree *Stack) error {
 	for _, object := range tree.Objects {
 		for _, p := range object.Parents {
 			parent := objectIndex[p]
+			log.Println(p, parent)
 			newObject := *object
 			newObject.Fields = nil
 			parent.Children = append(parent.Children, &newObject)

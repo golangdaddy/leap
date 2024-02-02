@@ -3,16 +3,11 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 import { useState, useEffect } from 'react';
 
-import VisitTab from '@/app/interfaces';
+import VisitTab from '@/features/interfaces'
 
 import { ProjectObjectGET, ProjectAdminAddPOST, ProjectAdminRemovePOST } from './_fetch'
 
-import { Admin } from './admin';
-
-import { UserObjectGET } from '@/app/fetch';
-import { DeleteObject } from '@/inputs/deleteObject';
-import AutocompleteUsername from '@/inputs/autocompleteUsername';
-import Spacer from '@/inputs/spacer';
+import { {{titlecase .Object.Name}}Admin } from './{{lowercase .Object.Name}}Admin';
 
 export function {{titlecase .Object.Name}}Admins(props) {
 
