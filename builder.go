@@ -171,6 +171,9 @@ func Build(stack *models.Stack) error {
 		if err := execTemplate("functions", "pluralShared.go", "api_"+object.Name+"shared.go", container); err != nil {
 			return err
 		}
+		if err := execTemplate("functions", "pluralLists.go", "api_"+object.Name+"Lists.go", container); err != nil {
+			return err
+		}
 		// chatgpt methods
 		if err := execTemplate("functions", "pluralShared_ChatGPTCreate.go", "api_"+object.Name+"shared_ChatGPTCreate.go", container); err != nil {
 			return err
@@ -447,7 +450,7 @@ func Build(stack *models.Stack) error {
 			path := fmt.Sprintf(
 				"build/app/features/%ss/%sAdmin.js",
 				cases.Lower(language.English).String(object.Name),
-				cases.Title(language.English).String(object.Name),
+				cases.Lower(language.English).String(object.Name),
 			)
 			copyFile(
 				"templates/js/feature/subjectAdmin.js",
@@ -461,7 +464,7 @@ func Build(stack *models.Stack) error {
 			path := fmt.Sprintf(
 				"build/app/features/%ss/%sAdmins.js",
 				cases.Lower(language.English).String(object.Name),
-				cases.Title(language.English).String(object.Name),
+				cases.Lower(language.English).String(object.Name),
 			)
 			copyFile(
 				"templates/js/feature/subjectAdmins.js",

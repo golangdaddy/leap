@@ -19,8 +19,12 @@ export function {{titlecase .Object.Name}}List(props) {
 
 	const [ list, setList ] = useState(null)
 
+	var mode = "modified"
+	{{if .Object.Options.Order}}mode = "ordered"{{end}}
+	{{if .Object.Options.Admin}}mode = "admin"{{end}}
+
 	function updateList() {
-		{{titlecase .Object.Name}}sListGET(userdata, props.subject?.Meta.ID, props.limit)
+		{{titlecase .Object.Name}}sListGET(userdata, props.subject?.Meta.ID, mode, props.limit)
 		.then((res) => res.json())
 		.then((data) => {
 			console.log(data)

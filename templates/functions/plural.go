@@ -8,9 +8,7 @@ import (
 	"strconv"
 	"log"
 
-	"cloud.google.com/go/firestore"
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"google.golang.org/api/iterator"
 )
 
 // api-{{lowercase .Object.Name}}s
@@ -182,8 +180,14 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 			}
 			return
 
-		// return a list of {{lowercase .Object.Name}}s in a specific parent
-		case "list", "altlist":
+		case "list":
+
+			// get function
+			mode, err := cloudfunc.QueryParam(r, "mode")
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
 
 			var limit int
 			limitString, _ := cloudfunc.QueryParam(r, "limit")
@@ -191,40 +195,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 				limit = n
 			}
 
-			list := []*{{uppercase .Object.Name}}{}
-
-			// handle objects that need to be ordered
-			{{if .Object.Options.Order}}
-			q := parent.Firestore(app.App).Collection("{{lowercase .Object.Name}}s").OrderBy("Meta.Context.Order", firestore.Asc)
-			{{else}}
-			q := parent.Firestore(app.App).Collection("{{lowercase .Object.Name}}s").OrderBy("Meta.Modified", firestore.Desc)
-			{{end}}
-
-			if limit > 0 {
-				q = q.Limit(limit)
-			}
-			iter := q.Documents(app.Context())
-			for {
-				doc, err := iter.Next()
-				if err == iterator.Done {
-					break
-				}
-				if err != nil {
-					log.Println(err)
-					break
-				}
-				{{lowercase .Object.Name}} := &{{uppercase .Object.Name}}{}
-				if err := doc.DataTo({{lowercase .Object.Name}}); err != nil {
-					log.Println(err)
-					continue
-				}
-				list = append(list, {{lowercase .Object.Name}})
-			}
-
-			if err := cloudfunc.ServeJSON(w, list); err != nil {
-				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-				return
-			}
+			app.{{lowercase .Object.Name}}Lists(w, user, parent, mode, limit)
 
 			return
 

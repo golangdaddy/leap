@@ -16,8 +16,8 @@ export function {{titlecase .Object.Name}}ObjectGET(user, id) {
     return SessionFetch(user, "GET", "api/{{lowercase .Object.Name}}?function=object&id="+id)
 }
 
-export function {{titlecase .Object.Name}}sListGET(user, parentID, limit) {
-    return SessionFetch(user, "GET", "api/{{lowercase .Object.Name}}s?function=list&parent="+parentID+"&limit="+limit)
+export function {{titlecase .Object.Name}}sListGET(user, parentID, mode, limit) {
+    return SessionFetch(user, "GET", "api/{{lowercase .Object.Name}}s?function=list&parent="+parentID+"&mode="+mode+"&limit="+limit)
 }
 
 export function {{titlecase .Object.Name}}sCountGET(user, parentID) {
@@ -70,4 +70,12 @@ export function {{titlecase .Object.Name}}ChatGPTInitPOST(user, parentID, payloa
 
 export function {{titlecase .Object.Name}}ChatGPTPromptPOST(user, id, payload) {
     return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=prompt&id="+id, payload)
+}
+
+export function {{titlecase .Object.Name}}AdminAddPOST(user, id, payload) {
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=addadmin&id="+id, payload)
+}
+
+export function {{titlecase .Object.Name}}AdminRemovePOST(user, id, payload) {
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=removeadmin&id="+id, payload)
 }

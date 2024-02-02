@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 import VisitTab from '@/features/interfaces'
 
-import { ProjectObjectGET, ProjectAdminAddPOST, ProjectAdminRemovePOST } from './_fetch'
+import { {{titlecase .Object.Name}}ObjectGET, {{titlecase .Object.Name}}AdminAddPOST, {{titlecase .Object.Name}}AdminRemovePOST } from './_fetch'
 
 import { {{titlecase .Object.Name}}Admin } from './{{lowercase .Object.Name}}Admin';
 
