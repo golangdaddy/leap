@@ -1,4 +1,3 @@
-
 type OTP struct {
 	Email     string `json:"email" firestore:"email"`
 	User      string `json:"user" firestore:"user"`

@@ -1,4 +1,3 @@
-
 type Users []*User
 
 type UserRef struct {

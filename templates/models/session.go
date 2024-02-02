@@ -1,4 +1,3 @@
-
 type Session struct {
 	UserID  string
 	Expires int64
