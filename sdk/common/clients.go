@@ -9,6 +9,7 @@ import (
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/gin-gonic/gin"
 	"github.com/golangdaddy/leap/sdk/assetlayer"
+	"github.com/pusher/pusher-http-go/v5"
 	"github.com/sashabaranov/go-openai"
 )
 
@@ -22,6 +23,7 @@ type Clients struct {
 	app        *App
 	gin        *gin.Engine
 	httpClient *http.Client
+	pusher     *pusher.Client
 	algolia    *search.Client
 	assetlayer *assetlayer.Client
 	openai     *openai.Client

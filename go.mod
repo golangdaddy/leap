@@ -61,6 +61,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/ninjapunkgirls/sdk v0.0.0-20221201145847-920638355e20 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
+	github.com/pusher/pusher-http-go/v5 v5.1.1 // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/sashabaranov/go-openai v1.18.3 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect

@@ -28,7 +28,7 @@ export function {{titlecase .Object.Name}}s(props) {
 				!promptToggle && <Loading/>
 			}
 			{
-				promptToggle && <{{titlecase .Object.Name}}List subject={subject} />
+				promptToggle && <{{titlecase .Object.Name}}List subject={subject} native={true} />
 			}
 		</div>
 	)
