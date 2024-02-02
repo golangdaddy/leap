@@ -29,9 +29,6 @@ export function {{titlecase .Object.Name}}Admin(props) {
 
             <div className='flex flex-row justify-between w-full'>
                 {
-                    !admin && <Loading/>
-                }
-                {
                     admin && <div className='flex flex-col justify-center text-2xl uppercase m-4'>
                         { admin.username }
                     </div>

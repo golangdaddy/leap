@@ -144,19 +144,28 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 			}
 			return
 
-		{{if eq false .Object.Options.File}}/*{{end}}
-		case "initupload":
-			// reuse code
-			app.Upload{{uppercase .Object.Name}}(w, r, parent, user)
-			return
-		{{if eq false .Object.Options.File}}*/{{end}}
 
-		{{if eq false .Object.Options.File}}/*{{end}}
-		case "inituploads":
-			// reuse code
-			app.ArchiveUpload{{uppercase .Object.Name}}(w, r, parent, user)
-			return
-		{{if eq false .Object.Options.File}}*/{{end}}
+		case "upload":
+			
+			mode, err := cloudfunc.QueryParam(r, "mode")
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
+
+			switch mode {
+			case "file":
+				app.Upload{{uppercase .Object.Name}}(w, r, parent, user)
+				return
+
+			case "archive":
+				app.ArchiveUpload{{uppercase .Object.Name}}(w, r, parent, user)
+				return
+			default:
+				err := fmt.Errorf("mode not found: %s", mode)
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return		
+			}
 
 		default:
 			err := fmt.Errorf("function not found: %s", function)
@@ -182,7 +191,6 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 
 		case "list":
 
-			// get function
 			mode, err := cloudfunc.QueryParam(r, "mode")
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusBadRequest)

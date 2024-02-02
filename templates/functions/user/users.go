@@ -79,12 +79,12 @@ func (app *App) UsersEntrypoint(w http.ResponseWriter, r *http.Request) {
 					log.Println(err)
 					break
 				}
-				user := &User{}
-				if err := doc.DataTo(user); err != nil {
+				username := &Username{}
+				if err := doc.DataTo(username); err != nil {
 					log.Println(err)
 					continue
 				}
-				list = append(list, user.Ref())
+				list = append(list, username.User)
 			}
 
 			if err := cloudfunc.ServeJSON(w, list); err != nil {

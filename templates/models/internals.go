@@ -1,4 +1,3 @@
-
 type Generic struct {
 	Meta Internals
 }

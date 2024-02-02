@@ -46,16 +46,12 @@ export function {{titlecase .Object.Name}}JobPOST(user, id, job) {
 
 // file handling
 
-export function {{titlecase .Object.Name}}Upload(user, id, formData) {
-    return AxiosPOST(user, "api/{{lowercase .Object.Name}}?function=upload&id="+id, formData)
+export function {{titlecase .Object.Name}}Upload(user, id, mode, formData) {
+    return AxiosPOST(user, "api/{{lowercase .Object.Name}}?function=upload&id="+id+"&mode="+mode, formData)
 }
 
-export function {{titlecase .Object.Name}}InitUpload(user, parentID, formData) {
-    return AxiosPOST(user, "api/{{lowercase .Object.Name}}s?function=initupload&parent="+parentID, formData)
-}
-
-export function {{titlecase .Object.Name}}InitUploads(user, parentID, formData) {
-    return AxiosPOST(user, "api/{{lowercase .Object.Name}}s?function=inituploads&parent="+parentID, formData)
+export function {{titlecase .Object.Name}}sUpload(user, parentID, mode, formData) {
+    return AxiosPOST(user, "api/{{lowercase .Object.Name}}s?function=upload&parent="+parentID+"&mode="+mode, formData)
 }
 
 // misc
@@ -72,10 +68,6 @@ export function {{titlecase .Object.Name}}ChatGPTPromptPOST(user, id, payload) {
     return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=prompt&id="+id, payload)
 }
 
-export function {{titlecase .Object.Name}}AdminAddPOST(user, id, payload) {
-    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=addadmin&id="+id, payload)
-}
-
-export function {{titlecase .Object.Name}}AdminRemovePOST(user, id, payload) {
-    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=removeadmin&id="+id, payload)
+export function {{titlecase .Object.Name}}AdminPOST(user, id, mode, payload) {
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=admin&mode="+mode+"&id="+id, payload)
 }

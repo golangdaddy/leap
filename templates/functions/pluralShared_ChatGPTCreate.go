@@ -77,7 +77,7 @@ The response should be a raw JSON array with one or more objects, based on the u
 		if err := app.CreateDocument{{uppercase .Object.Name}}(&parent.Meta, object); err != nil {
 			return err
 		}
-		app.SendMessageToUser(user, &Message{Type: "async-create", Body: object})
+		app.SendMessageToUser(user, "create", object)
 	}
 
 	return nil

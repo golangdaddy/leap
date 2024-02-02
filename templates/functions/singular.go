@@ -136,7 +136,13 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 
 		switch function {
 
-		case "addadmin":
+		case "admin":
+
+			mode, err := cloudfunc.QueryParam(r, "mode")
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
 
 			admin, err := cloudfunc.QueryParam(r, "admin")
 			if err != nil {
@@ -144,22 +150,27 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 				return
 			}
 
-			if err := app.add{{titlecase .Object.Name}}Admin(object, admin); err != nil {
-				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-				return
-			}
-			return
-
-		case "removeadmin":
-
-			admin, err := cloudfunc.QueryParam(r, "admin")
-			if err != nil {
+			// prevent self-deletion
+			if strings.Contains(admin, user.Username) {
+				errors.New("you cannot add or remove yourself as ad admin")
 				cloudfunc.HttpError(w, err, http.StatusBadRequest)
 				return
 			}
 
-			if err := app.remove{{titlecase .Object.Name}}Admin(object, admin); err != nil {
-				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			switch mode {
+			case "add":
+				if err := app.add{{titlecase .Object.Name}}Admin(object, admin); err != nil {
+					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+					return
+				}
+			case "remove":
+				if err := app.remove{{titlecase .Object.Name}}Admin(object, admin); err != nil {
+					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+					return
+				}
+			default:
+				err := fmt.Errorf("mode not found: %s", mode)
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
 				return
 			}
 			return

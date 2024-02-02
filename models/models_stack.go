@@ -6,16 +6,21 @@ import (
 )
 
 type Stack struct {
-	WebAPI        string    `json:"webAPI"`
-	HostAPI       string    `json:"hostAPI"`
-	WebsocketHost string    `json:"websocketHost"`
-	RepoURI       string    `json:"repoURI"`
-	SiteName      string    `json:"siteName"`
-	ProjectID     string    `json:"projectID"`
-	DatabaseID    string    `json:"databaseID"`
-	Objects       []*Object `json:"objects"`
-	Wallets       []string  `json:"wallets"`
-	Entrypoints   []string  `json:"entrypoints"`
+	WebAPI        string       `json:"webAPI"`
+	HostAPI       string       `json:"hostAPI"`
+	WebsocketHost string       `json:"websocketHost"`
+	RepoURI       string       `json:"repoURI"`
+	SiteName      string       `json:"siteName"`
+	ProjectID     string       `json:"projectID"`
+	DatabaseID    string       `json:"databaseID"`
+	Objects       []*Object    `json:"objects"`
+	Wallets       []string     `json:"wallets"`
+	Entrypoints   []string     `json:"entrypoints"`
+	Options       StackOptions `json:"options"`
+}
+
+type StackOptions struct {
+	Pusher bool `json:"pusher"`
 }
 
 func (stack *Stack) NewObject(parent *Object, name string) *Object {

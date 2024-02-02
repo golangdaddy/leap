@@ -3,9 +3,11 @@ import { useUserContext } from '@/context/user';
 import { useLocalContext } from '@/context/local';
 import { useState, useEffect } from 'react';
 
+import AutocompleteUsername from '@/inputs/autocompleteUsername'
+import Spacer from '@/inputs/spacer'
 import VisitTab from '@/features/interfaces'
 
-import { {{titlecase .Object.Name}}ObjectGET, {{titlecase .Object.Name}}AdminAddPOST, {{titlecase .Object.Name}}AdminRemovePOST } from './_fetch'
+import { {{titlecase .Object.Name}}ObjectGET, {{titlecase .Object.Name}}AdminPOST } from './_fetch'
 
 import { {{titlecase .Object.Name}}Admin } from './{{lowercase .Object.Name}}Admin';
 
@@ -46,7 +48,7 @@ export function {{titlecase .Object.Name}}Admins(props) {
 
 	function deleteAdmin(id) {
 		const adminID = project.Meta.Moderation.Admins[id]
-		ProjectAdminRemovePOST(userdata, project.Meta.ID, adminID)
+		{{titlecase .Object.Name}}AdminPOST(userdata, project.Meta.ID, "remove", adminID)
 		.then(updateProject)
 	}
 
@@ -57,13 +59,13 @@ export function {{titlecase .Object.Name}}Admins(props) {
 
 	function addAdmins() {
 		newAdmins.forEach(function (admin, i) {
-			ProjectAdminAddPOST(userdata, project.Meta.ID, admin)
+			{{titlecase .Object.Name}}AdminPOST(userdata, project.Meta.ID, "add", admin)
 		})
 		updateProject()
 	}
 
     return (
-		<div className='flex flex-col'>
+		<div style={ {padding:"30px 60px 30px 60px"} } className='flex flex-col'>
 			<div className='text-2xl'>Add Admin</div>
 			<AutocompleteUsername inputChange={inputChange} />
 			<Spacer/>
@@ -90,7 +92,7 @@ export function {{titlecase .Object.Name}}Admins(props) {
 				{
 					project.Meta.Moderation.Admins.map(function (adminID, i) {
 						return (
-							<Admin key={adminID} id={i} admin={adminID} delete={deleteAdmin}/>
+							<{{titlecase .Object.Name}}Admin key={adminID} id={i} admin={adminID} delete={deleteAdmin}/>
 						)
 					})
 				}

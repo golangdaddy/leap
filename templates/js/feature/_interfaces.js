@@ -65,7 +65,6 @@ export var {{titlecase .Object.Name}}Interfaces = {
 	"{{lowercase .Object.Name}}": {
 		level: {{parentcount .Object}}+2,
 		name: "{{titlecase .Object.Name}}",
-		sublinks: [{{if .Object.Options.File}}"upload{{lowercase .Object.Name}}"{{end}}],
 		subsublinks: [{{ range .Object.Children }}"{{lowercase .Name}}s",{{end}}{{if .Object.Options.Admin}}"{{lowercase .Object.Name}}admins"{{end}}],
 		component: (<{{titlecase .Object.Name}} />),
 		hasDeleteButton: true,
@@ -73,12 +72,12 @@ export var {{titlecase .Object.Name}}Interfaces = {
 	},
 	"{{lowercase .Object.Name}}admin": {
 		level: {{parentcount .Object}}+2,
-		name: "{{titlecase .Object.Name}}",
+		name: "Admin",
 		component: (<{{titlecase .Object.Name}}Admin />),
 	},
 	"{{lowercase .Object.Name}}admins": {
 		level: {{parentcount .Object}}+2,
-		name: "{{titlecase .Object.Name}}",
+		name: "Admins",
 		component: (<{{titlecase .Object.Name}}Admins />),
 	},
 	"{{lowercase .Object.Name}}assets": {

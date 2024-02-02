@@ -17,15 +17,20 @@ func main() {
 	}
 
 	app := NewApp()
-	app.UseGCP("{{.ProjectID}}")
-	app.UseGCPFirestore("{{.DatabaseID}}")
 	app.UseAssetlayer(
 		os.Getenv("ASSETLAYERAPPID"),
 		os.Getenv("ASSETLAYERSECRET"),
 		os.Getenv("DIDTOKEN"),
 	)
 	app.UseChatGPT(os.Getenv("OPENAI_KEY"))
-
+	{{if .Options.Pusher}}
+	app.UsePusher(
+		os.Getenv("PUSHER_APP_ID"),
+		os.Getenv("PUSHER_KEY"),
+		os.Getenv("PUSHER_SECRET"),
+		os.Getenv("PUSHER_CLUSTER"),
+	)
+	{{end}}
 	slotID, err := app.Assetlayer().EnsureSlotExists("{{.DatabaseID}}-models", "description...", "")
 	if err != nil {
 		panic(err)
@@ -54,8 +59,6 @@ func main() {
 	http.HandleFunc("/api/{{lowercase .Name}}", app.Entrypoint{{uppercase .Name}})
 	http.HandleFunc("/api/{{lowercase .Name}}s", app.Entrypoint{{uppercase .Name}}S)
 	println("registering handlers for {{lowercase .Name}}s"){{end}}
-
-	http.HandleFunc("/ws", app.HandleConnections)
 
 	port, err := strconv.Atoi(os.Getenv("PORT"))
 	if err != nil {

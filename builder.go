@@ -91,6 +91,10 @@ func Build(stack *models.Stack) error {
 	if err := copyFile("templates/functions/assetlayer/assetlayer.go", "build/api_assetlayer.go"); err != nil {
 		return err
 	}
+	// inbox go
+	if err := copyFile("templates/functions/mail/mail.go", "build/api_mail.go"); err != nil {
+		return err
+	}
 
 	// update the headers and footers
 	if err := doTemplate("build/app/components/header.js", stack); err != nil {
@@ -168,7 +172,10 @@ func Build(stack *models.Stack) error {
 		if err := execTemplate("functions", "singular.go", "api_"+strings.ToLower(object.Name)+".go", container); err != nil {
 			return err
 		}
-		if err := execTemplate("functions", "pluralShared.go", "api_"+object.Name+"shared.go", container); err != nil {
+		if err := execTemplate("functions", "pluralAdmins.go", "api_"+object.Name+"Admins.go", container); err != nil {
+			return err
+		}
+		if err := execTemplate("functions", "pluralUpload.go", "api_"+object.Name+"Upload.go", container); err != nil {
 			return err
 		}
 		if err := execTemplate("functions", "pluralLists.go", "api_"+object.Name+"Lists.go", container); err != nil {
@@ -209,9 +216,6 @@ func Build(stack *models.Stack) error {
 			return err
 		}
 		if err := execTemplate("functions/auth", "auth.go", "api_"+"auth.go", container); err != nil {
-			return err
-		}
-		if err := execTemplate("functions/app", "websocket.go", "websocket.go", container); err != nil {
 			return err
 		}
 		/*
@@ -768,6 +772,9 @@ func concatModels(dstPath string, stack *models.Stack) error {
 	if err := concatFile("templates/models/internals.go", dstPath); err != nil {
 		return err
 	}
+	if err := concatFile("templates/models/pusher.go", dstPath); err != nil {
+		return err
+	}
 	if err := concatFile("templates/models/user.go", dstPath); err != nil {
 		return err
 	}
@@ -787,6 +794,9 @@ func concatModels(dstPath string, stack *models.Stack) error {
 		return err
 	}
 	if err := concatFile("templates/models/username.go", dstPath); err != nil {
+		return err
+	}
+	if err := concatFile("templates/models/mail.go", dstPath); err != nil {
 		return err
 	}
 	if err := concatFile("templates/models/asyncjob.go", dstPath); err != nil {

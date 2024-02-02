@@ -65,20 +65,6 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 			}
 			return
 
-		{{if eq false .Object.Options.File}}/*{{end}}
-		case "initupload":
-			// reuse code
-			app.Upload{{uppercase .Object.Name}}(w, r, parent)
-			return
-		{{if eq false .Object.Options.File}}*/{{end}}
-
-		{{if eq false .Object.Options.File}}/*{{end}}
-		case "initarchiveupload":
-			// reuse code
-			app.ArchiveUpload{{uppercase .Object.Name}}(w, r, parent)
-			return
-		{{if eq false .Object.Options.File}}*/{{end}}
-
 		default:
 			err := fmt.Errorf("function not found: %s", function)
 			cloudfunc.HttpError(w, err, http.StatusBadRequest)

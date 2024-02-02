@@ -171,7 +171,7 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 			}
 
 			// create username association
-			if _, err := app.Firestore().Collection("usernames").Doc(user.Username).Set(app.Context(), user.Ref().Username); err != nil {
+			if _, err := app.Firestore().Collection("usernames").Doc(user.Username).Set(app.Context(), user.GetUsernameRef()); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}

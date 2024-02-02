@@ -49,7 +49,7 @@ func (app *App) UseAlgolia(appID, secretPath string) {
 
 // UsePusher initialises the pusher client
 func (app *App) UsePusher(appID, key, secret, cluster string) {
-	app.Clients.pusher = pusher.Client{
+	app.Clients.pusher = &pusher.Client{
 		AppID:   appID,
 		Key:     key,
 		Secret:  secret,

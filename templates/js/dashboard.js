@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
+import Pusher from 'pusher-js';
 import { useRouter } from 'next/router'
 
 import { useUserContext } from "@/context/user"
@@ -36,21 +37,13 @@ export default function Dashboard(props) {
 				user.headers = {"Authorization": data.secret}
 				setUserdata(user)
 				// init websocket
-				messaging.socket = new WebSocket('ws://{{.WebsocketHost}}/ws?key='+data.secret);
-				messaging.socket.addEventListener('open', (event) => {
-					console.log('Connected to WebSocket server');
+				const pusher = new Pusher('818e55ca022763d940aa', {
+					cluster: 'eu',
+					encrypted: true
 				});
-				messaging.socket.addEventListener('message', (event) => {
-
-					var msg = JSON.parse(event.data)
-					console.log('Received message:', msg);
-
-					if (msg.Type == "shout") {
-						console.log("skipping", msg)
-						return
-					}
-
-					setFeed([...feed, msg.Body]);
+				const channel = pusher.subscribe(userdata.Meta.ID);
+				channel.bind('message', data => {
+					setFeed({ chats: [...feed, data], test: '' });
 				});
 
 			})
