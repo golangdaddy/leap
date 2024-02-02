@@ -29,7 +29,7 @@ export function {{titlecase .Object.Name}}Matrix(props) {
 	const [ list, setList ] = useState(null)
 
 	function updateList() {
-		{{titlecase .Object.Name}}sListGET(userdata, props.subject?.Meta.ID, props.limit)
+		{{titlecase .Object.Name}}sListGET(userdata, props.subject?.Meta.ID, "created", props.limit)
 		.then((res) => res.json())
 		.then((data) => {
 			console.log(data)

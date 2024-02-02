@@ -174,6 +174,9 @@ func Build(stack *models.Stack) error {
 		if err := execTemplate("functions", "pluralLists.go", "api_"+object.Name+"Lists.go", container); err != nil {
 			return err
 		}
+		if err := execTemplate("functions", "pluralCreate.go", "api_"+object.Name+"Create.go", container); err != nil {
+			return err
+		}
 		// chatgpt methods
 		if err := execTemplate("functions", "pluralShared_ChatGPTCreate.go", "api_"+object.Name+"shared_ChatGPTCreate.go", container); err != nil {
 			return err

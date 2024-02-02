@@ -11,7 +11,7 @@ import Spacer from '@/inputs/spacer';
 import { AssetsWallet } from '@/app/fetch'
 
 import { {{titlecase .Object.Name}}AssetsRow } from './{{lowercase .Object.Name}}AssetsRow';
-import { {{titlecase .Object.Name}}DELETE, {{titlecase .Object.Name}}sListGET, {{titlecase .Object.Name}}MoveUpPOST, {{titlecase .Object.Name}}MoveDownPOST } from '../_fetch';
+import { {{titlecase .Object.Name}}DELETE, {{titlecase .Object.Name}}MoveUpPOST, {{titlecase .Object.Name}}MoveDownPOST } from '../_fetch';
 
 export function {{titlecase .Object.Name}}Assets(props) {
 
