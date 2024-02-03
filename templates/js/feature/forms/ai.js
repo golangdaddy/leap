@@ -12,7 +12,7 @@ import Select from '@/inputs/select';
 import CollectionSelect from '@/inputs/collectionSelect';
 import Color from '@/inputs/color';
 
-import { {{titlecase .Object.Name}}ChatGPTPOST } from '../_fetch'
+import { {{titlecase .Object.Name}}sChatGPTPOST, {{titlecase .Object.Name}}sChatGPTCollectionPOST } from '../_fetch'
 
 export function AI(props) {
 
@@ -39,7 +39,7 @@ export function AI(props) {
 		}
 		switch (select) {
 		case "prompt":
-			{{titlecase .Object.Name}}ChatGPTPOST(userdata, props.subject.Meta.ID, "create", payload)
+			{{titlecase .Object.Name}}sChatGPTPOST(userdata, props.subject.Meta.ID, "create", payload)
 			.then((res) => {
 				console.log(res)
 				props.updateList(true)
@@ -50,7 +50,7 @@ export function AI(props) {
 			})
 			break
 		case "create":
-			{{titlecase .Object.Name}}ChatGPTPOST(userdata, props.subject.Meta.ID, "create", payload)
+			{{titlecase .Object.Name}}sChatGPTPOST(userdata, props.subject.Meta.ID, "create", payload)
 			.then((res) => {
 				console.log(res)
 				props.updateList(true)
@@ -61,7 +61,7 @@ export function AI(props) {
 			})
 			break
 		case "modify":
-			{{titlecase .Object.Name}}ChatGPTPOST(userdata, props.subject.Meta.ID, props.collection, "modify", payload)
+			{{titlecase .Object.Name}}sChatGPTCollectionPOST(userdata, props.subject.Meta.ID, props.collection, payload)
 			.then((res) => {
 				console.log(res)
 				props.updateList(true)

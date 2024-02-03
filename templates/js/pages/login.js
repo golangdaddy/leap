@@ -57,6 +57,11 @@ export default function PageLogin({ data }) {
 					Get login link via inbox
 					</button>
 				}
+				{
+					(emailState != 1) && <div className='font-lg'>
+						Did you forget to register? We can't find your email...
+					</div>
+				}
 				</div>
 			</div>
 		</div>

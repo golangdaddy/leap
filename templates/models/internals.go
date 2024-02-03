@@ -29,6 +29,7 @@ type Internals struct {
 	Class      string
 	URIs       []string
 	Name       string `json:",omitempty"`
+	Color      string `json:",omitempty"`
 	Asset      string `json:",omitempty"`
 	Wallet     string `json:",omitempty"`
 	Context    Context
