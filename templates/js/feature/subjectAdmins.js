@@ -60,13 +60,13 @@ export function {{titlecase .Object.Name}}Admins(props) {
 	function addAdmins() {
 		newAdmins.forEach(function (admin, i) {
 			{{titlecase .Object.Name}}AdminPOST(userdata, project.Meta.ID, "add", admin)
+			.then(updateProject)
 		})
-		updateProject()
 	}
 
     return (
 		<div style={ {padding:"30px 60px 30px 60px"} } className='flex flex-col'>
-			<div className='text-2xl'>Add Admin</div>
+			<div className='text-xl'>Add Admin</div>
 			<AutocompleteUsername inputChange={inputChange} />
 			<Spacer/>
 			<div>
@@ -79,14 +79,14 @@ export function {{titlecase .Object.Name}}Admins(props) {
 							</svg>
 						</div>
 						<div className='flex flex-col justify-center'>
-							<div className='text-xl'>Add { newAdmins.join(" & ") }</div>
+							<div className='text-lg'>Add { newAdmins.join(" & ") }</div>
 						</div>
 					</div>
 				</button>
 			}
 			</div>
 			<Spacer/>
-			<div className='text-2xl'>Existing Administrators:</div>
+			<div className='text-xl'>Existing Administrators:</div>
 			<Spacer/>
 			<div className='flex flex-col'>
 				{

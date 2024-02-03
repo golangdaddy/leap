@@ -10,7 +10,7 @@ import Spacer from '@/inputs/spacer';
 
 import { {{titlecase .Object.Name}}ListRow } from './{{lowercase .Object.Name}}ListRow';
 import { {{titlecase .Object.Name}}ListRowJob } from './{{lowercase .Object.Name}}ListRowJob';
-import { {{titlecase .Object.Name}}DELETE, {{titlecase .Object.Name}}sListGET, {{titlecase .Object.Name}}MoveUpPOST, {{titlecase .Object.Name}}MoveDownPOST } from '../_fetch';
+import { {{titlecase .Object.Name}}DELETE, {{titlecase .Object.Name}}sListGET, {{titlecase .Object.Name}}OrderPOST } from '../_fetch';
 
 export function {{titlecase .Object.Name}}List(props) {
 
@@ -54,7 +54,7 @@ export function {{titlecase .Object.Name}}List(props) {
 	function moveUp(id) {
 		const object = list[parseInt(id)]
 		console.log("MOVE UP", object)
-		{{titlecase .Object.Name}}MoveUpPOST(userdata, object.Meta.ID)
+		{{titlecase .Object.Name}}OrderPOST(userdata, object.Meta.ID, "up")
 		.then((res) => console.log(res))
 		.then(function () {
 			updateList()
@@ -67,7 +67,7 @@ export function {{titlecase .Object.Name}}List(props) {
 	function moveDown(id) {
 		const object = list[parseInt(id)]
 		console.log("MOVE DOWN", object)
-		{{titlecase .Object.Name}}MoveDownPOST(userdata, object.Meta.ID)
+		{{titlecase .Object.Name}}OrderPOST(userdata, object.Meta.ID, "down")
 		.then((res) => console.log(res))
 		.then(function () {
 			updateList()

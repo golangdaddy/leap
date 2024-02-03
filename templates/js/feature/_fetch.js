@@ -24,12 +24,8 @@ export function {{titlecase .Object.Name}}sCountGET(user, parentID) {
     return SessionFetch(user, "GET", "api/{{lowercase .Object.Name}}s?function=count&parent="+parentID)
 }
 
-export function {{titlecase .Object.Name}}MoveUpPOST(user, id) {
-    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=up&id="+id)
-}
-
-export function {{titlecase .Object.Name}}MoveDownPOST(user, id) {
-    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=down&id="+id)
+export function {{titlecase .Object.Name}}OrderPOST(user, id, mode) {
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=order&mode="+mode+"&id="+id)
 }
 
 export function {{titlecase .Object.Name}}DELETE(user, id) {
@@ -56,18 +52,10 @@ export function {{titlecase .Object.Name}}sUpload(user, parentID, mode, formData
 
 // misc
 
-export function {{titlecase .Object.Name}}ChatGPTModifyPOST(user, parentID, collectionID, payload) {
-    return SessionFetch(user, "POST", "api/openai?function=collectionprompt&collection="+collectionID+"&parent="+parentID, payload)
+export function {{titlecase .Object.Name}}sChatGPTPOST(user, parentID, mode, payload) {
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}s?function=prompt&mode="+mode+"&parent="+parentID, payload)
 }
 
-export function {{titlecase .Object.Name}}ChatGPTInitPOST(user, parentID, payload) {
-    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}s?function=prompt&parent="+parentID, payload)
-}
-
-export function {{titlecase .Object.Name}}ChatGPTPromptPOST(user, id, payload) {
-    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=prompt&id="+id, payload)
-}
-
-export function {{titlecase .Object.Name}}AdminPOST(user, id, mode, payload) {
-    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=admin&mode="+mode+"&id="+id, payload)
+export function {{titlecase .Object.Name}}AdminPOST(user, id, mode, admin) {
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=admin&mode="+mode+"&id="+id+"&admin="+admin)
 }

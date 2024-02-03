@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"strings"
 	"net/http"
 
 	"cloud.google.com/go/pubsub"
@@ -265,6 +266,8 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 				return
 			}
 
+			app.SendMessageToUser(user, "update", object)
+
 			if err := cloudfunc.ServeJSON(w, object); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
@@ -316,87 +319,107 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 			}
 
 			return
+
 		{{if .Object.Options.Order}}
-		case "down":
+		case "order":
 
-			list := app.get{{titlecase .Object.Name}}List(object)
-
-			var me, beforeMe *{{uppercase .Object.Name}}
-			for order, item := range list {
-				item.Meta.Context.Order = order
-				if item.Meta.ID == object.Meta.ID {
-					me = item
-					break
-				} else {
-					beforeMe = item
-				}
-			}
-			if beforeMe == nil {
+			mode, err := cloudfunc.QueryParam(r, "mode")
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
 				return
 			}
 
-			order := me.Meta.Context.Order
-			me.Meta.Context.Order = beforeMe.Meta.Context.Order
-			beforeMe.Meta.Context.Order = order
+			switch mode {
 
-			for _, item := range list {
-				updates := []firestore.Update{
-					{
-						FieldPath: firestore.FieldPath{"Meta.Context.Order"},
-						Value:     item.Meta.Context.Order,
-					},
+			case "down":
+
+				list := app.get{{titlecase .Object.Name}}List(object)
+
+				var me, beforeMe int
+				var hasbefore bool
+				for order, item := range list {
+					list[order].Meta.Context.Order = order
+					if item.Meta.ID == object.Meta.ID {
+						me = order
+						break
+					} else {
+						beforeMe = order
+						hasbefore = true
+					}
 				}
-				println("UPDATING", item.Meta.ID, item.Meta.Context.Order)
-				if updateInfo, err := item.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
-					log.Println(err)
-				} else {
-					log.Println("info:", updateInfo)
+				if !hasbefore {
+					return
 				}
-			}
 
-			return
+				order := list[me].Meta.Context.Order
+				list[me].Meta.Context.Order = list[beforeMe].Meta.Context.Order
+				list[beforeMe].Meta.Context.Order = order
 
-		case "up":
-
-			list := app.get{{titlecase .Object.Name}}List(object)
-
-			var me, afterMe *{{uppercase .Object.Name}}
-			for x, _ := range list {
-				order := (len(list) - 1) - x
-				item := list[order]
-				item.Meta.Context.Order = order
-				if item.Meta.ID == object.Meta.ID {
-					me = item
-					break
-				} else {
-					afterMe = item
+				for _, item := range list {
+					updates := []firestore.Update{
+						{
+							Path: "Meta.Context.Order",
+							Value: item.Meta.Context.Order,
+						},
+					}
+					println("UPDATING", item.Meta.ID, item.Meta.Context.Order)
+					if updateInfo, err := item.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
+						log.Println(err)
+					} else {
+						log.Println("info:", updateInfo)
+					}
 				}
-			}
-			if afterMe == nil {
+
 				return
-			}
 
-			order := me.Meta.Context.Order
-			me.Meta.Context.Order = afterMe.Meta.Context.Order
-			afterMe.Meta.Context.Order = order
+			case "up":
 
-			for _, item := range list {
-				updates := []firestore.Update{
-					{
-						FieldPath: firestore.FieldPath{"Meta.Context.Order"},
-						Value:     item.Meta.Context.Order,
-					},
+				list := app.get{{titlecase .Object.Name}}List(object)
+
+				var me, afterMe int
+				var hasAfter bool
+				for x, _ := range list {
+					order := (len(list) - 1) - x
+					list[order].Meta.Context.Order = order
+					if list[order].Meta.ID == object.Meta.ID {
+						me = order
+						break
+					} else {
+						afterMe = order
+						hasAfter = true
+					}
 				}
-				println("UPDATING", item.Meta.ID, item.Meta.Context.Order)
-				if updateInfo, err := item.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
-					log.Println(err)
-				} else {
-					log.Println("info:", updateInfo)
+				if !hasAfter {
+					return
 				}
-			}
 
-			return
-		{{end}}
+				order := list[me].Meta.Context.Order
+				list[me].Meta.Context.Order = list[afterMe].Meta.Context.Order
+				list[afterMe].Meta.Context.Order = order
+
+				for _, item := range list {
+					updates := []firestore.Update{
+						{
+							Path: "Meta.Context.Order",
+							Value:     item.Meta.Context.Order,
+						},
+					}
+					println("UPDATING", item.Meta.ID, item.Meta.Context.Order)
+					if updateInfo, err := item.Meta.Firestore(app.App).Update(app.Context(), updates); err != nil {
+						log.Println(err)
+					} else {
+						log.Println("info:", updateInfo)
+					}
+				}
+				return
+
+			default:
+				err := fmt.Errorf("mode not found: %s", mode)
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+
+			}
+			{{end}}
 
 		default:
 			err := fmt.Errorf("function not found: %s", function)
@@ -469,6 +492,5 @@ func (app *App) get{{titlecase .Object.Name}}List(subject *{{uppercase .Object.N
 		}
 		list = append(list, object)
 	}
-	log.Println(len(list))
 	return list
 }

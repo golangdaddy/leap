@@ -54,7 +54,7 @@ func (app *App) Upload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.
 	{{lowercase .Object.Name}} := user.New{{uppercase .Object.Name}}(parent, fields)
 
 	// hidden line here if noparent: {{lowercase .Object.Name}}.Fields.Filename = zipFile.Name
-	{{if .Object.Options.File}}{{lowercase .Object.Name}}.Fields.Filename = handler.Filename{{end}}
+	{{lowercase .Object.Name}}.Meta.Name = handler.Filename
 
 	// generate a new URI
 	uri := {{lowercase .Object.Name}}.Meta.NewURI()
@@ -130,8 +130,7 @@ func (app *App) ArchiveUpload{{uppercase .Object.Name}}(w http.ResponseWriter, r
 		fields := Fields{{uppercase .Object.Name}}{}
 		{{lowercase .Object.Name}} := user.New{{uppercase .Object.Name}}(parent, fields)
 
-		// hidden line here if noparent: {{lowercase .Object.Name}}.Fields.Filename = zipFile.Name
-		{{if .Object.Options.File}}{{lowercase .Object.Name}}.Fields.Filename = zipFile.Name{{end}}
+		{{lowercase .Object.Name}}.Meta.Name = zipFile.Name
 
 		{{lowercase .Object.Name}}.Meta.Context.Order = n
 

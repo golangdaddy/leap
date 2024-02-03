@@ -200,8 +200,8 @@ type Context struct {
 	Parents  []string `json:",omitempty"`
 	Country  string   `json:",omitempty"`
 	Region   string   `json:",omitempty"`
-	Order    int      `json:",omitempty"`
-	Status   string   `json:",omitempty"`
+	Order    int
+	Status   string `json:",omitempty"`
 }
 
 type Moderation struct {

@@ -13,8 +13,7 @@ import { {{titlecase .Object.Name}}MatrixRow } from './{{lowercase .Object.Name}
 import {
 	{{titlecase .Object.Name}}DELETE,
 	{{titlecase .Object.Name}}sListGET,
-	{{titlecase .Object.Name}}MoveUpPOST,
-	{{titlecase .Object.Name}}MoveDownPOST,
+	{{titlecase .Object.Name}}OrderPOST,
 } from '../_fetch';
 import { ObjectPATCH } from '@/app/fetch'
 
@@ -70,7 +69,7 @@ export function {{titlecase .Object.Name}}Matrix(props) {
 	function moveUp(id) {
 		const object = list[parseInt(id)]
 		console.log("MOVE UP", object)
-		{{titlecase .Object.Name}}MoveUpPOST(userdata, object.Meta.ID)
+		{{titlecase .Object.Name}}OrderPOST(userdata, object.Meta.ID, "up")
 		.then((res) => console.log(res))
 		.then(function () {
 			updateList()
@@ -83,7 +82,7 @@ export function {{titlecase .Object.Name}}Matrix(props) {
 	function moveDown(id) {
 		const object = list[parseInt(id)]
 		console.log("MOVE DOWN", object)
-		{{titlecase .Object.Name}}MoveDownPOST(userdata, object.Meta.ID)
+		{{titlecase .Object.Name}}OrderPOST(userdata, object.Meta.ID, "down")
 		.then((res) => console.log(res))
 		.then(function () {
 			updateList()

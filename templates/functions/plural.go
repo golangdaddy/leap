@@ -137,6 +137,8 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 				return				
 			}
 
+			app.SendMessageToUser(user, "create", object)
+
 			// finish the request
 			if err := cloudfunc.ServeJSON(w, object); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)

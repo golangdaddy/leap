@@ -37,15 +37,21 @@ export default function Dashboard(props) {
 				user.headers = {"Authorization": data.secret}
 				setUserdata(user)
 				// init websocket
-				const pusher = new Pusher('818e55ca022763d940aa', {
+				messaging.pusher = new Pusher('818e55ca022763d940aa', {
 					cluster: 'eu',
 					encrypted: true
 				});
-				const channel = pusher.subscribe(userdata.Meta.ID);
-				channel.bind('message', data => {
-					setFeed({ chats: [...feed, data], test: '' });
+				const c = user.Meta.ID;
+				console.log("CONNECTING TO PUSHER", c)
+				messaging.channel = messaging.pusher.subscribe(c);
+				messaging.channel.bind('create', data => {
+					console.log("create MESSAGE !!!!!!!!!!!!")
+					setFeed([...feed, data]);
 				});
-
+				messaging.channel.bind('update', data => {
+					console.log("update MESSAGE !!!!!!!!!!!!")
+					setFeed([...feed, data]);
+				});
 			})
 			.catch((e) => {
 				console.log(e)

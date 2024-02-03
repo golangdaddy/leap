@@ -8,7 +8,7 @@ func (user *User) GetUsernameRef() *Username {
 	if max > 14 {
 		max = 14
 	}
-	for x := 3; x < max; x++ {
+	for x := 3; x <= max; x++ {
 		ref.Index[strconv.Itoa(x)] = []string{user.Username[:x]}
 	}
 	return ref

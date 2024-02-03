@@ -3,7 +3,7 @@ package cloudfunc
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -33,13 +33,13 @@ func HandleCORS(w http.ResponseWriter, r *http.Request, origin string) bool {
 func HttpError(w http.ResponseWriter, err error, status int) {
 	if err != nil {
 		log.Println(err)
+		http.Error(w, err.Error(), status)
 	}
-	http.Error(w, err.Error(), status)
-	w.Write([]byte(fmt.Sprintf("REQUEST FAILED: %d %s", status, err)))
+	w.Write([]byte(fmt.Sprintf("REQUEST FAILED: %d %v", status, err)))
 }
 
 func ParseJSON(r *http.Request, dst interface{}) error {
-	b, err := ioutil.ReadAll(r.Body)
+	b, err := io.ReadAll(r.Body)
 	if r.Body != nil {
 		r.Body.Close()
 	}

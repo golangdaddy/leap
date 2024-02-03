@@ -172,16 +172,16 @@ func Build(stack *models.Stack) error {
 		if err := execTemplate("functions", "singular.go", "api_"+strings.ToLower(object.Name)+".go", container); err != nil {
 			return err
 		}
-		if err := execTemplate("functions", "pluralAdmins.go", "api_"+object.Name+"Admins.go", container); err != nil {
+		if err := execTemplate("functions", "singularAdmins.go", "api_"+object.Name+"Admins.go", container); err != nil {
 			return err
 		}
-		if err := execTemplate("functions", "pluralUpload.go", "api_"+object.Name+"Upload.go", container); err != nil {
+		if err := execTemplate("functions", "pluralUpload.go", "api_"+object.Name+"sUpload.go", container); err != nil {
 			return err
 		}
-		if err := execTemplate("functions", "pluralLists.go", "api_"+object.Name+"Lists.go", container); err != nil {
+		if err := execTemplate("functions", "pluralLists.go", "api_"+object.Name+"sLists.go", container); err != nil {
 			return err
 		}
-		if err := execTemplate("functions", "pluralCreate.go", "api_"+object.Name+"Create.go", container); err != nil {
+		if err := execTemplate("functions", "pluralCreate.go", "api_"+object.Name+"sCreate.go", container); err != nil {
 			return err
 		}
 		// chatgpt methods

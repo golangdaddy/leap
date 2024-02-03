@@ -105,16 +105,6 @@ func Prepare(tree *Stack) error {
 
 	for n, _ := range tree.Objects {
 
-		if tree.Objects[n].Options.File {
-			tree.Objects[n].Fields = append(
-				tree.Objects[n].Fields,
-				&Field{
-					Name: "filename",
-					JSON: "string_1000",
-				},
-			)
-		}
-
 		if len(tree.Objects[n].JSON) > 0 {
 			name := tree.Objects[n].JSON + ".json"
 			if app.jsonObjects[name] == nil {

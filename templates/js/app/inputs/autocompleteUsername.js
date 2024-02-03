@@ -27,6 +27,9 @@ export default function AutocompleteUsername(props) {
 	function changeEvent(e) {
 		const id = e.target.id
 		var value = e.target.value
+		if (value.length < 3) {
+			return
+		}
 		UserAutocompleteGET(userdata, value)
 		.then((res) => res.json())
 		.then((data) => {

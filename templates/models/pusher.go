@@ -1,5 +1,5 @@
 func (app *App) SendMessageToUser(user *User, msgType string, data interface{}) {
-	log.Println("SENDING MESSAGE TO PUSHER USER:", user.Username)
+	log.Printf("SENDING %s MESSAGE TO PUSHER USER %s (%s)", msgType, user.Username, user.Meta.ID)
 	err := app.Pusher().Trigger(user.Meta.ID, msgType, data)
 	if err != nil {
 		log.Println(err.Error())
