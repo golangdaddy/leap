@@ -6,7 +6,8 @@ import (
 )
 
 func (app *App) CreateDocument{{uppercase .Object.Name}}(parent *Internals, object *{{uppercase .Object.Name}}) error {
-	log.Println(*object)
+	
+	log.Println("CREATING DOCUMENT", object.Meta.Class, object.Meta.ID)
 
 	{{if eq false .Object.Options.Order}}/*{{end}}
 	var order int

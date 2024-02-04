@@ -8,12 +8,13 @@ export default function PageLogin({ data }) {
 
 	console.log("data", data)
 	const router = useRouter();
-	const [email, setEmail] = useState(data.email)
+	const [input, setInput] = useState(data.email)
 
 	const [emailState, setEmailState] = useState(0);
 
 	function checkEmail() {
 		const email = document.getElementById("otp_email").value
+		setInput(email)
 		if (email.length < 5) {
 			return
 		}
@@ -49,7 +50,7 @@ export default function PageLogin({ data }) {
 			</div>
 			<div className='flex flex-col items-center'>
 				<div className='m-5'>
-				<input onChange={checkEmail} placeholder="Email Address" defaultValue={email} className="p-5 rounded-lg" id="otp_email" type="email"/>
+				<input onChange={checkEmail} placeholder="Email Address" defaultValue={input} className="p-5 rounded-lg" id="otp_email" type="email"/>
 				</div>
 				<div className='m-5'>
 				{
@@ -58,7 +59,7 @@ export default function PageLogin({ data }) {
 					</button>
 				}
 				{
-					(emailState != 1) && <div className='font-lg'>
+					input && (emailState != 1) && (input.length >= 5) && <div className='font-lg font-bold'>
 						Did you forget to register? We can't find your email...
 					</div>
 				}

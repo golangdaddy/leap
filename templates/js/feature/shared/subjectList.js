@@ -10,12 +10,14 @@ import Spacer from '@/inputs/spacer';
 
 import { {{titlecase .Object.Name}}ListRow } from './{{lowercase .Object.Name}}ListRow';
 import { {{titlecase .Object.Name}}ListRowJob } from './{{lowercase .Object.Name}}ListRowJob';
-import { {{titlecase .Object.Name}}DELETE, {{titlecase .Object.Name}}sListGET, {{titlecase .Object.Name}}OrderPOST } from '../_fetch';
+import { {{titlecase .Object.Name}}DELETE, {{titlecase .Object.Name}}sListGET, {{titlecase .Object.Name}}OrderPOST, {{titlecase .Object.Name}}JobPOST } from '../_fetch';
 
 export function {{titlecase .Object.Name}}List(props) {
 
 	const [ userdata, setUserdata] = useUserContext()
 	const [ localdata, setLocaldata] = useLocalContext()
+
+	const [topics, setTopics] = useState([{{range .Object.Options.Topics}}{"name":"{{.Name}}","topic":"{{.Topic}}"},{{end}}])
 
 	const [ list, setList ] = useState(null)
 
@@ -30,6 +32,16 @@ export function {{titlecase .Object.Name}}List(props) {
 			console.log(data)
 			setList(data)
 		})
+	}
+
+	function sendToTopic(e) {
+		console.log(e)
+		const job = e.target.id
+		{{titlecase .Object.Name}}JobPOST(userdata, subject.Meta.ID, job)
+		.then((res) => console.log(res))
+		.catch((e) => {
+            console.error(e)
+        })
 	}
 
 	useEffect(() => {
@@ -93,7 +105,24 @@ export function {{titlecase .Object.Name}}List(props) {
 	return (
 	<div className='flex flex-col my-4'>
 	{
-		props.title && <div className='py-4 my-4 text-xl font-bold cursor-pointer' onClick={selectChild}>{props.title}s:</div>
+		!props.title && <div className="flex flex-row">
+			<div className='py-4 my-4 text-xl font-bold cursor-pointer' onClick={selectChild}>{props.title}s:</div>
+			{
+				topics.length && <div className='flex flex-row'>
+				{
+					topics.map(function (item, i) {
+						return (
+							<div key={i} className='px-4'>
+								<button key={i} id={item.topic} onClick={sendToTopic} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 rounded-sm text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+								{item.name}
+								</button>
+							</div>
+						)
+					})
+				}
+				</div>
+			}
+		</div>
 	}
 	{
 		props.title && <hr/>

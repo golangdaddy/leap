@@ -21,22 +21,10 @@ export function {{titlecase .Object.Name}}(props) {
     const [jdata, setJdata] = useState(localdata.tab.context.object)
     const [subject, setSubject] = useState(localdata.tab.context.object)
     const [image, setImage] = useState()
-	const [topics, setTopics] = useState([{{range .Object.Options.Topics}}{"name":"{{.Name}}","topic":"{{.Topic}}"},{{end}}])
-	console.log("topics", topics)
 
 	// update tabs handles the updated context and sends the user to a new interface
 	function editData() {
 		setLocaldata(VisitTab(localdata, "edit{{lowercase .Object.Name}}", localdata.tab.context))
-	}
-
-	function sendToTopic(e) {
-		console.log(e)
-		const job = e.target.id
-		{{titlecase .Object.Name}}JobPOST(userdata, subject.Meta.ID, job)
-		.then((res) => console.log(res))
-		.catch((e) => {
-            console.error(e)
-        })
 	}
 
 	function getObject() {
@@ -100,27 +88,23 @@ export function {{titlecase .Object.Name}}(props) {
 									Edit Data
 								</button>
 							</div>
-							{
-								topics.length && <div className='flex flex-row'>
-								{
-									topics.map(function (item, i) {
-										return (
-											<div className='px-4'>
-												<button key={i} id={item.topic} onClick={sendToTopic} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 rounded-sm text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-												{item.name}
-												</button>
-											</div>
-										)
-									})
-								}
-								</div>
-							}
 						</div>
 					</div>
 				</div>
 			}
-            {{range .Object.Children}}
+
+
+
+			{{range .Object.Children}}
+			{{if .Options.Job}}
 			<{{titlecase .Name}}List title="{{titlecase .Name}}" subject={subject} limit={4} />
+			{{end}}
+			{{end}}
+
+            {{range .Object.Children}}
+			{{if eq false .Options.Job}}
+			<{{titlecase .Name}}List title="{{titlecase .Name}}" subject={subject} limit={4} />
+			{{end}}
 			{{end}}
         </div>
     )

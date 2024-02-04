@@ -26,5 +26,6 @@ import (
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
 
 	"github.com/gorilla/websocket"
+	"github.com/muesli/gamut"
 )
 

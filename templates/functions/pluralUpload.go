@@ -49,15 +49,15 @@ func (app *App) Upload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.
 		return
 	}
 	{{if eq false .Object.Options.Image}}*/{{end}}
-	log.Println("creating new {{lowercase .Object.Name}}:", handler.Filename)
+	log.Println("creating new object:", handler.Filename)
 	fields := Fields{{uppercase .Object.Name}}{}
-	{{lowercase .Object.Name}} := user.New{{uppercase .Object.Name}}(parent, fields)
+	object := user.New{{uppercase .Object.Name}}(parent, fields)
 
-	// hidden line here if noparent: {{lowercase .Object.Name}}.Fields.Filename = zipFile.Name
-	{{lowercase .Object.Name}}.Meta.Name = handler.Filename
+	// hidden line here if noparent: object.Fields.Filename = zipFile.Name
+	object.Meta.Name = handler.Filename
 
 	// generate a new URI
-	uri := {{lowercase .Object.Name}}.Meta.NewURI()
+	uri := object.Meta.NewURI()
 	println ("URI", uri)
 
 	bucketName := "{{.DatabaseID}}-uploads"
@@ -67,7 +67,7 @@ func (app *App) Upload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.
 	}
 
 	// reuse document init create code
-	if err := app.CreateDocument{{uppercase .Object.Name}}(parent, {{lowercase .Object.Name}}); err != nil {
+	if err := app.CreateDocument{{uppercase .Object.Name}}(parent, object); err != nil {
 		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 		return		
 	}
@@ -126,26 +126,25 @@ func (app *App) ArchiveUpload{{uppercase .Object.Name}}(w http.ResponseWriter, r
 			continue
 		}
 		{{if eq false .Object.Options.Image}}*/{{end}}
-		log.Println("creating new {{lowercase .Object.Name}}:", zipFile.Name)
+		log.Println("creating new object:", zipFile.Name)
 		fields := Fields{{uppercase .Object.Name}}{}
-		{{lowercase .Object.Name}} := user.New{{uppercase .Object.Name}}(parent, fields)
+		object := user.New{{uppercase .Object.Name}}(parent, fields)
 
-		{{lowercase .Object.Name}}.Meta.Name = zipFile.Name
+		object.Meta.Name = zipFile.Name
 
-		{{lowercase .Object.Name}}.Meta.Context.Order = n
+		object.Meta.Context.Order = n
 
 		// generate a new URI
-		uri := {{lowercase .Object.Name}}.Meta.NewURI()
-		println ("URI", uri)
+		uri := object.Meta.NewURI()
+		log.Println("URI", uri)
 
-		bucketName := "{{.DatabaseID}}-uploads"
-		if err := app.write{{titlecase .Object.Name}}File(bucketName, uri, extractedContent); err != nil {
+		if err := app.write{{titlecase .Object.Name}}File(CONST_BUCKET_UPLOADS, uri, extractedContent); err != nil {
 			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 			return
 		}
 
 		// reuse document init create code
-		if err := app.CreateDocument{{uppercase .Object.Name}}(parent, {{lowercase .Object.Name}}); err != nil {
+		if err := app.CreateDocument{{uppercase .Object.Name}}(parent, object); err != nil {
 			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 			return		
 		}
