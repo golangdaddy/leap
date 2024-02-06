@@ -37,7 +37,7 @@ export function {{titlecase .Object.Name}}List(props) {
 	function sendToTopic(e) {
 		console.log(e)
 		const job = e.target.id
-		{{titlecase .Object.Name}}JobPOST(userdata, subject.Meta.ID, job)
+		{{titlecase .Object.Name}}JobPOST(userdata, props.subject?.Meta.ID, job)
 		.then((res) => console.log(res))
 		.catch((e) => {
             console.error(e)
@@ -102,18 +102,26 @@ export function {{titlecase .Object.Name}}List(props) {
 		})
 	}
 
+	const jobButtonStyle = {
+		borderRadius: "20px",
+		backgroundColor: "rgb(96, 165, 250)",
+		border: "solid 0px",
+		color: "white",
+		padding: "6px 10px"
+	}
+
 	return (
-	<div className='flex flex-col my-4'>
+	<div className='flex flex-col w-full'>
 	{
-		!props.title && <div className="flex flex-row">
-			<div className='py-4 my-4 text-xl font-bold cursor-pointer' onClick={selectChild}>{props.title}s:</div>
+		props.title && <div className="flex flex-row justify-between items-center">
+			<div className='py-4 my-4 text-xl font-bold'>{props.title}s:</div>
 			{
-				topics.length && <div className='flex flex-row'>
+				(topics.length > 0) && <div className='flex flex-row'>
 				{
 					topics.map(function (item, i) {
 						return (
-							<div key={i} className='px-4'>
-								<button key={i} id={item.topic} onClick={sendToTopic} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 rounded-sm text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+							<div key={i} className='flex flex-col justify-center'>
+								<button key={i} className='text-sm' id={item.topic} onClick={sendToTopic} style={jobButtonStyle}>
 								{item.name}
 								</button>
 							</div>
@@ -134,14 +142,13 @@ export function {{titlecase .Object.Name}}List(props) {
 		list && list.map(function (item, i) {
 
 			return (
-				<div key={i}>
+				<div className='py-2 px-4' key={i}>
 					{{if eq false .Object.Options.Job}}
 					<{{titlecase .Object.Name}}ListRow id={i} listLength={list.length} item={item} select={selectItem} moveUp={moveUp} moveDown={moveDown} delete={deleteItem}/>
 					{{end}}
 					{{if .Object.Options.Job}}
 					<{{titlecase .Object.Name}}ListRowJob id={i} listLength={list.length} item={item} select={selectItem} moveUp={moveUp} moveDown={moveDown} delete={deleteItem}/>
 					{{end}}
-					<Spacer/>
 				</div>
 			)
 		})

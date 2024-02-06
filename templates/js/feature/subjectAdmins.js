@@ -68,24 +68,22 @@ export function {{titlecase .Object.Name}}Admins(props) {
 		<div style={ {padding:"30px 60px 30px 60px"} } className='flex flex-col'>
 			<div className='text-xl'>Add Admin</div>
 			<AutocompleteUsername inputChange={inputChange} />
-			<Spacer/>
-			<div>
 			{
-				newAdmins && <button onClick={addAdmins} className="my-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-					<div className='flex flex-row'>
-						<div className='flex flex-col justify-center'>
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-							<path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-							</svg>
+				newAdmins && <div>
+					<button onClick={addAdmins} className="my-4 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+						<div className='flex flex-row'>
+							<div className='flex flex-col justify-center'>
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+								<path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+								</svg>
+							</div>
+							<div className='flex flex-col justify-center'>
+								<div className='text-lg'>Add { newAdmins.join(" & ") }</div>
+							</div>
 						</div>
-						<div className='flex flex-col justify-center'>
-							<div className='text-lg'>Add { newAdmins.join(" & ") }</div>
-						</div>
-					</div>
-				</button>
+					</button>
+				</div>
 			}
-			</div>
-			<Spacer/>
 			<div className='text-xl'>Existing Administrators:</div>
 			<Spacer/>
 			<div className='flex flex-col'>

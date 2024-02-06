@@ -7,6 +7,7 @@ import VisitTab from '../interfaces'
 
 import { GoBack } from '../interfaces'
 import Loading from '@/app/loading'
+import Spacer from '@/inputs/spacer';
 
 {{range .Object.Children}}import { {{titlecase .Name}}List } from '@/features/{{lowercase .Name}}s/shared/{{lowercase .Name}}List'
 {{end}}
@@ -49,12 +50,30 @@ export function {{titlecase .Object.Name}}(props) {
 		getObject()
 	}, [])
 
+	const editButtonStyle = {
+		borderRadius: "20px",
+		backgroundColor: "rgb(52, 211, 153)",
+		border: "solid 0px",
+		color: "white",
+		padding: "6px 10px"
+	}
+
     return (
         <div style={ {padding:"30px 60px 30px 60px"} }>
 			{ !subject && <Loading/> }
 			{
-				subject && <div>
-					<div className='text-2xl'>{ subject.Meta.Class } / { subject.fields.name }</div>
+				subject && <div className='flex flex-col w-full'>
+					<div className='flex flex-row justify-between items-center w-full py-4 my-4'>
+						<div className='text-2xl'>
+							{ subject.Meta.Class } / <span className='font-bold'>{ subject.fields.name }</span>
+						</div>
+						<div className='flex flex-row justify-center items-center'>
+							<button className='text-sm' onClick={editData} style={editButtonStyle}>
+							Edit {{titlecase .Object.Name}}
+							</button>
+						</div>
+					</div>
+					<hr/>
 					<div className='flex flex-row'>
 						{
 							image && <div className="m-4" style={ {maxWidth:"40vw"} }>
@@ -81,13 +100,9 @@ export function {{titlecase .Object.Name}}(props) {
 											</div>
 										</td>
 									</tr>
+									<Spacer/>
 								{{end}}</tbody>
 							</table>
-							<div className='px-4'>
-								<button onClick={editData} className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 rounded-sm text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-									Edit Data
-								</button>
-							</div>
 						</div>
 					</div>
 				</div>

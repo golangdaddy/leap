@@ -22,20 +22,19 @@ export function {{titlecase .Object.Name}}ListRow(props) {
 	}
 
 	return (
-		<div className='flex flex-row justify-between items-center w-full my-2'>
+		<div className='flex flex-row justify-between py-2 items-center w-full'>
 			{{if .Object.Options.Image}}<RowThumbnail source={'https://storage.googleapis.com/{{.DatabaseID}}-uploads/'+props.item.Meta.URIs[props.item.Meta.URIs.length-1]}/>{{end}}
-			<div onClick={selectItem} className='flex flex-row w-full items-center cursor-pointer m-4'>
+			<div onClick={selectItem} className='flex flex-row w-full items-center cursor-pointer'>
 				{
-					props.item.Meta.Name.length && <>
-						<div className='text-xl font-bold' title="Name">{ props.item.Meta.Name }</div>
-						<Spacer/>
+					props.item.Meta.Name?.length && <>
+						<div className='text-lg font-bold' title="Name">{ props.item.Meta.Name }</div>
 					</>
 				}
+				<div className="px-4"></div>
 				{{range $item, $key := .Object.Fields}}{
 					("{{lowercase $key.Name}}" != "name") && <>
 						<div className='text-sm font-bold' title="{{lowercase $key.Name}}">{ props.item.fields["{{lowercase $key.Name}}"] }</div>
 						<div className="px-4"></div>
-						<Spacer/>
 					</>
 				}{{end}}
 			</div>
