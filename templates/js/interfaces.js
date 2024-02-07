@@ -4,7 +4,7 @@ import * as React from 'react'
 import { {{titlecase .Name}}Interfaces } from '@/features/{{lowercase .Name}}s/_interfaces'{{end}}
 
 import Home from '@/features/home'
-import EditProfile from '@/features/editProfile'
+import Account from '@/features/account/account'
 
 export var Interfaces = {
 	"home": {
@@ -12,10 +12,10 @@ export var Interfaces = {
 		name: "Home",
 		component: (<Home/>),
 	},
-	"editprofile": {
+	"account": {
 		level: 0,
-		name: "Edit Profile",
-		component: (<EditProfile/>),
+		name: "Your Account",
+		component: (<Account/>),
 	},
 }
 

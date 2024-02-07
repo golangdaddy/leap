@@ -19,7 +19,6 @@ export default function Controller(props) {
 	const [feed, setFeed] = useState([])
 
 	const router = useRouter();
-	console.log("USERDATA", userdata)
 
 
 	// update tabs handles the updated context and sends the user to a new interface

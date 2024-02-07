@@ -11,7 +11,7 @@ export default function Header() {
     const [localdata, setLocaldata] = useLocalContext()
 
     function editProfile() {
-        setLocaldata(VisitTab(localdata, "editprofile"))
+        setLocaldata(VisitTab(localdata, "account"))
     }
 
     return (

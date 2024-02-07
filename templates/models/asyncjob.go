@@ -1,10 +1,11 @@
 type ASYNCJOB struct {
 	Meta Internals
 	// pending:started:completed:failed
-	Status string
-	Stage  int
-	Stages []ASYNCJOBSTAGE
-	Data   interface{}
+	Status  string
+	Stage   int
+	Stages  []ASYNCJOBSTAGE
+	Data    interface{}
+	Counter int
 }
 
 type ASYNCJOBSTAGE struct {

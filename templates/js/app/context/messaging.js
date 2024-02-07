@@ -6,6 +6,7 @@ export function MessagingProvider({ children }) {
   const [messagedata, setMessagingdata] = useState({
     "test": [],
     "latest": [],
+    "feed": [],
   });
   return (
     <MessagingContext.Provider value={[messagedata, setMessagingdata]}>{children}</MessagingContext.Provider>

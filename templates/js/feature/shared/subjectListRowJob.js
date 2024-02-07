@@ -35,7 +35,7 @@ export function {{titlecase .Object.Name}}ListRowJob(props) {
 					<div className="text-lg p-2 flex flex-col items-center justify-center"><div>:</div></div>
 					<div className='text-lg' title="">{ props.item.Meta.Context.Status }</div>
 				</div>
-				<div className='text-lg' title="">{ dateTime }</div>
+				<div className='text-sm' title="">{ dateTime }</div>
 			</div>
 		</div>
 	)

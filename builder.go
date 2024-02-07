@@ -71,15 +71,28 @@ func Build(stack *models.Stack) error {
 	}
 
 	println("copying editP")
-	if err := copyFile("templates/js/editProfile.js", "build/app/features/editProfile.js"); err != nil {
+
+	if err := copyFile("templates/js/dashboard.js", "build/app/features/dashboard.js"); err != nil {
 		return err
 	}
-	if err := copyFile("templates/js/dashboard.js", "build/app/features/dashboard.js"); err != nil {
+	if err := copyFile("templates/js/controller.js", "build/app/features/controller.js"); err != nil {
 		return err
 	}
 	if err := doTemplate("build/app/features/dashboard.js", stack); err != nil {
 		return err
 	}
+
+	//account
+	if err := copyFile("templates/js/account/account.js", "build/app/features/account/account.js"); err != nil {
+		return err
+	}
+	if err := copyFile("templates/js/account/sidebar.js", "build/app/features/account/sidebar.js"); err != nil {
+		return err
+	}
+	if err := copyFile("templates/js/account/account_inbox.js", "build/app/features/account/account_inbox.js"); err != nil {
+		return err
+	}
+
 	if err := copyFile("templates/js/interfaces.js", "build/app/features/interfaces.js"); err != nil {
 		return err
 	}
