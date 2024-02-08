@@ -13,6 +13,7 @@ type Object struct {
 }
 
 type Options struct {
+	ReadOnly    bool        `json:"readonly"`
 	Admin       bool        `json:"admin"`
 	Job         bool        `json:"job"`
 	Order       bool        `json:"order"`

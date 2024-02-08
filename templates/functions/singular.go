@@ -228,6 +228,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 				return
 			}
 
+		{{if eq false .Object.Options.ReadOnly}}
 		// update the subject
 		case "update":
 
@@ -273,6 +274,8 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 				return
 			}
 			return
+
+		{{end}}
 
 		case "upload":
 

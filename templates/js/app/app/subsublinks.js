@@ -36,16 +36,14 @@ export default function Subsublinks(props) {
 	return (
 		<>
 		{
-			(localdata.tab.subsublinks?.length > 0) && <div className='flex flex-row justify-center w-full bg-gray-300 text-white px-2 py-2 text-sm'>
+			(localdata.tab.subsublinks?.length > 0) && <div className='flex flex-row justify-start w-full bg-gray-300 text-white p-2 text-sm'>
 				{
 					localdata.tab.subsublinks.map(function (tabname, i) {
 						if (tabname.length == 0) { return }
 						const tab = interfaces[tabname]
 						return (
-							<div key={i} className='flex flex-col justify-center'>
-								<div className='flex flex-row rounded-md border py-1 px-2 mx-2 bg-white'>
-									<div id={tab.id} className='cursor-pointer text-gray-800' onClick={updateTabEvent}>{tab.name}</div>
-								</div>
+							<div key={i} className='flex flex-row rounded-md border py-1 px-2 mx-2 bg-white'>
+								<div id={tab.id} className='cursor-pointer text-gray-800' onClick={updateTabEvent}>{tab.name}</div>
 							</div>
 						)
 					})

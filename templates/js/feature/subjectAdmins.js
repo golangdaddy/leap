@@ -84,7 +84,8 @@ export function {{titlecase .Object.Name}}Admins(props) {
 					</button>
 				</div>
 			}
-			<div className='text-xl'>Existing Administrators:</div>
+			<Spacer/>
+			<div className='text-base'>Existing Administrators:</div>
 			<Spacer/>
 			<div className='flex flex-col'>
 				{

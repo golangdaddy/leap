@@ -76,9 +76,6 @@ export default function Dashboard(props) {
 	return (
 		userdata && <div className='flex flex-col w-full'>
 			<Controller/>
-			{
-				localdata?.tab && <Subsublinks></Subsublinks>
-			}
 			{ 
 				localdata?.tab && <div className='flex flex-row min-h-full w-full bg-white'>
 					<div className='flex flex-col min-h-full w-full bg-white'>		

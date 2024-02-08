@@ -23,12 +23,14 @@ export default function Sidebar() {
 		messaging.channel.bind('create', data => {
 			data.msg = "create"
 			console.log("create MESSAGE !!!!!!!!!!!!", data)
-			setFeed([data, ...feed])
+			messaging.feed = [data, ...messaging.feed]
+			setMessaging(messaging)
 		});
 		messaging.channel.bind('update', data => {
 			data.msg = "update"
 			console.log("update MESSAGE !!!!!!!!!!!!", data)
-			setFeed([data, ...feed])
+			messaging.feed = [data, ...messaging.feed]
+			setMessaging(messaging)
 		});
 		messaging.channel.bind('job', data => {
 			data.msg = "job"

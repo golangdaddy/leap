@@ -114,7 +114,7 @@ export function {{titlecase .Object.Name}}List(props) {
 	<div className='flex flex-col w-full'>
 	{
 		props.title && <div className="flex flex-row justify-between items-center">
-			<div className='py-4 my-4 text-xl font-bold'>{props.title}s:</div>
+			<div className='py-4 my-4 text-xl font-bold'>{props.title}:</div>
 			{
 				(topics.length > 0) && <div className='flex flex-row'>
 				{
