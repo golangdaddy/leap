@@ -44,66 +44,6 @@ export default function Controller(props) {
 		userdata && <div className='flex flex-col w-full'>
 			<div className='items-center flex flex-row w-full bg-gray-600 text-white px-4 py-2 text-xl shadow-xl'>
 				{
-					localdata?.tab && <div className='flex flex-col justify-start px-4 pl-6'>
-						{ 
-							localdata.tab.context.object && <div className='text-sm font-bold' style={ {whiteSpace: "nowrap"} }>
-								{localdata.tab.context.object.Meta.Class}
-							</div>
-						}
-						<div className='text-2xl' style={ {whiteSpace: "nowrap"} }>{localdata.tab.context._ ? localdata.tab.context._ : localdata.tab.name }</div>
-					</div>
-				}
-				{
-					localdata?.tab && localdata.tab.hasNewButton && <div className="m-2 flex flex-col justify-center">
-						<div id={'new'+localdata.tab.name.substr(0, localdata.tab.name.length-1).toLowerCase()}
-						onClick={updateTabEvent} className="flex flex-col justify-center items-center m-2 cursor-pointer" style={ {width:"20px",height:"20px"} }>
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" style={ {pointerEvents:"none"} }>
-							<path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-							</svg>
-						</div>
-					</div>
-				}
-				{
-					localdata?.tab && localdata.tab.context?.object && localdata.tab.hasListButton && <div className="m-2 flex flex-col justify-center">
-						<div id={localdata.tab.context.object.Meta.Class}
-						onClick={updateTabEvent} className="flex flex-col justify-center items-center m-2 cursor-pointer" style={ {width:"20px",height:"20px"} }>
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" style={ {pointerEvents:"none"} }>
-							<path strokeLinecap="round" strokeLinejoin="round" d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3" />
-							</svg>	
-						</div>
-					</div>
-				}
-				{
-					localdata?.tab && localdata.tab.hasSpreadsheetButton && <div className="m-2 flex flex-col justify-center">
-						<div id={localdata.tab.name.toLowerCase()+"matrix"}
-						onClick={updateTabEvent} className="flex flex-col justify-center items-center m-2 cursor-pointer" style={ {width:"20px",height:"20px"} }>
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" style={ {pointerEvents:"none"} }>
-							<path strokeLinecap="round" strokeLinejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125Z" />
-							</svg>
-						</div>
-					</div>
-				}
-				{
-					localdata?.tab && localdata.tab.hasEditButton && <div className="m-2 flex flex-col justify-center">
-						<div id={'edit'+localdata.tab.context.object.Meta.Class.substr(0, localdata.tab.context.object.Meta.Class.length-1)}
-						onClick={updateTabEvent} className="flex flex-col justify-center items-center m-2 cursor-pointer" style={ {width:"20px",height:"20px"} }>
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" style={ {pointerEvents:"none"} }>
-							<path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z" />
-							</svg>
-						</div>
-					</div>
-				}
-				{
-					localdata?.tab && localdata.tab.hasDeleteButton && <div className="m-2 flex flex-col justify-center">
-						<div id={'delete'+localdata.tab.context.object.Meta.Class.substr(0, localdata.tab.context.object.Meta.Class.length-1)}
-						onClick={updateTabEvent} className="flex flex-col justify-center items-center m-2 cursor-pointer" style={ {width:"20px",height:"20px"} }>
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" style={ {pointerEvents:"none"} }>
-							<path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-							</svg>
-						</div>
-					</div>
-				}
-				{
 					localdata?.breadcrumbs && <div className='my-4 w-full bg-gray-800 text-white flex justify-start' style={ {borderRadius:"12px",overflow:"hidden"} }>
 						<div className="flex flex-col justify-center rounded-l-lg" style={ {backgroundColor:"#111111"} }>
 							<div id="home" onClick={updateTabEvent} className="flex flex-col justify-center items-center m-4 cursor-pointer" style={ {width:"36px",height:"36px"} }>

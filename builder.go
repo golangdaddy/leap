@@ -89,7 +89,7 @@ func Build(stack *models.Stack) error {
 	if err := copyFile("templates/js/account/sidebar.js", "build/app/features/account/sidebar.js"); err != nil {
 		return err
 	}
-	if err := copyFile("templates/js/account/account_inbox.js", "build/app/features/account/account_inbox.js"); err != nil {
+	if err := copyFile("templates/js/account/accountInbox.js", "build/app/features/account/accountInbox.js"); err != nil {
 		return err
 	}
 

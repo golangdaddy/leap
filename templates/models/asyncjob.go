@@ -38,11 +38,13 @@ func (job *ASYNCJOB) DataTo(dst interface{}) error {
 	return json.Unmarshal(b, dst)
 }
 
-func (job *ASYNCJOB) AddNote(note string) {
-	job.Stages[job.Stage].Notes = append(
-		job.Stages[job.Stage].Notes,
-		note,
-	)
+func (job *ASYNCJOB) AddNote(notes ...string) {
+	if len(notes) > 0 {
+		job.Stages[job.Stage].Notes = append(
+			job.Stages[job.Stage].Notes,
+			strings.Join(notes, " "),
+		)
+	}
 }
 
 func (job *ASYNCJOB) StartStage() {

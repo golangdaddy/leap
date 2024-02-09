@@ -23,8 +23,8 @@ export default function Sidebar(props) {
 
 	return (
 		<div id="" className='flex flex-col text-lg font-bold items-center' style={menuStyle}>
-			<div className='m-2' onClick={updateTabEvent}>
-				<div>inbox</div>
+			<div id="accountinbox" className='m-2' onClick={updateTabEvent}>
+				inbox
 			</div>
 			<div className='m-2' onClick={updateTabEvent}>
 				<div>favourites</div>

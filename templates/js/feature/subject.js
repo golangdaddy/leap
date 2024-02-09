@@ -9,6 +9,7 @@ import { GetInterfaces } from '@/features/interfaces'
 import { GoBack } from '../interfaces'
 import Loading from '@/app/loading'
 import Spacer from '@/inputs/spacer';
+import { RowThumbnail } from '@/components/rowThumbnail'
 
 {{range .Object.Children}}import { {{titlecase .Name}}List } from '@/features/{{lowercase .Name}}s/shared/{{lowercase .Name}}List'
 {{end}}
@@ -77,6 +78,7 @@ export function {{titlecase .Object.Name}}(props) {
     return (
         <div style={ {padding:"30px 60px 30px 60px"} }>
 			{ !subject && <Loading/> }
+			{{if .Object.Options.Image}}<RowThumbnail source={'https://storage.googleapis.com/{{.DatabaseID}}-uploads/'+subject.Meta.URIs[subject.Meta.URIs.length-1]}/>{{end}}
 			{
 				subject && <div className='flex flex-col w-full'>
 					<div className='flex flex-row justify-between items-center w-full py-4 my-4'>
@@ -141,7 +143,34 @@ export function {{titlecase .Object.Name}}(props) {
 										</td>
 										<td className='flex flex-col justify-start'>
 											<div className='w-full flex flex-row justify-end'>
-												<div className=''>{ subject.fields["{{lowercase .Name}}"] }</div>
+												{
+													(typeof subject.fields["{{lowercase .Name}}"] === 'object') && <div className='flex flex-col m-4'>
+														{
+															Object.keys(subject.fields["{{lowercase .Name}}"]).forEach(function(k, i) {
+																const v = subject.fields["{{lowercase .Name}}"][k]
+																return (
+																	<div key={i} className='flex flex-row text-xs m-2'>
+																		<div className=''>{k}</div>
+																		<div className='px-2'>:</div>
+																		<div className=''>{v}</div>
+																	</div>
+																)
+															})
+														}
+													</div>
+												}
+												{
+													Array.isArray(subject.fields["{{lowercase .Name}}"]) && subject.fields["{{lowercase .Name}}"].map(function(item, i) {
+														return (
+															<div key={i} className='text-xs'>{item}</div>
+														)
+													})
+												}
+												{
+													!Array.isArray(subject.fields["{{lowercase .Name}}"]) && !(typeof subject.fields["{{lowercase .Name}}"] === 'object') && <>
+														{ subject.fields["{{lowercase .Name}}"] }
+													</>
+												}
 											</div>
 										</td>
 									</tr>

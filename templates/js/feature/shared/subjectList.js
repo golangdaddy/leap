@@ -12,6 +12,10 @@ import { {{titlecase .Object.Name}}ListRow } from './{{lowercase .Object.Name}}L
 import { {{titlecase .Object.Name}}ListRowJob } from './{{lowercase .Object.Name}}ListRowJob';
 import { {{titlecase .Object.Name}}DELETE, {{titlecase .Object.Name}}sListGET, {{titlecase .Object.Name}}OrderPOST, {{titlecase .Object.Name}}JobPOST } from '../_fetch';
 
+{{if eq 1 (stringslength .Object.Parents)}}
+import { {{firstparenttitle .Object.Parents}}JobPOST } from '@/features/{{firstparent .Object.Parents}}s/_fetch'
+{{end}}
+
 export function {{titlecase .Object.Name}}List(props) {
 
 	const [ userdata, setUserdata] = useUserContext()
@@ -37,11 +41,13 @@ export function {{titlecase .Object.Name}}List(props) {
 	function sendToTopic(e) {
 		console.log(e)
 		const job = e.target.id
-		{{titlecase .Object.Name}}JobPOST(userdata, props.subject?.Meta.ID, job)
+		{{if eq 1 (stringslength .Object.Parents)}}
+		{{firstparenttitle .Object.Parents}}JobPOST(userdata, props.subject?.Meta.ID, job)
 		.then((res) => console.log(res))
 		.catch((e) => {
             console.error(e)
         })
+		{{end}}
 	}
 
 	useEffect(() => {

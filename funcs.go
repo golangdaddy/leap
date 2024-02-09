@@ -9,12 +9,27 @@ import (
 )
 
 var funcMap = template.FuncMap{
-	"parentcount": parentcount,
-	"lowercase":   lowercase,
-	"uppercase":   uppercase,
-	"titlecase":   titlecase,
-	"json":        jsonmarshal,
-	"tidy":        tidy,
+	"parentcount":      parentcount,
+	"lowercase":        lowercase,
+	"uppercase":        uppercase,
+	"titlecase":        titlecase,
+	"json":             jsonmarshal,
+	"tidy":             tidy,
+	"firstparent":      firstparent,
+	"firstparenttitle": firstparenttitle,
+	"stringslength":    stringslength,
+}
+
+func stringslength(a []string) int {
+	return len(a)
+}
+
+func firstparent(a []string) string {
+	return a[0]
+}
+
+func firstparenttitle(a []string) string {
+	return titlecase(a[0])
 }
 
 func jsonmarshal(x interface{}) string {

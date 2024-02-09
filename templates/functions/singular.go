@@ -15,6 +15,8 @@ import (
 	"google.golang.org/api/iterator"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
+
+	"github.com/kr/pretty"
 )
 
 // api-{{lowercase $obj.Name}}
@@ -187,6 +189,8 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 
 			println("launching job:", job)
 
+			pretty.Println(object)
+
 			b, err := app.MarshalJSON(object)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
@@ -194,7 +198,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 			}
 			result := app.PubSub().Topic(job).Publish(
 				app.Context(),
-				&pubsub.Message{Data: b},
+				&pubsub.Message{Data: b},	
 			)
 			msgID, err := result.Get(app.Context())
 			if err != nil {

@@ -32,8 +32,10 @@ export function {{titlecase .Object.Name}}ListRow(props) {
 				}
 				<div className="px-4"></div>
 				{{range $item, $key := .Object.Fields}}{
-					("{{lowercase $key.Name}}" != "name") && <>
-						<div className='text-sm font-bold' title="{{lowercase $key.Name}}">{ props.item.fields["{{lowercase $key.Name}}"] }</div>
+					("{{lowercase $key.Name}}" != "name") && !Array.isArray(props.item.fields["{{lowercase $key.Name}}"]) &&  !(typeof props.item.fields["{{lowercase $key.Name}}"] === 'object')  && <>
+						<div className='text-sm font-bold' title="{{lowercase $key.Name}}">
+							{ props.item.fields["{{lowercase $key.Name}}"] }
+						</div>
 						<div className="px-4"></div>
 					</>
 				}{{end}}

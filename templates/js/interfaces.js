@@ -5,6 +5,7 @@ import { {{titlecase .Name}}Interfaces } from '@/features/{{lowercase .Name}}s/_
 
 import Home from '@/features/home'
 import Account from '@/features/account/account'
+import AccountInbox from '@/features/account/accountInbox'
 
 export var Interfaces = {
 	"home": {
@@ -13,9 +14,14 @@ export var Interfaces = {
 		component: (<Home/>),
 	},
 	"account": {
-		level: 0,
+		level: 1,
 		name: "Your Account",
 		component: (<Account/>),
+	},
+	"accountinbox": {
+		level: 2,
+		name: "Your Inbox",
+		component: (<AccountInbox/>),
 	},
 }
 

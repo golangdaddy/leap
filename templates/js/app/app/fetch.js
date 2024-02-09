@@ -104,3 +104,11 @@ export function ObjectPATCH(user, object, field, value) {
 	console.log("PATCHING OBJECT:", user, "PATCH", "api/"+c+"?id="+object.Meta.ID, payload)
 	return SessionFetch(user, "PATCH", "api/"+c+"?id="+object.Meta.ID, payload)
 }
+
+export function InboxConvosGET(user) {
+	return SessionFetch(user, "GET", "api/mail?function=convos")
+}
+
+export function InboxMessagesGET(user, conversation) {
+	return SessionFetch(user, "GET", "api/mail?function=messages&conversation="+conversation)
+}
