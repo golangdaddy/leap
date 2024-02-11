@@ -92,6 +92,12 @@ func Build(stack *models.Stack) error {
 	if err := copyFile("templates/js/account/accountInbox.js", "build/app/features/account/accountInbox.js"); err != nil {
 		return err
 	}
+	if err := copyFile("templates/js/account/accountInboxCompose.js", "build/app/features/account/accountInboxCompose.js"); err != nil {
+		return err
+	}
+	if err := copyFile("templates/js/account/accountInboxMessages.js", "build/app/features/account/accountInboxMessages.js"); err != nil {
+		return err
+	}
 
 	if err := copyFile("templates/js/interfaces.js", "build/app/features/interfaces.js"); err != nil {
 		return err

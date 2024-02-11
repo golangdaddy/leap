@@ -36,6 +36,7 @@ type Internals struct {
 	Moderation Moderation
 	Updated    bool
 	Created    int64
+	Deleted    int64 `json:",omitempty"`
 	Modified   int64
 	Stats      map[string]float64 `json:",omitempty"`
 }

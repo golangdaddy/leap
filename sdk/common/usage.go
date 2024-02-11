@@ -1,9 +1,11 @@
 package common
 
 import (
+	"context"
 	"log"
 	"os"
 
+	language "cloud.google.com/go/language/apiv1beta2"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/fxamacker/cbor/v2"
 	"github.com/golangdaddy/leap/sdk/assetlayer"
@@ -82,4 +84,15 @@ func (app *App) UseChatGPT(openaiKey string) {
 	app.Clients.Lock()
 	defer app.Clients.Unlock()
 	app.Clients.openai = openai.NewClient(openaiKey)
+}
+
+// google natural language processing
+func (self *GCPClients) UseNLP() *language.Client {
+	var err error
+	self.nlp, err = language.NewClient(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer self.nlp.Close()
+	return self.nlp
 }

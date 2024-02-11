@@ -112,3 +112,7 @@ export function InboxConvosGET(user) {
 export function InboxMessagesGET(user, conversation) {
 	return SessionFetch(user, "GET", "api/mail?function=messages&conversation="+conversation)
 }
+
+export function InboxSendMessage(user, msg) {
+	return SessionFetch(user, "POST", "api/mail?", msg)
+}

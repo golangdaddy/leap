@@ -10,6 +10,7 @@ import (
 	"cloud.google.com/go/firestore"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
+	"github.com/kr/pretty"
 	"google.golang.org/api/iterator"
 )
 
@@ -112,10 +113,19 @@ func (app *App) MailEntrypoint(w http.ResponseWriter, r *http.Request) {
 			cloudfunc.HttpError(w, err, http.StatusBadRequest)
 			return
 		}
+		mail.Meta = user.Meta.NewInternals("mails")
+		mail.Sender = user.Ref()
+		pretty.Println(mail)
+
+		if len(mail.Body) == 0 {
+			log.Println("rejected request with no message body")
+			cloudfunc.HttpError(w, err, http.StatusBadRequest)
+			return
+		}
 
 		postboxIDs := []string{}
 		postboxOwners := []*User{}
-		for _, recipient := range mail.Recipients {
+		for _, recipient := range append(mail.Recipients, mail.Sender) {
 			user, err := app.GetUser(recipient)
 			if err != nil {
 				cloudfunc.HttpError(w, err, http.StatusNotFound)
@@ -129,13 +139,25 @@ func (app *App) MailEntrypoint(w http.ResponseWriter, r *http.Request) {
 		sort.Strings(postboxIDs)
 		conversation := app.SeedDigest(strings.Join(postboxIDs, " "))
 
+		ownerIDs := []string{}
+		for _, owner := range postboxOwners {
+			ownerIDs = append(ownerIDs, owner.Username)
+		}
+
 		for _, user := range postboxOwners {
 			// write the new mail to firestore
 			stub := &Internals{
+				ID:      conversation,
+				Class:   "stubs",
 				Updated: true,
 				Created: app.TimeNow().Unix(),
+				Name:    mail.Body,
 			}
+			stub.Context.Parents = ownerIDs
+
+			// if this converstation thread between the users exists
 			if doc, err := user.Meta.Firestore(app.App).Collection("convos").Doc(conversation).Get(app.Context()); err != nil {
+				log.Println(err)
 				if _, err := user.Meta.Firestore(app.App).Collection("convos").Doc(conversation).Set(app.Context(), stub); err != nil {
 					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 					return

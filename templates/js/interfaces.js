@@ -6,6 +6,7 @@ import { {{titlecase .Name}}Interfaces } from '@/features/{{lowercase .Name}}s/_
 import Home from '@/features/home'
 import Account from '@/features/account/account'
 import AccountInbox from '@/features/account/accountInbox'
+import AccountInboxMessages from '@/features/account/accountInboxMessages'
 
 export var Interfaces = {
 	"home": {
@@ -23,6 +24,11 @@ export var Interfaces = {
 		name: "Your Inbox",
 		component: (<AccountInbox/>),
 	},
+	"accountinboxmessages": {
+		level: 3,
+		name: "Conversation",
+		component: (<AccountInboxMessages/>),
+	}
 }
 
 export function GetInterfaces() {

@@ -9,15 +9,25 @@ import (
 	"cloud.google.com/go/pubsub"
 	"cloud.google.com/go/storage"
 	firebase "firebase.google.com/go/v4"
+
+	language "cloud.google.com/go/language/apiv1beta2"
 )
+
+// client for the GSP NLP language api
+func (self *GCPClients) NLP() *language.Client {
+	return self.nlp
+}
 
 type GCPClients struct {
 	projectID         string
-	storage           *storage.Client
-	firebase          *firebase.App
-	firestore         *firestore.Client
-	pubsub            *pubsub.Client
 	firestoreDatabase string
+
+	storage   *storage.Client
+	firebase  *firebase.App
+	firestore *firestore.Client
+	pubsub    *pubsub.Client
+	nlp       *language.Client
+
 	sync.RWMutex
 }
 
