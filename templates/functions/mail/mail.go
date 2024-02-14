@@ -12,6 +12,8 @@ import (
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
 	"github.com/kr/pretty"
 	"google.golang.org/api/iterator"
+
+	"cloud.google.com/go/language/apiv1beta2/languagepb"
 )
 
 // api-inbox
@@ -174,7 +176,23 @@ func (app *App) MailEntrypoint(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 			}
+
 		}
+
+		resp, err := app.GCPClients.NLP().AnalyzeEntitySentiment(app.Context(), &languagepb.AnalyzeEntitySentimentRequest{
+			Document: &languagepb.Document{
+				Source: &languagepb.Document_Content{
+					Content: mail.Body,
+				},
+				Type: languagepb.Document_PLAIN_TEXT,
+			},
+		})
+		if err != nil {
+			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			return
+		}
+
+		pretty.Println(resp)
 
 		// write the new mail to firestore
 		if _, err := app.Firestore().Collection("conversations").Doc(conversation).Collection("messages").Doc(mail.Meta.ID).Create(app.Context(), mail); err != nil {

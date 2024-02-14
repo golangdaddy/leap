@@ -6,6 +6,7 @@ import (
 	"os"
 
 	language "cloud.google.com/go/language/apiv1beta2"
+	"cloud.google.com/go/vertexai/genai"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/fxamacker/cbor/v2"
 	"github.com/golangdaddy/leap/sdk/assetlayer"
@@ -95,4 +96,16 @@ func (self *GCPClients) UseNLP() *language.Client {
 	}
 	defer self.nlp.Close()
 	return self.nlp
+}
+
+// google natural language processing
+func (self *GCPClients) UseVertex(location string) *genai.Client {
+	self.Lock()
+	defer self.Unlock()
+	var err error
+	self.vertex, err = genai.NewClient(context.Background(), self.projectID, location)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return self.vertex
 }

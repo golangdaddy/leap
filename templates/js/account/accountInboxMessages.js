@@ -29,6 +29,11 @@ export default function AccountInboxMessages(props) {
 		})		
 	}
 
+	const bodystyle = {
+		borderRadius: "12px",
+		border: "solid 1px black",
+	}
+
 	useEffect(() => {
 		updateMessages()
 	}, [])
@@ -37,6 +42,8 @@ export default function AccountInboxMessages(props) {
 		<div className='flex flex-row text-sm cursor-pointer w-full'>
 			<Sidebar/>
 			<div className='flex flex-col p-4  w-auto w-full'>
+				<textarea id='body' className="w-full my-2 p-2" placeholder="your message" style={bodystyle}></textarea>
+				<button style={buttonStyle} onClick={sendMessage}>Send</button>
 			{
 				messages.map(function (item, i) {
 					return (

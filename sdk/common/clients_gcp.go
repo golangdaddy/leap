@@ -8,6 +8,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/pubsub"
 	"cloud.google.com/go/storage"
+	"cloud.google.com/go/vertexai/genai"
 	firebase "firebase.google.com/go/v4"
 
 	language "cloud.google.com/go/language/apiv1beta2"
@@ -27,6 +28,7 @@ type GCPClients struct {
 	firestore *firestore.Client
 	pubsub    *pubsub.Client
 	nlp       *language.Client
+	vertex    *genai.Client
 
 	sync.RWMutex
 }
@@ -109,4 +111,14 @@ func (self *GCPClients) PubSub() *pubsub.Client {
 	}
 
 	return client
+}
+
+func (clients *GCPClients) Vertex() *genai.Client {
+	return clients.vertex
+}
+
+func (clients *GCPClients) VertexModel(modelName string, temperature float32) *genai.GenerativeModel {
+	model := clients.vertex.GenerativeModel(modelName)
+	model.SetTemperature(temperature)
+	return model
 }
