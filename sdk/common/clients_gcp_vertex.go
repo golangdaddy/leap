@@ -19,7 +19,7 @@ func (self *GCPClients) GenerateContent(prompt string, temperature float32) (int
 		return 0, nil, err
 	}
 
-	resp, err := model.GenerateContent(context.Background(), genai.Text("What is the average size of a swallow?"))
+	resp, err := model.GenerateContent(context.Background(), genai.Text(prompt))
 	if err != nil {
 		return 0, nil, err
 	}
