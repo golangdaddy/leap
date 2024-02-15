@@ -203,6 +203,10 @@ func Build(stack *models.Stack) error {
 		if err := execTemplate("functions", "pluralCreate.go", "api_"+object.Name+"sCreate.go", container); err != nil {
 			return err
 		}
+		// vertex AI methods
+		if err := execTemplate("functions", "pluralShared_VertexCreate.go", "api_"+object.Name+"shared_VertexCreate.go", container); err != nil {
+			return err
+		}
 		// chatgpt methods
 		if err := execTemplate("functions", "pluralShared_ChatGPTCreate.go", "api_"+object.Name+"shared_ChatGPTCreate.go", container); err != nil {
 			return err

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/fxamacker/cbor/v2"
+	"github.com/kr/pretty"
 )
 
 type App struct {
@@ -27,6 +28,10 @@ func NewApp() *App {
 	app.newClients()
 
 	return app
+}
+
+func (app *App) Pretty(x interface{}) {
+	pretty.Println(x)
 }
 
 func (app *App) Context() context.Context {
