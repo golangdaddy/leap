@@ -22,7 +22,9 @@ func main() {
 		os.Getenv("ASSETLAYERSECRET"),
 		os.Getenv("DIDTOKEN"),
 	)
+	{{if .Options.Pusher}}
 	app.UseChatGPT(os.Getenv("OPENAI_KEY"))
+	{{end}}
 	{{if .Options.Pusher}}
 	app.UsePusher(
 		os.Getenv("PUSHER_APP_ID"),
@@ -31,12 +33,12 @@ func main() {
 		os.Getenv("PUSHER_CLUSTER"),
 	)
 	{{end}}
+	{{if .Options.Assetlayer}}
 	slotID, err := app.Assetlayer().EnsureSlotExists("{{.DatabaseID}}-models", "description...", "")
 	if err != nil {
 		panic(err)
 	}
 	os.Setenv("SLOTID", slotID)
-
 	{{range .Objects}}
 	{
 		collectionID, err := app.Assetlayer().EnsureCollectionExists(slotID, "Unique", "{{lowercase .Name}}s", "description...", "", 1000000, nil)
@@ -45,12 +47,11 @@ func main() {
 		}
 		os.Setenv("MODEL_{{uppercase .Name}}S", collectionID)
 	}{{end}}
-
 	{{range .Wallets}}
 	if _, err := app.Assetlayer().NewAppWallet("{{.}}"); err != nil {
 		log.Println(err)
 	}{{end}}
-
+	{{end}}
 	http.HandleFunc("/api/user", app.UserEntrypoint)
 	http.HandleFunc("/api/users", app.UsersEntrypoint)
 	http.HandleFunc("/api/auth", app.AuthEntrypoint)

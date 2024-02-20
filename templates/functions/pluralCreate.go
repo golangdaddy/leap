@@ -26,6 +26,7 @@ func (app *App) CreateDocument{{uppercase .Object.Name}}(parent *Internals, obje
 	object.Meta.Context.Order = order
 	{{if eq false .Object.Options.Order}}*/{{end}}
 
+	{{if ne nil .Object.Options.Assetlayer}}
 	{{if eq false .Object.Options.Assetlayer.Wallet}}/*{{end}}
 	// create app wallet
 	{
@@ -54,6 +55,7 @@ func (app *App) CreateDocument{{uppercase .Object.Name}}(parent *Internals, obje
 		{{end}}
 	}
 	{{if eq false .Object.Options.Assetlayer.Token}}*/{{end}}
+	{{end}}
 	
 	// write new {{uppercase .Object.Name}} to the DB
 	if err := object.Meta.SaveToFirestore(app.App, object); err != nil {

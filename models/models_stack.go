@@ -20,7 +20,8 @@ type Stack struct {
 }
 
 type StackOptions struct {
-	Pusher bool `json:"pusher"`
+	Pusher     bool `json:"pusher"`
+	Assetlayer bool `json:"assetlayer"`
 }
 
 func (stack *Stack) NewObject(parent *Object, name string) *Object {

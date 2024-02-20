@@ -23,7 +23,7 @@ type Options struct {
 	Font        bool        `json:"font"`
 	TopicCreate *string     `json:"topicCreate"`
 	Topics      []*JobTopic `json:"topics"`
-	Assetlayer  Assetlayer  `json:"assetlayer"`
+	Assetlayer  *Assetlayer `json:"assetlayer"`
 	Pusher      bool        `json:"pusher"`
 	Permissions Permissions `json:"permissions"`
 }
