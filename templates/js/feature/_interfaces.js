@@ -10,7 +10,6 @@ import { New{{titlecase .Object.Name}} } from './new{{titlecase .Object.Name}}'
 import { Edit{{titlecase .Object.Name}} } from './edit{{titlecase .Object.Name}}'
 import { Delete{{titlecase .Object.Name}} } from './delete{{titlecase .Object.Name}}'
 import { InitUpload{{titlecase .Object.Name}} } from './initUpload{{titlecase .Object.Name}}'
-import { InitUpload{{titlecase .Object.Name}}s } from './initUpload{{titlecase .Object.Name}}s'
 import { Upload{{titlecase .Object.Name}} } from './upload{{titlecase .Object.Name}}'
 
 export var {{titlecase .Object.Name}}Interfaces = {
@@ -29,11 +28,6 @@ export var {{titlecase .Object.Name}}Interfaces = {
 		level: {{parentcount .Object}}+2,
 		name: "Upload {{titlecase .Object.Name}}",
 		component: (<InitUpload{{titlecase .Object.Name}} />),
-	},
-	"initupload{{lowercase .Object.Name}}s": {
-		level: {{parentcount .Object}}+2,
-		name: "Upload {{titlecase .Object.Name}}s",
-		component: (<InitUpload{{titlecase .Object.Name}}s />),
 	},
 	"upload{{lowercase .Object.Name}}": {
 		level: {{parentcount .Object}}+3,

@@ -5,7 +5,7 @@ import { useLocalContext } from '@/context/local';
 import { GoBack } from '@/features/interfaces';
 import Loading from '@/app/loading';
 
-import { {{titlecase .Object.Name}}Upload } from './_fetch'
+import { {{titlecase .Object.Name}}InitUpload} from './_fetch'
 
 export function InitUpload{{titlecase .Object.Name}}(props) {
 
@@ -29,7 +29,7 @@ export function InitUpload{{titlecase .Object.Name}}(props) {
 		formData.append('file', file);
 		formData.append('fileName', file.name);
 
-		{{titlecase .Object.Name}}Upload(userdata, element.Meta.ID, "file", formData)
+		{{titlecase .Object.Name}}InitUpload(userdata, element.Meta.ID, formData)
 		.then((response) => {
 			console.log(response.data);
 			if (props.done) {

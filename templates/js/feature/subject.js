@@ -78,7 +78,9 @@ export function {{titlecase .Object.Name}}(props) {
     return (
         <div style={ {padding:"30px 60px 30px 60px"} }>
 			{ !subject && <Loading/> }
-			{{if .Object.Options.Image}}<RowThumbnail source={'https://storage.googleapis.com/{{.DatabaseID}}-uploads/'+subject.Meta.URIs[subject.Meta.URIs.length-1]}/>{{end}}
+			{
+				subject?.Meta.Media.Image && <RowThumbnail source={'https://storage.googleapis.com/{{.DatabaseID}}-uploads/'+subject.Meta.Media.URIs[subject.Meta.Media.URIs.length-1]}/>
+			}
 			{
 				subject && <div className='flex flex-col w-full'>
 					<div className='flex flex-row justify-between items-center w-full py-4 my-4'>

@@ -27,13 +27,12 @@ func (n Internals) NewInternals(class string) Internals {
 type Internals struct {
 	ID         string
 	Class      string
-	URIs       []string
 	Name       string `json:",omitempty"`
-	Color      string `json:",omitempty"`
 	Asset      string `json:",omitempty"`
 	Wallet     string `json:",omitempty"`
 	Context    Context
 	Moderation Moderation
+	Media      Media
 	Updated    bool
 	Created    int64
 	Deleted    int64 `json:",omitempty"`
@@ -63,16 +62,16 @@ func (i *Internals) AssetlayerCollectionID() string {
 }
 
 func (i *Internals) URI() (string, error) {
-	if len(i.URIs) == 0 {
+	if len(i.Media.URIs) == 0 {
 		return "", errors.New("this object has no assigned URI")
 	}
-	return i.URIs[len(i.URIs)-1], nil
+	return i.Media.URIs[len(i.Media.URIs)-1], nil
 }
 
 func (i *Internals) NewURI() string {
-	i.URIs = append(i.URIs, uuid.NewString())
+	i.Media.URIs = append(i.Media.URIs, uuid.NewString())
 	i.Modify()
-	return i.URIs[len(i.URIs)-1]
+	return i.Media.URIs[len(i.Media.URIs)-1]
 }
 
 func (i *Internals) DocPath() string {
@@ -194,6 +193,12 @@ func (i *Internals) Modify() {
 func (i *Internals) Update() {
 	i.Updated = true
 	i.Modify()
+}
+
+type Media struct {
+	Color string   `json:",omitempty"`
+	URIs  []string `json:",omitempty"`
+	Image bool     `json:",omitempty"`
 }
 
 type Context struct {

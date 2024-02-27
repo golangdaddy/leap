@@ -17,7 +17,6 @@ type Options struct {
 	Admin       bool        `json:"admin"`
 	Job         bool        `json:"job"`
 	Order       bool        `json:"order"`
-	Color       bool        `json:"color"`
 	File        bool        `json:"file"`
 	Image       bool        `json:"image"`
 	Font        bool        `json:"font"`

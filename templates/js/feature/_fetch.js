@@ -46,8 +46,8 @@ export function {{titlecase .Object.Name}}Upload(user, id, mode, formData) {
     return AxiosPOST(user, "api/{{lowercase .Object.Name}}?function=upload&id="+id+"&mode="+mode, formData)
 }
 
-export function {{titlecase .Object.Name}}sUpload(user, parentID, mode, formData) {
-    return AxiosPOST(user, "api/{{lowercase .Object.Name}}s?function=upload&parent="+parentID+"&mode="+mode, formData)
+export function {{titlecase .Object.Name}}InitUpload(user, parentID, formData) {
+    return AxiosPOST(user, "api/{{lowercase .Object.Name}}s?function=upload&parent="+parentID, formData)
 }
 
 // misc

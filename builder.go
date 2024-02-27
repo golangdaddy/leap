@@ -562,20 +562,6 @@ func Build(stack *models.Stack) error {
 		}
 		{
 			path := fmt.Sprintf(
-				"build/app/features/%ss/initUpload%ss.js",
-				cases.Lower(language.English).String(object.Name),
-				cases.Title(language.English).String(object.Name),
-			)
-			copyFile(
-				"templates/js/feature/initUploadSubjects.js",
-				path,
-			)
-			if err := doTemplate(path, container); err != nil {
-				return err
-			}
-		}
-		{
-			path := fmt.Sprintf(
 				"build/app/features/%ss/upload%s.js",
 				cases.Lower(language.English).String(object.Name),
 				cases.Title(language.English).String(object.Name),

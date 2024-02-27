@@ -1,15 +1,16 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"archive/zip"
 	"bytes"
+	"fmt"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
+	"log"
 	"net/http"
+	"strings"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
 )
@@ -43,114 +44,82 @@ func (app *App) Upload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.
 		log.Println("copy: wrote", n, "bytes")
 	}
 
-	{{if eq false .Object.Options.Image}}/*{{end}}
-	if err := checkImage{{uppercase .Object.Name}}(buf.Bytes()); err != nil {
-		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-		return
-	}
-	{{if eq false .Object.Options.Image}}*/{{end}}
-	log.Println("creating new object:", handler.Filename)
-	fields := Fields{{uppercase .Object.Name}}{}
-	object := user.New{{uppercase .Object.Name}}(parent, fields)
+	newFileObjects := []*{{uppercase .Object.Name}}{}
 
-	// hidden line here if noparent: object.Fields.Filename = zipFile.Name
-	object.Meta.Name = handler.Filename
+	if !strings.Contains(strings.ToLower(handler.Filename), "zip") {
 
-	// generate a new URI
-	uri := object.Meta.NewURI()
-	println ("URI", uri)
-
-	bucketName := "{{.DatabaseID}}-uploads"
-	if err := app.write{{titlecase .Object.Name}}File(bucketName, uri, buf.Bytes()); err != nil {
-		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-		return
-	}
-
-	// reuse document init create code
-	if err := app.CreateDocument{{uppercase .Object.Name}}(parent, object); err != nil {
-		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-		return		
-	}
-	return
-}
-
-func (app *App) ArchiveUpload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request, parent *Internals, user *User) {
-
-	log.Println("PARSING FORM")
-	if err := r.ParseMultipartForm(300 << 20); err != nil {
-		cloudfunc.HttpError(w, err, http.StatusBadRequest)
-		return
-	}
-
-	// Get handler for filename, size and headers
-	file, handler, err := r.FormFile("file")
-	if err != nil {
-		cloudfunc.HttpError(w, err, http.StatusBadRequest)
-		return
-	}
-
-	defer file.Close()
-	fmt.Printf("Uploaded File: %+v\n", handler.Filename)
-	fmt.Printf("File Size: %+v\n", handler.Size)
-	fmt.Printf("MIME Header: %+v\n", handler.Header)
-
-	buf := bytes.NewBuffer(nil)
-	// Copy the uploaded file to the created file on the filesystem
-	if n, err := io.Copy(buf, file); err != nil {
-		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-		return
-	} else {
-		log.Println("copy: wrote", n, "bytes")
-	}
-
-	// Open the zip archive from the buffer
-	zipReader, err := zip.NewReader(bytes.NewReader(buf.Bytes()), int64(buf.Len()))
-	if err != nil {
-		err = fmt.Errorf("Error opening zip archive: %v", err)
-		cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-		return 
-	}
-
-	// Extract each file from the zip archive
-	for n, zipFile := range zipReader.File {
-
-		extractedContent, err := readZipFile{{uppercase .Object.Name}}(zipFile)
+		obj, err := app.newUploadObject{{uppercase .Object.Name}}(parent, user, 0, handler.Filename, buf.Bytes())
 		if err != nil {
-			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			log.Println(err)
 			return
 		}
 
-		{{if eq false .Object.Options.Image}}/*{{end}}
-		if err := checkImage{{uppercase .Object.Name}}(extractedContent); err != nil {
-			log.Println("skipping file that cannot be decoded:", zipFile.Name)
-			continue
-		}
-		{{if eq false .Object.Options.Image}}*/{{end}}
-		log.Println("creating new object:", zipFile.Name)
-		fields := Fields{{uppercase .Object.Name}}{}
-		object := user.New{{uppercase .Object.Name}}(parent, fields)
+		newFileObjects = append(newFileObjects, obj)
 
-		object.Meta.Name = zipFile.Name
+	} else {
 
-		object.Meta.Context.Order = n
+		log.Println("HANDLING ZIP")
 
-		// generate a new URI
-		uri := object.Meta.NewURI()
-		log.Println("URI", uri)
-
-		if err := app.write{{titlecase .Object.Name}}File(CONST_BUCKET_UPLOADS, uri, extractedContent); err != nil {
+		// Open the zip archive from the buffer
+		zipReader, err := zip.NewReader(bytes.NewReader(buf.Bytes()), int64(buf.Len()))
+		if err != nil {
+			err = fmt.Errorf("Error opening zip archive: %v", err)
 			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-			return
+			return 
 		}
 
-		// reuse document init create code
-		if err := app.CreateDocument{{uppercase .Object.Name}}(parent, object); err != nil {
+		// Extract each file from the zip archive
+		for n, zipFile := range zipReader.File {
+	
+			extractedContent, err := readZipFile{{uppercase .Object.Name}}(zipFile)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+	
+			obj, err := app.newUploadObject{{uppercase .Object.Name}}(parent, user, n, zipFile.Name, extractedContent)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			newFileObjects = append(newFileObjects, obj)
+		}
+	}
+
+	// make the documents proper
+	for _, obj := range newFileObjects {
+		if err := app.CreateDocument{{uppercase .Object.Name}}(parent, obj); err != nil {
 			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 			return		
 		}
-
 	}
+
 	return
+}
+
+func (app *App) newUploadObject{{uppercase .Object.Name}}(parent *Internals, user *User, n int, name string, b []byte) (*{{uppercase .Object.Name}}, error) {
+	fields := Fields{{uppercase .Object.Name}}{}
+	object := user.New{{uppercase .Object.Name}}(parent, fields)
+	object.Meta.Name = name
+	object.Meta.Context.Order = n
+	// generate a new URI
+	uri := object.Meta.NewURI()
+	log.Println(name, "URI", uri)
+
+	// check if it is an image
+	if err := checkImage{{uppercase .Object.Name}}(b); err != nil {
+		fmt.Errorf("skipping file that cannot be decoded: %s", name)
+		return nil, err
+	} else {
+		object.Meta.Media.Image = true
+	}
+
+	if err := app.write{{titlecase .Object.Name}}File(CONST_BUCKET_UPLOADS, uri, b); err != nil {
+		return nil, err
+	}
+
+	return object, nil
 }
 
 // assert file is an image because of .Object.Options.Image

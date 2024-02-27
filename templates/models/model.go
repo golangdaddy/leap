@@ -19,13 +19,12 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 		}
 	}
 
-	{{if eq false .Options.Color}}
 	colors, err := gamut.Generate(8, gamut.PastelGenerator{})
 	if err != nil {
 		log.Println(err)
 	} else {
-		object.Meta.Color = gamut.ToHex(colors[0])
-	}{{end}}
+		object.Meta.Media.Color = gamut.ToHex(colors[0])
+	}
 
 	{{if eq false .Options.Admin}}// this object inherits its admin permissions
 	if parent != nil {
