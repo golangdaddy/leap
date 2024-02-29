@@ -1,13 +1,14 @@
 package models
 
 type Object struct {
+	Name        string    `json:"name"`
+	Plural      string    `json:"plural"`
 	JSON        string    `json:"json"`
 	Mode        string    `json:"mode"`
 	Context     string    `json:"context"`
 	Parents     []string  `json:"parents,omitempty"`
 	ParentCount int       `json:"parentCount,omitempty"`
 	Children    []*Object `json:"children,omitempty"`
-	Name        string    `json:"name"`
 	Fields      []*Field  `json:"fields"`
 	Options     Options   `json:"options"`
 }

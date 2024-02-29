@@ -105,6 +105,10 @@ func Prepare(tree *Stack) error {
 
 	for n, _ := range tree.Objects {
 
+		if len(tree.Objects[n].Plural) == 0 {
+			tree.Objects[n].Plural = tree.Objects[n].Name + "s"
+		}
+
 		if len(tree.Objects[n].JSON) > 0 {
 			name := tree.Objects[n].JSON + ".json"
 			if app.jsonObjects[name] == nil {

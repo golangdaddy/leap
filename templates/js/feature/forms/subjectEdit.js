@@ -27,12 +27,18 @@ export function {{titlecase .Object.Name}}Edit(props) {
 	}
 
 	const [inputs, setInputs] = useState({
-		{{range .Object.Fields}}"{{lowercase .Name}}": {
+		{{range .Object.Fields}}
+		"{{lowercase .Name}}": {
 			id: "{{lowercase .Name}}",
 			type: "{{lowercase .Type}}",
+			{{if eq "name" (lowercase .Name)}}
+			value: subject.Meta.Name,
+			{{else}}
 			value: subject.fields.{{lowercase .Name}},
+			{{end}}
 			required: {{.Required}},
-		},{{end}}
+		},
+		{{end}}
 	})
 	function handleInputChange(obj) {
 		InputChange(inputs, setInputs, obj)

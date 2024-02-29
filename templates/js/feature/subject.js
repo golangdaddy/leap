@@ -85,7 +85,7 @@ export function {{titlecase .Object.Name}}(props) {
 				subject && <div className='flex flex-col w-full'>
 					<div className='flex flex-row justify-between items-center w-full py-4 my-4'>
 						<div className='text-base'>
-							<span className='uppercase text-sm'>{ subject.Meta.Class }</span> / <span className='font-bold'>{ subject.fields.name }</span>
+							<span className='uppercase text-sm'>{{titlecase .Object.Plural}}</span> / <span className='font-bold'>{ subject.fields.name }</span>
 						</div>
 						{
 							localdata.tab.subsublinks.map(function (tabname, i) {
@@ -170,7 +170,11 @@ export function {{titlecase .Object.Name}}(props) {
 												}
 												{
 													!Array.isArray(subject.fields["{{lowercase .Name}}"]) && !(typeof subject.fields["{{lowercase .Name}}"] === 'object') && <>
+														{{if eq "name" .Name}}
+														{ subject.Meta.Name }
+														{{else}}
 														{ subject.fields["{{lowercase .Name}}"] }
+														{{end}}
 													</>
 												}
 											</div>

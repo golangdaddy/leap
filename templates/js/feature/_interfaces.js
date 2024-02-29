@@ -42,7 +42,7 @@ export var {{titlecase .Object.Name}}Interfaces = {
 	},  
 	"{{lowercase .Object.Name}}s": {
 		level: {{parentcount .Object}}+1,
-		name: "{{titlecase .Object.Name}}s", 
+		name: "{{titlecase .Object.Plural}}", 
 		component: (<{{titlecase .Object.Name}}s />),
 		subsublinks: ["{{lowercase .Object.Name}}smatrix", "new{{lowercase .Object.Name}}"{{if .Object.Options.File}}, "initupload{{lowercase .Object.Name}}", "initupload{{lowercase .Object.Name}}s"{{end}}],
 		hasNewButton: true,
