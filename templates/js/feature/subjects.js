@@ -44,15 +44,16 @@ export function {{titlecase .Object.Name}}s(props) {
 		<div style={ {padding:"30px 60px 30px 60px"} } className='flex flex-col w-full'>
 			<div className='flex flex-row justify-between w-full'>
 				<div className='flex flex-row'>
-					<button id={'new{{lowercase .Object.Name}}'} onClick={updateTabEvent} className="flex flex-col justify-center items-center m-2 cursor-pointer" style={buttonStyle}>
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" style={ {pointerEvents:"none"} }>
-						<path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-						</svg>
-					</button>
 					{{if .Object.Options.File}}
 					<button id={'initupload{{lowercase .Object.Name}}'} onClick={updateTabEvent} className="flex flex-col justify-center items-center m-2 cursor-pointer" style={buttonStyle}>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"  style={ {pointerEvents:"none"} }>
 						<path strokeLinecap="round" strokeLinejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75" />
+						</svg>
+					</button>
+					{{else}}
+					<button id={'new{{lowercase .Object.Name}}'} onClick={updateTabEvent} className="flex flex-col justify-center items-center m-2 cursor-pointer" style={buttonStyle}>
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" style={ {pointerEvents:"none"} }>
+						<path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 						</svg>
 					</button>
 					{{end}}

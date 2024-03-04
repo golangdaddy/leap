@@ -47,8 +47,15 @@ export default function PageRegister({ data }) {
 			<div className="flex flex-col m-10 p-5">
 				<div className='flex flex-col items-center'>
 					<div className='font-2xl font-bold'>Register</div>
-					<div className='m-5'>
+					<div className='flex flex-row m-5'>
 						<input onChange={checkEmail} placeholder="Email Address" className="p-5 rounded-lg border" id="otp_email" type="email"/>
+						{{if .Options.WhitelistDomains}}
+						<select>
+							{{range .Options.RegistrationDomains}}
+							<option value="{{.}}">{{.}}</option>
+							{{end}}
+						</select>
+						{{end}}
 					</div>
 					<div className='m-5'>
 						<input onKeyUp={formatUsername} placeholder="username" className="p-5 rounded-lg" id="otp_username" type="text"/>

@@ -14,14 +14,18 @@ type Stack struct {
 	ProjectID     string       `json:"projectID"`
 	DatabaseID    string       `json:"databaseID"`
 	Objects       []*Object    `json:"objects"`
-	Wallets       []string     `json:"wallets"`
 	Entrypoints   []string     `json:"entrypoints"`
 	Options       StackOptions `json:"options"`
 }
 
 type StackOptions struct {
-	Pusher     bool `json:"pusher"`
-	Assetlayer bool `json:"assetlayer"`
+	Pusher              bool     `json:"pusher"`
+	Assetlayer          bool     `json:"assetlayer"`
+	Wallets             []string `json:"wallets"`
+	WhitelistDomains    bool     `json:"whitelistDomains"`
+	RegistrationDomains []string `json:"registrationDomains"`
+	WhitelistEmails     bool     `json:"whitelistEmails"`
+	RegistrationEmails  []string `json:"registrationEmails"`
 }
 
 func (stack *Stack) NewObject(parent *Object, name string) *Object {

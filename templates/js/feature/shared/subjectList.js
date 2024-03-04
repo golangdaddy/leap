@@ -59,7 +59,7 @@ export function {{titlecase .Object.Name}}List(props) {
 		console.log("SELECT {{titlecase .Object.Name}}", id)
 		const next = list[parseInt(id)]
 		const context = {
-			"_": next.fields.name,
+			"_": (next.Meta.Name ? next.fields.name : next.fields.name),
 			"object": next,
 		}
 		setLocaldata(VisitTab(localdata, "{{lowercase .Object.Name}}", context))

@@ -13,6 +13,9 @@ import (
 	"strings"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
+
+	"github.com/dsoprea/go-jpeg-image-structure"
+	"github.com/dsoprea/go-png-image-structure"
 )
 
 func (app *App) Upload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request, parent *Internals, user *User) {
@@ -113,6 +116,15 @@ func (app *App) newUploadObject{{uppercase .Object.Name}}(parent *Internals, use
 		return nil, err
 	} else {
 		object.Meta.Media.Image = true
+	}
+
+	// determine image format
+	if jpegstructure.NewJpegMediaParser().LooksLikeFormat(b) {
+		object.Meta.Media.Format = "JPEG"
+	} else {
+		if pngstructure.NewPngMediaParser().LooksLikeFormat(b) {
+			object.Meta.Media.Format = "PNG"
+		}
 	}
 
 	if err := app.write{{titlecase .Object.Name}}File(CONST_BUCKET_UPLOADS, uri, b); err != nil {

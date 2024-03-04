@@ -76,16 +76,18 @@ export function {{titlecase .Object.Name}}(props) {
 	}
 
     return (
-        <div style={ {padding:"30px 60px 30px 60px"} }>
+		<div className='flex flex-col w-full' style={ {padding:"30px 60px 30px 60px"} }>
 			{ !subject && <Loading/> }
-			{
-				subject?.Meta.Media.Image && <RowThumbnail source={'https://storage.googleapis.com/{{.DatabaseID}}-uploads/'+subject.Meta.Media.URIs[subject.Meta.Media.URIs.length-1]}/>
-			}
-			{
-				subject && <div className='flex flex-col w-full'>
+			<div className="flex flex-row w-full">
+				{
+					subject?.Meta.Media.Image && <RowThumbnail source={'https://storage.googleapis.com/{{.DatabaseID}}-uploads/'+subject.Meta.Media.URIs[subject.Meta.Media.URIs.length-1]}/>
+				}
+				<div className='flex flex-col w-full'>
 					<div className='flex flex-row justify-between items-center w-full py-4 my-4'>
 						<div className='text-base'>
-							<span className='uppercase text-sm'>{{titlecase .Object.Plural}}</span> / <span className='font-bold'>{ subject.fields.name }</span>
+							<span className='uppercase text-sm'>{{titlecase .Object.Plural}}</span>
+							/
+							<span className='font-bold'>{ subject.fields.name }</span>
 						</div>
 						{
 							localdata.tab.subsublinks.map(function (tabname, i) {
@@ -106,102 +108,102 @@ export function {{titlecase .Object.Name}}(props) {
 						</div>
 						{{end}}
 					</div>
-					<hr/>
-					<div className='flex flex-row'>
-						{
-							image && <div className="m-4" style={ {maxWidth:"40vw"} }>
-								<img className='w-full' src={image}/>
-							</div>
-						}
-						<div>
-							<table className='m-4 w-full'>
-								<tbody>
-									<tr className='flex flex-row text-sm'>
-										<td className='flex flex-col justify-start'>
-											<div className='w-full flex flex-row justify-end'>
-												<div className=''>Updated</div>
-											</div>
-										</td>
-										<td className='flex flex-col justify-start'>
-										</td>
-										<td className='flex flex-col justify-start'>
-											<div className='w-full flex flex-row justify-end'>
-												<div className=''>{ dateTime }</div>
-											</div>
-										</td>
-									</tr>
-									<Spacer/>
-									{{range .Object.Fields}}
-									<tr className='flex flex-row'>
-										<td className='flex flex-col justify-start'>
-											<div className='w-full flex flex-row justify-end'>
-												<div className='font-bold'>{{.Name}}</div>
-											</div>
-										</td>
-										<td className='flex flex-col justify-start'>
-											<div className='w-full flex flex-row justify-end'>
-												<div className='px-2'>:</div>
-											</div>
-										</td>
-										<td className='flex flex-col justify-start'>
-											<div className='w-full flex flex-row justify-end'>
+				</div>
+			</div>
+			<hr/>
+			<div className="flex flex-col w-full">
+				<div className='flex flex-row'>
+				{
+					image && <div className="m-4" style={ {maxWidth:"40vw"} }>
+						<img className='w-full' src={image}/>
+					</div>
+				}
+					<table className='m-4 w-full'>
+						<tbody>
+							<tr className='flex flex-row text-sm'>
+								<td className='flex flex-col justify-start'>
+									<div className='w-full flex flex-row justify-end'>
+										<div className=''>Updated</div>
+									</div>
+								</td>
+								<td className='flex flex-col justify-start'>
+								</td>
+								<td className='flex flex-col justify-start'>
+									<div className='w-full flex flex-row justify-end'>
+										<div className=''>{ dateTime }</div>
+									</div>
+								</td>
+							</tr>
+							<Spacer/>
+							{{range .Object.Fields}}
+							<tr className='flex flex-row'>
+								<td className='flex flex-col justify-start'>
+									<div className='w-full flex flex-row justify-end'>
+										<div className='font-bold'>{{.Name}}</div>
+									</div>
+								</td>
+								<td className='flex flex-col justify-start'>
+									<div className='w-full flex flex-row justify-end'>
+										<div className='px-2'>:</div>
+									</div>
+								</td>
+								<td className='flex flex-col justify-start'>
+									<div className='w-full flex flex-row justify-end'>
+										{
+											(typeof subject.fields["{{lowercase .Name}}"] === 'object') && <div className='flex flex-col m-4'>
 												{
-													(typeof subject.fields["{{lowercase .Name}}"] === 'object') && <div className='flex flex-col m-4'>
-														{
-															Object.keys(subject.fields["{{lowercase .Name}}"]).forEach(function(k, i) {
-																const v = subject.fields["{{lowercase .Name}}"][k]
-																return (
-																	<div key={i} className='flex flex-row text-xs m-2'>
-																		<div className=''>{k}</div>
-																		<div className='px-2'>:</div>
-																		<div className=''>{v}</div>
-																	</div>
-																)
-															})
-														}
-													</div>
-												}
-												{
-													Array.isArray(subject.fields["{{lowercase .Name}}"]) && subject.fields["{{lowercase .Name}}"].map(function(item, i) {
+													Object.keys(subject.fields["{{lowercase .Name}}"]).forEach(function(k, i) {
+														const v = subject.fields["{{lowercase .Name}}"][k]
 														return (
-															<div key={i} className='text-xs'>{item}</div>
+															<div key={i} className='flex flex-row text-xs m-2'>
+																<div className=''>{k}</div>
+																<div className='px-2'>:</div>
+																<div className=''>{v}</div>
+															</div>
 														)
 													})
 												}
-												{
-													!Array.isArray(subject.fields["{{lowercase .Name}}"]) && !(typeof subject.fields["{{lowercase .Name}}"] === 'object') && <>
-														{{if eq "name" .Name}}
-														{ subject.Meta.Name }
-														{{else}}
-														{ subject.fields["{{lowercase .Name}}"] }
-														{{end}}
-													</>
-												}
 											</div>
-										</td>
-									</tr>
-									<Spacer/>
-								{{end}}</tbody>
-							</table>
-						</div>
-					</div>
+										}
+										{
+											Array.isArray(subject.fields["{{lowercase .Name}}"]) && subject.fields["{{lowercase .Name}}"].map(function(item, i) {
+												return (
+													<div key={i} className='text-xs'>{item}</div>
+												)
+											})
+										}
+										{
+											!Array.isArray(subject.fields["{{lowercase .Name}}"]) && !(typeof subject.fields["{{lowercase .Name}}"] === 'object') && <>
+												{{if eq "name" .Name}}
+												{ subject.Meta.Name }
+												{{end}}
+												{{if ne "name" .Name}}
+												{ subject.fields["{{lowercase .Name}}"] }
+												{{end}}
+											</>
+										}
+									</div>
+								</td>
+							</tr>
+							<Spacer/>
+							{{end}}
+						</tbody>
+					</table>
 				</div>
-			}
+			</div>
+			<div className='flex flex-col'>
+				{{range .Object.Children}}
+				{{if .Options.Job}}
+				<{{titlecase .Name}}List title="{{titlecase .Plural}}" subject={subject} limit={4} />
+				{{end}}
+				{{end}}
 
-
-
-			{{range .Object.Children}}
-			{{if .Options.Job}}
-			<{{titlecase .Name}}List title="{{titlecase .Name}}" subject={subject} limit={4} />
-			{{end}}
-			{{end}}
-
-            {{range .Object.Children}}
-			{{if eq false .Options.Job}}
-			<{{titlecase .Name}}List title="{{titlecase .Name}}" subject={subject} limit={4} />
-			{{end}}
-			{{end}}
-        </div>
+				{{range .Object.Children}}
+				{{if eq false .Options.Job}}
+				<{{titlecase .Name}}List title="{{titlecase .Plural}}" subject={subject} limit={4} />
+				{{end}}
+				{{end}}
+			</div>
+		</div>
     )
-
 }
