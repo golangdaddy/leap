@@ -22,7 +22,7 @@ func main() {
 		os.Getenv("ASSETLAYERSECRET"),
 		os.Getenv("DIDTOKEN"),
 	)
-	{{if .Options.Pusher}}
+	{{if .Options.ChatGPT}}
 	app.UseChatGPT(os.Getenv("OPENAI_KEY"))
 	{{end}}
 	{{if .Options.Pusher}}

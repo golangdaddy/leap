@@ -7,12 +7,13 @@ type Field struct {
 	// go primative types
 	Type string `json:"type"`
 	// define frontend options
-	Input        string   `json:"input"`
-	InputOptions []string `json:"inputOptions,omitempty"`
-	Required     bool     `json:"required"`
-	Range        *Range   `json:"range"`
-	Regexp       string   `json:"regexp"`
-	RegexpHex    string   `json:"regexpHex"`
+	Input          string   `json:"input"`
+	InputReference string   `json:"inputReference"`
+	InputOptions   []string `json:"inputOptions,omitempty"`
+	Required       bool     `json:"required"`
+	Range          *Range   `json:"range"`
+	Regexp         string   `json:"regexp"`
+	RegexpHex      string   `json:"regexpHex"`
 }
 
 func (object *Object) NewField() *Field {

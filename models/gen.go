@@ -107,6 +107,7 @@ func Prepare(tree *Stack) error {
 
 		if len(tree.Objects[n].Plural) == 0 {
 			tree.Objects[n].Plural = tree.Objects[n].Name + "s"
+			println(tree.Objects[n].Plural)
 		}
 
 		if len(tree.Objects[n].JSON) > 0 {

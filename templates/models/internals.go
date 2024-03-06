@@ -27,6 +27,7 @@ func (n Internals) NewInternals(class string) Internals {
 type Internals struct {
 	ID         string
 	Class      string
+	ClassName  string
 	Name       string `json:",omitempty"`
 	Asset      string `json:",omitempty"`
 	Wallet     string `json:",omitempty"`

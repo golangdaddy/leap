@@ -85,7 +85,7 @@ export function {{titlecase .Object.Name}}(props) {
 				<div className='flex flex-col w-full'>
 					<div className='flex flex-row justify-between items-center w-full py-4 my-4'>
 						<div className='text-base'>
-							<span className='uppercase text-sm'>{{titlecase .Object.Plural}}</span>
+							<span className='uppercase text-sm'>{ subject.Meta.ClassName }</span>
 							/
 							<span className='font-bold'>{ subject.fields.name }</span>
 						</div>
@@ -194,13 +194,13 @@ export function {{titlecase .Object.Name}}(props) {
 			<div className='flex flex-col'>
 				{{range .Object.Children}}
 				{{if .Options.Job}}
-				<{{titlecase .Name}}List title="{{titlecase .Plural}}" subject={subject} limit={4} />
+				<{{titlecase .Name}}List title={subject.Meta.ClassName} subject={subject} limit={4} />
 				{{end}}
 				{{end}}
 
 				{{range .Object.Children}}
 				{{if eq false .Options.Job}}
-				<{{titlecase .Name}}List title="{{titlecase .Plural}}" subject={subject} limit={4} />
+				<{{titlecase .Name}}List title={subject.Meta.ClassName} subject={subject} limit={4} />
 				{{end}}
 				{{end}}
 			</div>

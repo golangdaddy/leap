@@ -20,6 +20,7 @@ type Stack struct {
 
 type StackOptions struct {
 	Pusher              bool     `json:"pusher"`
+	ChatGPT             bool     `json:"chatgpt"`
 	Assetlayer          bool     `json:"assetlayer"`
 	Wallets             []string `json:"wallets"`
 	WhitelistDomains    bool     `json:"whitelistDomains"`

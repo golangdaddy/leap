@@ -17,7 +17,7 @@ func getInputs(object *models.Object, field *models.Field) (string, error) {
 
 	switch field.Input {
 	case "select":
-		const s = `<Select id="{{lowercase .Name}}" type='text' required={ {{.Required}} } title="%s {{lowercase .Name}}" options={ {{json .InputOptions}} } placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
+		const s = `<Select id="{{lowercase .Name}}" type='text' required={ {{.Required}} } reference={ {{.InputReference}} } title="%s {{lowercase .Name}}" options={ {{json .InputOptions}} } placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "text":

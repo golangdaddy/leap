@@ -1,6 +1,7 @@
 {
     "mode": "many",
     "name": "tag",
+    "plural": "tags",
     "fields": [
         {
             "name": "name",
