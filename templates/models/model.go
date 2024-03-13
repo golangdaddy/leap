@@ -19,7 +19,7 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 		}
 	}
 
-	object.Meta.ClassName = "{{uppercase .Plural}}"
+	object.Meta.ClassName = "{{lowercase .Plural}}"
 
 	colors, err := gamut.Generate(8, gamut.PastelGenerator{})
 	if err != nil {
@@ -119,6 +119,12 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 	name, ok := m["name"].(string)
 	if ok {
 		x.Meta.Name = name	
+	} else {
+		var names []string
+		{{range .Names}}
+		names = append(names, m["{{.}}"].(string))
+		{{end}}
+		x.Meta.Name = strings.Join(names, " ")
 	}
 
 	x.Meta.Modify()

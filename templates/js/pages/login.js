@@ -41,7 +41,7 @@ export default function PageLogin({ data }) {
 
   return (
 	<Layout>
-		<div className="flex flex-col m-10 p-5 bg-gray-200">
+		<div className="flex flex-col m-10 p-5 bg-gray-200 text-black">
 			<div className='font-xl'>
 				Get a 1 time password delivered to your email.
 			</div>

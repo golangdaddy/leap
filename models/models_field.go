@@ -11,6 +11,7 @@ type Field struct {
 	InputReference string   `json:"inputReference"`
 	InputOptions   []string `json:"inputOptions,omitempty"`
 	Required       bool     `json:"required"`
+	Filter         bool     `json:"filter"`
 	Range          *Range   `json:"range"`
 	Regexp         string   `json:"regexp"`
 	RegexpHex      string   `json:"regexpHex"`

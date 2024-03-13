@@ -48,7 +48,7 @@ export default function PageRegister({ data }) {
 				<div className='flex flex-col items-center'>
 					<div className='font-2xl font-bold'>Register</div>
 					<div className='flex flex-row m-5'>
-						<input onChange={checkEmail} placeholder="Email Address" className="p-5 rounded-lg border" id="otp_email" type="email"/>
+						<input onChange={checkEmail} placeholder="Email Address" className="p-5 rounded-lg border text-black" id="otp_email" type="email"/>
 						{{if .Options.WhitelistDomains}}
 						<select>
 							{{range .Options.RegistrationDomains}}
@@ -58,7 +58,7 @@ export default function PageRegister({ data }) {
 						{{end}}
 					</div>
 					<div className='m-5'>
-						<input onKeyUp={formatUsername} placeholder="username" className="p-5 rounded-lg" id="otp_username" type="text"/>
+						<input onKeyUp={formatUsername} placeholder="username" className="p-5 rounded-lg text-black" id="otp_username" type="text"/>
 					</div>
 					<button onClick={sendRegisterRequest} className='text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700'>
 						Register

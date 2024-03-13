@@ -84,29 +84,31 @@ export function {{titlecase .Object.Name}}(props) {
 				}
 				<div className='flex flex-col w-full'>
 					<div className='flex flex-row justify-between items-center w-full py-4 my-4'>
-						<div className='text-base'>
-							<span className='uppercase text-sm'>{ subject.Meta.ClassName }</span>
-							/
+						<div className='flex flex-row text-base'>
+							<span className='uppercase text-base'>{ subject.Meta.ClassName }</span>
+							<div className='px-2'>/</div>
 							<span className='font-bold'>{ subject.fields.name }</span>
 						</div>
-						{
-							localdata.tab.subsublinks.map(function (tabname, i) {
-								if (tabname.length == 0) { return }
-								const tab = interfaces[tabname]
-								return (
-									<div key={i} className='flex flex-row rounded-md border py-1 px-2 mx-2 bg-white'>
-										<div id={tab.id} className='cursor-pointer text-gray-800' onClick={updateTabEvent}>{tab.name}</div>
-									</div>
-								)
-							})
-						}
-						{{if eq false .Object.Options.ReadOnly}}
-						<div className='flex flex-row justify-center items-center'>
-							<button className='text-sm' onClick={editData} style={editButtonStyle}>
-							Edit {{titlecase .Object.Name}}
-							</button>
+						<div className='flex flex-row'>
+							{
+								localdata.tab.subsublinks.map(function (tabname, i) {
+									if (tabname.length == 0) { return }
+									const tab = interfaces[tabname]
+									return (
+										<div key={i} className='flex flex-row rounded-md border py-1 px-2 mx-2 bg-white'>
+											<div id={tab.id} className='cursor-pointer text-gray-800' onClick={updateTabEvent}>{tab.name}</div>
+										</div>
+									)
+								})
+							}
+							{{if eq false .Object.Options.ReadOnly}}
+							<div className='flex flex-row justify-center items-center'>
+								<button className='text-sm' onClick={editData} style={editButtonStyle}>
+								Edit {{titlecase .Object.Name}}
+								</button>
+							</div>
+							{{end}}
 						</div>
-						{{end}}
 					</div>
 				</div>
 			</div>
@@ -194,13 +196,13 @@ export function {{titlecase .Object.Name}}(props) {
 			<div className='flex flex-col'>
 				{{range .Object.Children}}
 				{{if .Options.Job}}
-				<{{titlecase .Name}}List title={subject.Meta.ClassName} subject={subject} limit={4} />
+				<{{titlecase .Name}}List title="{{titlecase .Plural}}" subject={subject} limit={4} />
 				{{end}}
 				{{end}}
 
 				{{range .Object.Children}}
 				{{if eq false .Options.Job}}
-				<{{titlecase .Name}}List title={subject.Meta.ClassName} subject={subject} limit={4} />
+				<{{titlecase .Name}}List title="{{titlecase .Plural}}" subject={subject} limit={4} />
 				{{end}}
 				{{end}}
 			</div>

@@ -11,13 +11,19 @@ export default function Select(props) {
 	console.log("SHOW INPUT", props)
 
 	useEffect(() => {
-		const url = "/api/" + props.reference.toUpper()
+		if (!props.reference) {
+			console.log("not getting reference data")
+			return
+		}
+		const parentMeta = props.referenceParent.Meta
+		const url = "api/" + props.reference + "?parent=" + parentMeta.Context.Parents[parentMeta.Context.Parents.length -1] + "&function=list&mode=created" 
+		console.log("getting reference data:", url)
 		SessionFetch(userdata, "GET", url)
 		.then((res) => res.json())
 		.then((data) => {
-			console.log(data)
+			console.log("referened data", data)
 			setOptions(data)
-		})
+		}).catch((e) => console.error(e))
 	}, [])
 
 	function changeEventOnload(e) {
@@ -58,9 +64,9 @@ export default function Select(props) {
 			<select disabled={(props.disabled == true)} className="py-2 px-4 border" id={props.id} defaultValue={props.value} onChange={changeEvent} onLoad={changeEventOnload}>
 				<option key={0}></option>
 				{
-					options.map(function (item, i) {
+					options && options.map(function (item, i) {
 						return (
-							<option key={i+1} value={item}>
+							<option key={i+1} value={item.Meta.Name}>
 							{item.Meta.Name}
 							</option>
 						)

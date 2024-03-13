@@ -14,11 +14,12 @@ type Stack struct {
 	ProjectID     string       `json:"projectID"`
 	DatabaseID    string       `json:"databaseID"`
 	Objects       []*Object    `json:"objects"`
-	Entrypoints   []string     `json:"entrypoints"`
+	Entrypoints   []*Object    `json:"entrypoints"`
 	Options       StackOptions `json:"options"`
 }
 
 type StackOptions struct {
+	Sidebar             bool     `json:"sidebar"`
 	Pusher              bool     `json:"pusher"`
 	ChatGPT             bool     `json:"chatgpt"`
 	Assetlayer          bool     `json:"assetlayer"`

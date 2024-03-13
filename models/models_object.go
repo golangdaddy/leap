@@ -2,6 +2,7 @@ package models
 
 type Object struct {
 	Name        string    `json:"name"`
+	Names       []string  `json:"names"`
 	Plural      string    `json:"plural"`
 	JSON        string    `json:"json"`
 	Mode        string    `json:"mode"`
@@ -14,18 +15,20 @@ type Object struct {
 }
 
 type Options struct {
-	ReadOnly    bool        `json:"readonly"`
-	Admin       bool        `json:"admin"`
-	Job         bool        `json:"job"`
-	Order       bool        `json:"order"`
-	File        bool        `json:"file"`
-	Image       bool        `json:"image"`
-	Font        bool        `json:"font"`
-	TopicCreate *string     `json:"topicCreate"`
-	Topics      []*JobTopic `json:"topics"`
-	Assetlayer  *Assetlayer `json:"assetlayer"`
-	Pusher      bool        `json:"pusher"`
-	Permissions Permissions `json:"permissions"`
+	ReadOnly     bool        `json:"readonly"`
+	Admin        bool        `json:"admin"`
+	Job          bool        `json:"job"`
+	Order        bool        `json:"order"`
+	File         bool        `json:"file"`
+	Image        bool        `json:"image"`
+	Photo        bool        `json:"photo"`
+	Font         bool        `json:"font"`
+	TopicCreate  *string     `json:"topicCreate"`
+	Topics       []*JobTopic `json:"topics"`
+	Assetlayer   *Assetlayer `json:"assetlayer"`
+	Pusher       bool        `json:"pusher"`
+	Permissions  Permissions `json:"permissions"`
+	FilterFields []*Field    `json:"filterFields"`
 }
 
 type JobTopic struct {

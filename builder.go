@@ -55,6 +55,12 @@ func Build(stack *models.Stack) error {
 	if err := copyDir("templates/js/pages", "build/app/pages/"); err != nil {
 		return err
 	}
+	if err := doTemplate("build/app/pages/login.js", stack); err != nil {
+		return err
+	}
+	if err := doTemplate("build/app/pages/register.js", stack); err != nil {
+		return err
+	}
 
 	// create models lib and file
 	if err := copyFile("templates/models/models.main", "build/models.go"); err != nil {
@@ -125,10 +131,6 @@ func Build(stack *models.Stack) error {
 
 	// dynamic backend url
 	if err := doTemplate("build/app/app/fetch.js", stack); err != nil {
-		return err
-	}
-	// add the entrypoints
-	if err := doTemplate("build/app/features/home.js", stack); err != nil {
 		return err
 	}
 
@@ -436,6 +438,20 @@ func Build(stack *models.Stack) error {
 		}
 		{
 			path := fmt.Sprintf(
+				"build/app/features/%ss/shared/%sListRowImage.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Lower(language.English).String(object.Name),
+			)
+			copyFile(
+				"templates/js/feature/shared/subjectListRowImage.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				return err
+			}
+		}
+		{
+			path := fmt.Sprintf(
 				"build/app/features/%ss/%ssMatrix.js",
 				cases.Lower(language.English).String(object.Name),
 				cases.Lower(language.English).String(object.Name),
@@ -575,9 +591,14 @@ func Build(stack *models.Stack) error {
 			}
 		}
 		if object.Mode == "root" {
-			stack.Entrypoints = append(stack.Entrypoints, object.Plural)
+			stack.Entrypoints = append(stack.Entrypoints, object)
 		}
 
+	}
+
+	// add the entrypoints
+	if err := doTemplate("build/app/features/home.js", stack); err != nil {
+		return err
 	}
 
 	copyFile(

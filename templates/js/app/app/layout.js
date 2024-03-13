@@ -18,7 +18,7 @@ export default function Layout({ children }) {
 				<LocalProvider>
 					<MessagingProvider>
 						<Header/>
-						{children}
+						<span className='text-black'>{children}</span>
 						<Footer/>
 					</MessagingProvider>
 				</LocalProvider>

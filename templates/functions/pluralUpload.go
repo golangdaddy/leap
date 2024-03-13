@@ -16,6 +16,7 @@ import (
 
 	"github.com/dsoprea/go-jpeg-image-structure"
 	"github.com/dsoprea/go-png-image-structure"
+	"github.com/kr/pretty"
 )
 
 func (app *App) Upload{{uppercase .Object.Name}}(w http.ResponseWriter, r *http.Request, parent *Internals, user *User) {
@@ -120,6 +121,16 @@ func (app *App) newUploadObject{{uppercase .Object.Name}}(parent *Internals, use
 
 	// determine image format
 	if jpegstructure.NewJpegMediaParser().LooksLikeFormat(b) {
+		parser := jpegstructure.NewJpegMediaParser()
+		mctx, err := parser.ParseBytes(b)
+		if err != nil {
+			return nil, err
+		}
+		pretty.Println(mctx)
+		_, b, err  := mctx.Exif()
+		if err != nil {
+			return nil, err
+		}
 		object.Meta.Media.Format = "JPEG"
 	} else {
 		if pngstructure.NewPngMediaParser().LooksLikeFormat(b) {

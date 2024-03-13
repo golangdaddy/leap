@@ -10,6 +10,7 @@ import Spacer from '@/inputs/spacer';
 
 import { {{titlecase .Object.Name}}ListRow } from './{{lowercase .Object.Name}}ListRow';
 import { {{titlecase .Object.Name}}ListRowJob } from './{{lowercase .Object.Name}}ListRowJob';
+import { {{titlecase .Object.Name}}ListRowImage } from './{{lowercase .Object.Name}}ListRowImage';
 import { {{titlecase .Object.Name}}DELETE, {{titlecase .Object.Name}}sListGET, {{titlecase .Object.Name}}OrderPOST, {{titlecase .Object.Name}}JobPOST } from '../_fetch';
 
 {{if eq 1 (stringslength .Object.Parents)}}
@@ -35,6 +36,8 @@ export function {{titlecase .Object.Name}}List(props) {
 		.then((data) => {
 			console.log(data)
 			setList(data)
+		}).catch((e) => {
+			console.error("subjetList.updateList:", e)
 		})
 	}
 
@@ -118,47 +121,70 @@ export function {{titlecase .Object.Name}}List(props) {
 
 	return (
 	<div className='flex flex-col w-full'>
-	{
-		props.title && <div className="flex flex-row justify-between items-center">
-			<div className='py-4 my-4 text-xl font-bold'>{props.title}:</div>
-			{
-				(topics.length > 0) && <div className='flex flex-row'>
+		{
+			props.title && <div className="flex flex-row justify-between items-center">
+				<div className='py-4 my-4 text-xl font-bold'>{props.title}:</div>
 				{
-					topics.map(function (item, i) {
-						return (
-							<div key={i} className='flex flex-col justify-center'>
-								<button key={i} className='text-sm' id={item.topic} onClick={sendToTopic} style={jobButtonStyle}>
-								{item.name}
-								</button>
-							</div>
-						)
-					})
+					(topics.length > 0) && <div className='flex flex-row'>
+					{
+						topics.map(function (item, i) {
+							return (
+								<div key={i} className='flex flex-col justify-center'>
+									<button key={i} className='text-sm' id={item.topic} onClick={sendToTopic} style={jobButtonStyle}>
+									{item.name}
+									</button>
+								</div>
+							)
+						})
+					}
+					</div>
 				}
-				</div>
-			}
+				{{range .Object.Options.FilterFields}}
+					<div>
+						<div>{{.Name}}</div>
+						<select>
+							<option>hello</option>
+						</select>
+					</div>
+				{{end}}
+			</div>
+		}
+		{
+			props.title && <hr/>
+		}
+		{
+			!list && <Loading/>
+		}
+		{{if .Object.Options.Image}}
+		<div className='flex flex-wrap'>
+		{
+			list && list.map(function (item, i) {
+				return (
+					<div key={i} className='m-2'>
+						<{{titlecase .Object.Name}}ListRowImage id={i} listLength={list.length} item={item} select={selectItem} moveUp={moveUp} moveDown={moveDown} delete={deleteItem}/>
+					</div>
+				)
+			})
+		}
 		</div>
-	}
-	{
-		props.title && <hr/>
-	}
-	{
-		!list && <Loading/>
-	}
-	{
-		list && list.map(function (item, i) {
+		{{end}}
+		{{if eq false .Object.Options.Image}}
+		{
+			list && list.map(function (item, i) {
 
-			return (
-				<div className='py-2 px-4' key={i}>
-					{{if eq false .Object.Options.Job}}
-					<{{titlecase .Object.Name}}ListRow id={i} listLength={list.length} item={item} select={selectItem} moveUp={moveUp} moveDown={moveDown} delete={deleteItem}/>
-					{{end}}
-					{{if .Object.Options.Job}}
-					<{{titlecase .Object.Name}}ListRowJob id={i} listLength={list.length} item={item} select={selectItem} moveUp={moveUp} moveDown={moveDown} delete={deleteItem}/>
-					{{end}}
-				</div>
-			)
-		})
-	}
+				return (
+					<div className='{{if .Object.Options.Image}}flex flex-wrap{{end}} py-2 px-4' key={i}>
+						{{if eq false .Object.Options.Job}}
+							<{{titlecase .Object.Name}}ListRow id={i} listLength={list.length} item={item} select={selectItem} moveUp={moveUp} moveDown={moveDown} delete={deleteItem}/>
+						{{end}}
+						{{if .Object.Options.Job}}
+							<{{titlecase .Object.Name}}ListRowJob id={i} listLength={list.length} item={item} select={selectItem} moveUp={moveUp} moveDown={moveDown} delete={deleteItem}/>
+						{{end}}
+					</div>
+				)
+			})
+		}
+		{{end}}
 	</div>
 	)
 

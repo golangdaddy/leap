@@ -197,11 +197,12 @@ func (i *Internals) Update() {
 }
 
 type Media struct {
-	Color  string                 `json:",omitempty"`
-	URIs   []string               `json:",omitempty"`
-	Image  bool                   `json:",omitempty"`
-	EXIF   map[string]interface{} `json:",omitempty"`
-	Format string                 `json:",omitempty"`
+	Color   string                 `json:",omitempty"`
+	Preview string                 `json:",omitempty"`
+	URIs    []string               `json:",omitempty"`
+	Image   bool                   `json:",omitempty"`
+	EXIF    map[string]interface{} `json:",omitempty"`
+	Format  string                 `json:",omitempty"`
 }
 
 type Context struct {

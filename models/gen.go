@@ -130,6 +130,10 @@ func Prepare(tree *Stack) error {
 				continue
 			}
 
+			if field.Filter {
+				tree.Objects[n].Options.FilterFields = append(tree.Objects[n].Options.FilterFields, field)
+			}
+
 			name := field.JSON + ".json"
 			if app.jsonFields[name] == nil {
 				pretty.Println(app.jsonFields)

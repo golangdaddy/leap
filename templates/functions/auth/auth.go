@@ -92,10 +92,10 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 			htmlContent := fmt.Sprintf(
 				`<h2>One-time-password link:</h2>
 				<br/>
-				<a href='http://localhost:3000/home?otp=%s'>Debug</a>
+				<a href='http://localhost:3000/home?p={{.SiteName}}&otp=%s'>Debug</a>
 				<br/>
 				<br/>
-				<a href='{{.WebAPI}}home?otp=%s'>Click here to Login</a>
+				<a href='{{.WebAPI}}home?p={{.SiteName}}&otp=%s'>Click here to Login</a>
 				`,
 				secret,
 				secret,

@@ -83,7 +83,7 @@ export default function Dashboard(props) {
 						localdata && localdata.tab && localdata.tab.component
 					}
 					</div>
-					<Sidebar/>
+					{{if .Options.Sidebar}}<Sidebar/>{{end}}
 				</div>
 			}
 		</div>
