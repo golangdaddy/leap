@@ -29,6 +29,7 @@ export function {{titlecase .Object.Name}}List(props) {
 	var mode = "modified"
 	{{if .Object.Options.Order}}mode = "ordered"{{end}}
 	{{if .Object.Options.Admin}}mode = "admin"{{end}}
+	{{if .Object.Options.EXIF}}mode = "exif"{{end}}
 
 	function updateList() {
 		{{titlecase .Object.Name}}sListGET(userdata, props.subject?.Meta.ID, mode, props.limit)

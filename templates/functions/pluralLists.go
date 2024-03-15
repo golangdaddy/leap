@@ -39,6 +39,10 @@ func (app *App) {{lowercase .Object.Name}}Lists(w http.ResponseWriter, user *Use
 
 		q = collection.OrderBy("Meta.Modified", firestore.Desc)
 
+	case "exif":
+
+		q = collection.OrderBy("Meta.Media.EXIF.taken", firestore.Desc)
+
 	default:
 
 		err := fmt.Errorf("mode not found: %s", mode)

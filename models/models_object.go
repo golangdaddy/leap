@@ -22,6 +22,7 @@ type Options struct {
 	File         bool        `json:"file"`
 	Image        bool        `json:"image"`
 	Photo        bool        `json:"photo"`
+	EXIF         bool        `json:"exif"`
 	Font         bool        `json:"font"`
 	TopicCreate  *string     `json:"topicCreate"`
 	Topics       []*JobTopic `json:"topics"`

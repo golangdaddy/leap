@@ -24,7 +24,7 @@ export function {{titlecase .Object.Name}}ListRowImage(props) {
 	return (
 		<div className='flex flex-col justify-between items-center w-full'>
 			{{if .Object.Options.Image}}
-			<img src={'https://storage.googleapis.com/{{.DatabaseID}}-uploads/'+props.item.Meta.Media.URIs[props.item.Meta.Media.URIs.length-1]}/>
+			<div><img src={props.item.Meta.Media.Preview}/></div>
 			{{end}}
 			<div onClick={selectItem} className='flex flex-row w-full items-center cursor-pointer px-4'>
 				{

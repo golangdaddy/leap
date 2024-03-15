@@ -7,6 +7,10 @@ import (
 	"log"
 	"sync"
 	"time"
+	"image"
+	_ "image/jpeg"
+	_ "image/png"
+	"bytes"
 	"errors"
 	"context"
 	"regexp"
@@ -27,4 +31,8 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/muesli/gamut"
+
+	"github.com/rwcarlsen/goexif/exif"
+	"github.com/dsoprea/go-jpeg-image-structure"
+	"github.com/dsoprea/go-png-image-structure"
 )
