@@ -1,0 +1,5 @@
+{
+    "type": "string",
+    "input": "select",
+    "inputOptions": ["male", "female"]
+}

@@ -82,14 +82,14 @@ export function {{titlecase .Object.Name}}(props) {
 				{
 					subject?.Meta.Media.Image && <RowThumbnail source={'https://storage.googleapis.com/{{.DatabaseID}}-uploads/'+subject.Meta.Media.URIs[subject.Meta.Media.URIs.length-1]}/>
 				}
-				<div className='flex flex-col w-full'>
+				<div className='flex flex-wrap w-full'>
 					<div className='flex flex-row justify-between items-center w-full py-4 my-4'>
 						<div className='flex flex-row text-base'>
 							<span className='uppercase text-base'>{ subject.Meta.ClassName }</span>
 							<div className='px-2'>/</div>
 							<span className='font-bold'>{ subject.fields.name }</span>
 						</div>
-						<div className='flex flex-row'>
+						<div className='flex flex-wrap'>
 							{
 								localdata.tab.subsublinks.map(function (tabname, i) {
 									if (tabname.length == 0) { return }

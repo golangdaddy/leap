@@ -25,14 +25,17 @@ export function {{titlecase .Object.Name}}List(props) {
 	const [topics, setTopics] = useState([{{range .Object.Options.Topics}}{"name":"{{.Name}}","topic":"{{.Topic}}"},{{end}}])
 
 	const [ list, setList ] = useState(null)
+	const [ listMode, setListMode ] = useState("modified")
 
-	var mode = "modified"
-	{{if .Object.Options.Order}}mode = "ordered"{{end}}
-	{{if .Object.Options.Admin}}mode = "admin"{{end}}
-	{{if .Object.Options.EXIF}}mode = "exif"{{end}}
+	function updateListMode(e) {
+		const mode = e.target.value
+		setListMode(mode)
+		updateList()
+		console.log("NEW MODE", mode)
+	}
 
 	function updateList() {
-		{{titlecase .Object.Name}}sListGET(userdata, props.subject?.Meta.ID, mode, props.limit)
+		{{titlecase .Object.Name}}sListGET(userdata, props.subject?.Meta.ID, listMode, props.limit)
 		.then((res) => res.json())
 		.then((data) => {
 			console.log(data)
@@ -55,6 +58,9 @@ export function {{titlecase .Object.Name}}List(props) {
 	}
 
 	useEffect(() => {
+		{{if .Object.Options.Order}}setListMode("ordered"){{end}}
+		{{if .Object.Options.Admin}}setListMode("admin"){{end}}
+		{{if .Object.Options.EXIF}}setListMode("exif"){{end}}
 		updateList()
 	}, [])
 
@@ -124,7 +130,15 @@ export function {{titlecase .Object.Name}}List(props) {
 	<div className='flex flex-col w-full'>
 		{
 			props.title && <div className="flex flex-row justify-between items-center">
-				<div className='py-4 my-4 text-xl font-bold'>{props.title}:</div>
+				<div className="flex flex-row">
+					<div className='py-4 my-4 text-xl font-bold'>{props.title}:</div>
+					<select onClick={updateListMode}>
+						<option value="created">Created</option>
+						<option value="modified">Modified</option>
+						<option value="order">Ordered</option>
+						<option value="exif">EXIF</option>
+					</select>
+				</div>
 				{
 					(topics.length > 0) && <div className='flex flex-row'>
 					{
