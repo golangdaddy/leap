@@ -24,9 +24,9 @@ export function {{titlecase .Object.Name}}ListRowImage(props) {
 	return (
 		<div className='flex flex-col justify-between items-center w-full'>
 			{{if .Object.Options.Image}}
-			<div><img src={props.item.Meta.Media.Preview}/></div>
+			<div  id={props.item.Meta.ID} onClick={selectItem} className="cursor-pointer"><img src={props.item.Meta.Media.Preview}/></div>
 			{{end}}
-			<div onClick={selectItem} className='flex flex-row w-full items-center cursor-pointer px-4'>
+			<div className='flex flex-row w-full items-center px-4'>
 				{
 					{{if .Object.Options.Photo}}false && {{end}}props.item.Meta.Name?.length && <>
 						<div className='text-sm font-bold' title="Name">{ props.item.Meta.Name }</div>

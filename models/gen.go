@@ -47,9 +47,13 @@ func (app *App) visitObject(fp string, fi os.DirEntry, err error) error {
 		return err
 	}
 
-	return json.Unmarshal(b, app.jsonObjects[name])
-}
+	if err := json.Unmarshal(b, app.jsonObjects[name]); err != nil {
+		return err
+	}
 
+	println(app.jsonObjects[name].Plural)
+	return nil
+}
 func (app *App) visitField(fp string, fi os.DirEntry, err error) error {
 	if err != nil {
 		fmt.Println(err) // can't walk here,
@@ -103,12 +107,7 @@ func Prepare(tree *Stack) error {
 
 	objectIndex := map[string]*Object{}
 
-	for n, _ := range tree.Objects {
-
-		if len(tree.Objects[n].Plural) == 0 {
-			tree.Objects[n].Plural = tree.Objects[n].Name + "s"
-			println(tree.Objects[n].Plural)
-		}
+	for n := range tree.Objects {
 
 		if len(tree.Objects[n].JSON) > 0 {
 			name := tree.Objects[n].JSON + ".json"
@@ -116,9 +115,27 @@ func Prepare(tree *Stack) error {
 				return errors.New("OBJECT NOT FOUND " + name)
 			}
 			f := *app.jsonObjects[name]
-			f.Name = tree.Objects[n].Name
+			if f.Name == "" {
+				f.Name = tree.Objects[n].Name
+				if tree.Objects[n].Plural == "" {
+					f.Plural = tree.Objects[n].Name + "s"
+				}
+			} else if f.Plural == "" {
+				if tree.Objects[n].Plural == "" {
+					f.Plural = tree.Objects[n].Name + "s"
+				} else {
+					f.Plural = tree.Objects[n].Plural
+				}
+			}
+			if len(f.Plural) == 0 {
+				panic("plural")
+			}
 			f.Parents = tree.Objects[n].Parents
-			*tree.Objects[n] = f
+			tree.Objects[n] = &f
+		} else {
+			if len(tree.Objects[n].Plural) == 0 {
+				tree.Objects[n].Plural = tree.Objects[n].Name + "s"
+			}
 		}
 
 		log.Println("SETTING INDEX", tree.Objects[n].Name, n)
@@ -143,6 +160,7 @@ func Prepare(tree *Stack) error {
 			f.Context = field.Context
 			f.Name = field.Name
 			f.Required = field.Required
+
 			*tree.Objects[n].Fields[x] = f
 
 		}

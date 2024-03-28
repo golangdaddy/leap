@@ -1,0 +1,21 @@
+{
+    "name": "comment",
+	"names": [
+		"content"
+	],
+	"fields": [
+		{
+			"name": "author",
+			"required": true,
+			"json": "string_100"
+		},
+		{
+			"name": "content",
+			"required": true,
+			"json": "string_10000"
+		}
+	],
+	"options": {
+		"comment": true
+	}
+}

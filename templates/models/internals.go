@@ -206,6 +206,7 @@ type Media struct {
 }
 
 type Context struct {
+	Author   []string `json:",omitempty"`
 	Children []string `json:",omitempty"`
 	Parent   string   `json:",omitempty"`
 	Parents  []string `json:",omitempty"`

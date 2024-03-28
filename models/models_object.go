@@ -26,6 +26,7 @@ type Options struct {
 	ReadOnly     bool        `json:"readonly"`
 	Admin        bool        `json:"admin"`
 	Job          bool        `json:"job"`
+	Comment      bool        `json:"comment"`
 	Order        bool        `json:"order"`
 	File         bool        `json:"file"`
 	Image        bool        `json:"image"`
