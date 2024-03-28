@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	log.Println("Starting Application", "{{.ProjectID}}", "{{.DatabaseID}}")
+	log.Println("Starting Application", "{{.ProjectID}}", "{{.ProjectName}}")
 
 	// handle local dev
 	if os.Getenv("ENVIRONMENT") != "production" {
@@ -23,7 +23,7 @@ func main() {
 		os.Getenv("DIDTOKEN"),
 	)
 	{{if .Options.ChatGPT}}
-	app.UseVertex("europe-west2-b")
+	app.UseVertex("{{.ProjectRegion}}")
 	app.UseChatGPT(os.Getenv("OPENAI_KEY"))
 	{{end}}
 	{{if .Options.Pusher}}
@@ -35,7 +35,7 @@ func main() {
 	)
 	{{end}}
 	{{if .Options.Assetlayer}}
-	slotID, err := app.Assetlayer().EnsureSlotExists("{{.DatabaseID}}-models", "description...", "")
+	slotID, err := app.Assetlayer().EnsureSlotExists("{{.ProjectName}}-models", "description...", "")
 	if err != nil {
 		panic(err)
 	}

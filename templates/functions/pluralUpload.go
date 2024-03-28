@@ -142,7 +142,7 @@ func (app *App) newUploadObject{{uppercase .Object.Name}}(parent *Internals, use
 		return nil, err
 	}
 
-	object.Meta.Media.Preview = "https://storage.googleapis.com/{{.DatabaseID}}-uploads/" + uri
+	object.Meta.Media.Preview = "https://storage.googleapis.com/{{.ProjectName}}-uploads/" + uri
 
 	return object, nil
 }

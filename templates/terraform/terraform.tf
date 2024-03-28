@@ -1,14 +1,9 @@
 provider "google" {
-  project = "{{.PROJECT_ID}}"
-  region  = "{{.REGION}}"
+  project = "{{.ProjectName}}"
+  region  = "{{.ProjectRegion}}"
 }
 
-resource "google_storage_bucket" "bucket1" {
-  name          = "bucket1-name"
-  location      = "US"
-}
-
-resource "google_storage_bucket" "bucket2" {
-  name          = "bucket2-name"
-  location      = "US"
+resource "google_storage_bucket" "primarybucket" {
+  name          = "{{.ProjectName}}-uploads"
+  location      = "EU"
 }

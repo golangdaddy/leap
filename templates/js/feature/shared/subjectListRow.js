@@ -24,7 +24,7 @@ export function {{titlecase .Object.Name}}ListRow(props) {
 	return (
 		<div className='flex flex-row justify-between py-2 items-center w-full'>
 			{{if .Object.Options.Image}}
-			<RowThumbnail source={'https://storage.googleapis.com/{{.DatabaseID}}-uploads/'+props.item.Meta.Media.URIs[props.item.Meta.Media.URIs.length-1]}/>
+			<RowThumbnail source={'https://storage.googleapis.com/{{.ProjectName}}-uploads/'+props.item.Meta.Media.URIs[props.item.Meta.Media.URIs.length-1]}/>
 			{{end}}
 			<div onClick={selectItem} className='flex flex-row w-full items-center cursor-pointer px-4'>
 				{

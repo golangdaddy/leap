@@ -21,13 +21,14 @@ import (
 )
 
 type Container struct {
-	WebAPI     string
-	SiteName   string
-	ProjectID  string
-	DatabaseID string
-	Object     *models.Object
-	Inputs     []string
-	EditInputs []string
+	WebAPI        string
+	SiteName      string
+	ProjectID     string
+	ProjectName   string
+	ProjectRegion string
+	Object        *models.Object
+	Inputs        []string
+	EditInputs    []string
 }
 
 //go:embed templates/*
@@ -41,8 +42,8 @@ var f embed.FS
 
 func Build(stack *models.Stack) error {
 
-	if stack.DatabaseID == "" {
-		panic("set a databaseID")
+	if stack.ProjectName == "" {
+		panic("set a projectName")
 	}
 
 	os.RemoveAll("build/")
@@ -151,7 +152,8 @@ func Build(stack *models.Stack) error {
 			stack.WebAPI,
 			stack.SiteName,
 			stack.ProjectID,
-			stack.DatabaseID,
+			stack.ProjectName,
+			stack.ProjectRegion,
 			object,
 			[]string{},
 			[]string{},
@@ -231,6 +233,11 @@ func Build(stack *models.Stack) error {
 			if err := execTemplate("functions", "pluralNoParent.go", "api_"+strings.ToLower(object.Name)+"s.go", container); err != nil {
 				return err
 			}
+		}
+
+		// terraform templates
+		if err := execTemplate("terraform", "terraform.tf", "terraform.tf", container); err != nil {
+			return err
 		}
 
 		// boilerplater functions

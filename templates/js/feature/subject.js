@@ -44,7 +44,7 @@ export function {{titlecase .Object.Name}}(props) {
 			setJdata(JSON.stringify(data.fields))
 			{{if .Object.Options.Image}}
 			if (data.Meta.URIs?.length > 0) {
-				setImage("https://storage.googleapis.com/{{.DatabaseID}}-uploads/" + data.Meta.URIs[data.Meta.URIs.length - 1])
+				setImage("https://storage.googleapis.com/{{.ProjectName}}-uploads/" + data.Meta.URIs[data.Meta.URIs.length - 1])
 			}{{end}}
 			console.log("IMAGE? src:", image)
 		}) 
@@ -88,7 +88,7 @@ export function {{titlecase .Object.Name}}(props) {
 			{ !subject && <Loading/> }
 			<div className="flex flex-row w-full">
 				{
-					subject?.Meta.Media.Image && <RowThumbnail source={'https://storage.googleapis.com/{{.DatabaseID}}-uploads/'+subject.Meta.Media.URIs[subject.Meta.Media.URIs.length-1]}/>
+					subject?.Meta.Media.Image && <RowThumbnail source={'https://storage.googleapis.com/{{.ProjectName}}-uploads/'+subject.Meta.Media.URIs[subject.Meta.Media.URIs.length-1]}/>
 				}
 				<div className='flex flex-wrap w-full py-4'>
 					<div className='flex flex-col'>

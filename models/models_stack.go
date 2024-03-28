@@ -12,7 +12,8 @@ type Stack struct {
 	RepoURI       string       `json:"repoURI"`
 	SiteName      string       `json:"siteName"`
 	ProjectID     string       `json:"projectID"`
-	DatabaseID    string       `json:"databaseID"`
+	ProjectName   string       `json:"projectName"`
+	ProjectRegion string       `json:"projectRegion"`
 	Objects       []*Object    `json:"objects"`
 	Entrypoints   []*Object    `json:"entrypoints"`
 	Options       StackOptions `json:"options"`
