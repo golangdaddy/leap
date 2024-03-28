@@ -66,8 +66,8 @@ export default function Select(props) {
 				{
 					options && options.map(function (item, i) {
 						return (
-							<option key={i+1} value={item.Meta.Name}>
-							{item.Meta.Name}
+							<option key={i+1} value={item.Meta?.Name ? item.Meta.Name : item}>
+							{item.Meta?.Name ? item.Meta.Name : item}
 							</option>
 						)
 					})

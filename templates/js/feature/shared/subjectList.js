@@ -58,9 +58,13 @@ export function {{titlecase .Object.Name}}List(props) {
 	}
 
 	useEffect(() => {
-		{{if .Object.Options.Order}}setListMode("ordered"){{end}}
-		{{if .Object.Options.Admin}}setListMode("admin"){{end}}
-		{{if .Object.Options.EXIF}}setListMode("exif"){{end}}
+		if ("{{.Object.ListMode}}".length) {
+			setListMode("{{.Object.ListMode}}")
+		} else {
+			{{if .Object.Options.Order}}setListMode("ordered"){{end}}
+			{{if .Object.Options.Admin}}setListMode("admin"){{end}}
+			{{if .Object.Options.EXIF}}setListMode("exif"){{end}}
+		}
 		updateList()
 	}, [])
 
@@ -132,7 +136,7 @@ export function {{titlecase .Object.Name}}List(props) {
 			props.title && <div className="flex flex-row justify-between items-center">
 				<div className="flex flex-row">
 					<div className='py-4 my-4 text-xl font-bold'>{props.title}:</div>
-					<select onClick={updateListMode}>
+					<select onChange={updateListMode}>
 						<option value="created">Created</option>
 						<option value="modified">Modified</option>
 						<option value="order">Ordered</option>

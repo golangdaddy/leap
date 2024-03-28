@@ -144,6 +144,8 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
+			username = strings.Replace(strings.TrimSpace(strings.Replace(username, "_", " ", -1)), " ", "_", -1)
+
 			user := NewUser(1, email, username)
 
 			if !user.IsValid() {

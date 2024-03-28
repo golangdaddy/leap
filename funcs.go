@@ -18,6 +18,7 @@ var funcMap = template.FuncMap{
 	"firstparent":      firstparent,
 	"firstparenttitle": firstparenttitle,
 	"stringslength":    stringslength,
+	"jsonmarshal":      jsonmarshal,
 }
 
 func stringslength(a []string) int {

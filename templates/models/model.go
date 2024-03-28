@@ -58,6 +58,12 @@ type Fields{{uppercase .Name}} struct {
 	{{end}}
 }
 
+func (x *{{uppercase .Name}}) Schema() *models.Object {
+	obj := &models.Object{}
+	json.Unmarshal([]byte(`{{jsonmarshal .}}`), obj)
+	return obj
+}
+
 func (x *{{uppercase .Name}}) ValidateInput(w http.ResponseWriter, m map[string]interface{}) bool {
 	if err := x.ValidateObject(m); err != nil {
 		cloudfunc.HttpError(w, err, http.StatusBadRequest)
@@ -120,9 +126,9 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 	if ok {
 		x.Meta.Name = name	
 	} else {
+		log.Println("trying to composite object name")
 		var names []string
-		{{range .Names}}
-		names = append(names, m["{{.}}"].(string))
+		{{range .Names}}names = append(names, m["{{.}}"].(string))
 		{{end}}
 		x.Meta.Name = strings.Join(names, " ")
 	}

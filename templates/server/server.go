@@ -23,6 +23,7 @@ func main() {
 		os.Getenv("DIDTOKEN"),
 	)
 	{{if .Options.ChatGPT}}
+	app.UseVertex("europe-west2-b")
 	app.UseChatGPT(os.Getenv("OPENAI_KEY"))
 	{{end}}
 	{{if .Options.Pusher}}

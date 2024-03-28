@@ -98,7 +98,7 @@ func (self *GCPClients) UseNLP() *language.Client {
 	return self.nlp
 }
 
-// google natural language processing
+// google vertex gemini
 func (self *GCPClients) UseVertex(location string) *genai.Client {
 	self.Lock()
 	defer self.Unlock()

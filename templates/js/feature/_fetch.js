@@ -52,13 +52,15 @@ export function {{titlecase .Object.Name}}InitUpload(user, parentID, formData) {
 
 // misc
 
-export function {{titlecase .Object.Name}}sChatGPTPOST(user, parentID, mode, payload) {
-    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}s?function=prompt&mode="+mode+"&parent="+parentID, payload)
+export function {{titlecase .Object.Name}}sModelsPOST(user, parentID, model, mode, payload) {
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}s?function=ai&model="+model+"&mode="+mode+"&parent="+parentID, payload)
 }
 
 export function {{titlecase .Object.Name}}sChatGPTCollectionPOST(user, parentID, collectionID, payload) {
-    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}s?function=prompt&mode="+mode+"&parent="+parentID+"&collection="+collectionID, payload)
+    return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}s?function=ai&mode="+mode+"&parent="+parentID+"&collection="+collectionID, payload)
 }
+
+// permissions
 
 export function {{titlecase .Object.Name}}AdminPOST(user, id, mode, admin) {
     return SessionFetch(user, "POST", "api/{{lowercase .Object.Name}}?function=admin&mode="+mode+"&id="+id+"&admin="+admin)

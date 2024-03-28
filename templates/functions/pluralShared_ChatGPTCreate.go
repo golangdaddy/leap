@@ -13,10 +13,15 @@ func (app *App) {{lowercase .Object.Name}}ChatGPTCreate(user *User, parent *{{up
 
 	fmt.Println("prompt with parent", parent.Meta.ID, prompt)
 
+	b, _ := app.MarshalJSON(parent.Fields)
+	parentString := string(b)
+
 	system := `Your role is a helpful preprocessor that follows the prompt to create one or more JSON objects, ultimately outputting raw valid JSON array.
 
-We want to create one or more of these data objects: 
-// {{.Object.Context}}
+We want to create one or more of these data objects: {{.Object.Context}}
+
+...for this parent object: ` + parentString + `
+
 {
 {{range .Object.Fields}}
 	// {{.Context}} {{if .Required}} (THIS FIELD IS REQUIRED){{end}}
@@ -26,7 +31,7 @@ We want to create one or more of these data objects:
 
 The response should be a raw JSON array with one or more objects, based on the user prompt: `
 
-	println(prompt)
+	println(system+prompt)
 
 	resp, err := app.ChatGPT().CreateChatCompletion(
 		app.Context(),
@@ -50,7 +55,7 @@ The response should be a raw JSON array with one or more objects, based on the u
 
 	newResults := []interface{}{}
 	replyBytes := []byte(reply)
-	if err := json.Unmarshal(replyBytes, &newResults); err != nil {
+	if err := app.ParseContentForArray(string(replyBytes), &newResults); err != nil {
 		newResult := map[string]interface{}{}
 		if err := json.Unmarshal(replyBytes, &newResult); err != nil {
 			return err

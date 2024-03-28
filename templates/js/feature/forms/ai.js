@@ -12,7 +12,7 @@ import Select from '@/inputs/select';
 import CollectionSelect from '@/inputs/collectionSelect';
 import Color from '@/inputs/color';
 
-import { {{titlecase .Object.Name}}sChatGPTPOST, {{titlecase .Object.Name}}sChatGPTCollectionPOST } from '../_fetch'
+import { {{titlecase .Object.Name}}sModelsPOST, {{titlecase .Object.Name}}sChatGPTCollectionPOST } from '../_fetch'
 
 export function AI(props) {
 
@@ -27,30 +27,29 @@ export function AI(props) {
 		setToggle(!toggle)
 	}
 
-	const [select, setSelect] = useState('prompt')
-	function updateSelect(e) {
-		setSelect(e.target.id)
+	const [mode, setMode] = useState('prompt')
+	function updateMode(e) {
+		setMode(e.target.value)
+	}
+
+	const [model, setModel] = useState('openai')
+	function updateModel(e) {
+		setModel(e.target.value)
 	}
 
 	function sendPrompt() {
 		props.updateList(false)
 		const payload = {
-			"prompt": document.getElementById("prompt").value,
+			"prompt": document.getElementById("textinput").value,
 		}
-		switch (select) {
+
+		console.log("model", model, "mode", mode)
+
+		switch (mode) {
 		case "prompt":
-			{{titlecase .Object.Name}}sChatGPTPOST(userdata, props.subject.Meta.ID, "create", payload)
-			.then((res) => {
-				console.log(res)
-				props.updateList(true)
-			}) 
-			.catch((e) => {
-				console.error(e)
-				props.updateList(true)
-			})
-			break
 		case "create":
-			{{titlecase .Object.Name}}sChatGPTPOST(userdata, props.subject.Meta.ID, "create", payload)
+
+			{{titlecase .Object.Name}}sModelsPOST(userdata, props.subject.Meta.ID, model, mode, payload)
 			.then((res) => {
 				console.log(res)
 				props.updateList(true)
@@ -60,6 +59,7 @@ export function AI(props) {
 				props.updateList(true)
 			})
 			break
+		
 		case "modify":
 			{{titlecase .Object.Name}}sChatGPTCollectionPOST(userdata, props.subject.Meta.ID, props.collection, payload)
 			.then((res) => {
@@ -109,33 +109,22 @@ export function AI(props) {
 			{
 				toggle && <>
 					<div className='flex flex-row justify-between items-center py-2'>
-						<div className='flex flex-row items-center'>
-							{
-								(select == "prompt") && <button id="prompt" onClick={updateSelect} style={buttonStyleSelected}>Prompt</button>
-							}
-							{
-								(select != "prompt") && <button id="prompt" onClick={updateSelect} style={buttonStyle}>Prompt</button>
-							}
-							<div className='p-2'></div>
-							{
-								(select == "create") && <button id="create"  onClick={updateSelect} style={buttonStyleSelected}>Create</button>
-							}
-							{
-								(select != "create") && <button id="create"  onClick={updateSelect} style={buttonStyle}>Create</button>
-							}
-							<div className='p-2'></div>
-							{
-								(select == "modify") && <button id="modify" onClick={updateSelect} style={buttonStyleSelected}>Modify</button>
-							}
-							{
-								(select != "modify") && <button id="modify" onClick={updateSelect} style={buttonStyle}>Modify</button>
-							}
+						<div>
+							<select onChange={updateModel} className='mx-2' defaultValue={model} placeholder="Select AI Model">
+								<option value="openai">openai</option>
+								<option value="vertex">gemini</option>
+							</select>
 						</div>
 						<div>
-							<button onClick={sendPrompt} style={buttonStyle}>Send</button>
+							<select onChange={updateMode} className='mx-2' defaultValue={mode}>
+								<option value="prompt">prompt</option>
+								<option value="create">create</option>
+								<option value="modify">modify</option>
+							</select>
 						</div>
+						<button onClick={sendPrompt} style={buttonStyle}>Send</button>
 					</div>
-					<textarea id='prompt' placeholder={"your "+select+" prompt..."} className='border p-2'></textarea>
+					<textarea id='textinput' placeholder={"Your "+mode+" prompt..."} className='border p-2'></textarea>
 				</>
 			}
 		</div>

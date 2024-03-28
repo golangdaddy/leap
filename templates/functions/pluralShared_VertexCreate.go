@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-//	"log"
-//	"errors"
-//	"encoding/json"
+	// "io"
+	//	"log"
+	"errors"
+	"encoding/json"
 
-//	"github.com/sashabaranov/go-openai"
+	//a	"github.com/sashabaranov/go-openai"
 
 	"github.com/kr/pretty"
 )
@@ -15,10 +16,15 @@ func (app *App) {{lowercase .Object.Name}}VertexCreate(user *User, parent *{{upp
 
 	fmt.Println("prompt with parent", parent.Meta.ID, prompt)
 
+	b, _ := app.MarshalJSON(parent.Fields)
+	parentString := string(b)
+
 	system := `Your role is a helpful preprocessor that follows the prompt to create one or more JSON objects, ultimately outputting raw valid JSON array.
 
-We want to create one or more of these data objects: 
-// {{.Object.Context}}
+We want to create one or more of these data objects: {{.Object.Context}}
+
+...for this parent object: ` + parentString + `
+
 {
 {{range .Object.Fields}}
 	// {{.Context}} {{if .Required}} (THIS FIELD IS REQUIRED){{end}}
@@ -28,7 +34,7 @@ We want to create one or more of these data objects:
 
 The response should be a raw JSON array with one or more objects, based on the user prompt: `
 
-	println(prompt)
+	println(system+prompt)
 
 	_, resp, err := app.GCPClients.GenerateContent(system+prompt, 0.9)
 	if err != nil {
@@ -36,14 +42,15 @@ The response should be a raw JSON array with one or more objects, based on the u
 		return err
 	}
 
-	pretty.Println(resp)
-/*
-	reply := resp.Choices[0].Message.Content
-	log.Println("reply >>", reply)
+	c := resp.Candidates[0].Content.Parts[0]
+
+	pretty.Println(c)
+
+	reply, _ := app.MarshalJSON(c)
 
 	newResults := []interface{}{}
 	replyBytes := []byte(reply)
-	if err := json.Unmarshal(replyBytes, &newResults); err != nil {
+	if err := app.ParseContentForArray(string(replyBytes), &newResults); err != nil {
 		newResult := map[string]interface{}{}
 		if err := json.Unmarshal(replyBytes, &newResult); err != nil {
 			return err
@@ -72,6 +79,6 @@ The response should be a raw JSON array with one or more objects, based on the u
 		}
 		app.SendMessageToUser(user, "create", object)
 	}
-*/
+
 	return nil
 }

@@ -243,6 +243,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 			}
 
 			if !object.ValidateInput(w, m) {
+				log.Println("cant validate")
 				return
 			}
 

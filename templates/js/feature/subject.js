@@ -69,6 +69,14 @@ export function {{titlecase .Object.Name}}(props) {
 
 	const editButtonStyle = {
 		borderRadius: "20px",
+		backgroundColor: "white",
+		border: "solid 1px black",
+		color: "black",
+		padding: "6px 10px"
+	}
+
+	const childButtonStyle = {
+		borderRadius: "20px",
 		backgroundColor: "rgb(52, 211, 153)",
 		border: "solid 0px",
 		color: "white",
@@ -82,32 +90,25 @@ export function {{titlecase .Object.Name}}(props) {
 				{
 					subject?.Meta.Media.Image && <RowThumbnail source={'https://storage.googleapis.com/{{.DatabaseID}}-uploads/'+subject.Meta.Media.URIs[subject.Meta.Media.URIs.length-1]}/>
 				}
-				<div className='flex flex-wrap w-full'>
-					<div className='flex flex-row justify-between items-center w-full py-4 my-4'>
+				<div className='flex flex-wrap w-full py-4'>
+					<div className='flex flex-col'>
 						<div className='flex flex-row text-base'>
 							<span className='uppercase text-base'>{ subject.Meta.ClassName }</span>
 							<div className='px-2'>/</div>
-							<span className='font-bold'>{ subject.fields.name }</span>
+							<span className='font-bold'>{ subject.Meta.Name }</span>
 						</div>
-						<div className='flex flex-wrap'>
+						<div className='flex flex-wrap my-4'>
 							{
 								localdata.tab.subsublinks.map(function (tabname, i) {
 									if (tabname.length == 0) { return }
 									const tab = interfaces[tabname]
 									return (
-										<div key={i} className='flex flex-row rounded-md border py-1 px-2 mx-2 bg-white'>
-											<div id={tab.id} className='cursor-pointer text-gray-800' onClick={updateTabEvent}>{tab.name}</div>
-										</div>
+										<button id={tabname} key={i} className='text-sm m-2' onClick={updateTabEvent} style={childButtonStyle}>
+											{tab.name}
+										</button>
 									)
 								})
 							}
-							{{if eq false .Object.Options.ReadOnly}}
-							<div className='flex flex-row justify-center items-center'>
-								<button className='text-sm' onClick={editData} style={editButtonStyle}>
-								Edit {{titlecase .Object.Name}}
-								</button>
-							</div>
-							{{end}}
 						</div>
 					</div>
 				</div>
@@ -132,7 +133,7 @@ export function {{titlecase .Object.Name}}(props) {
 								</td>
 								<td className='flex flex-col justify-start'>
 									<div className='w-full flex flex-row justify-end'>
-										<div className=''>{ dateTime }</div>
+										<div className='text-xs'>{ dateTime }</div>
 									</div>
 								</td>
 							</tr>
@@ -193,6 +194,13 @@ export function {{titlecase .Object.Name}}(props) {
 					</table>
 				</div>
 			</div>
+			{{if eq false .Object.Options.ReadOnly}}
+				<div className='flex flex-row justify-start items-center my-4'>
+					<button className='text-sm' onClick={editData} style={editButtonStyle}>
+					Edit {{titlecase .Object.Name}}
+					</button>
+				</div>
+			{{end}}
 			<div className='flex flex-col'>
 				{{range .Object.Children}}
 				{{if .Options.Job}}

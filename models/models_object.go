@@ -11,8 +11,16 @@ type Object struct {
 	ParentCount int       `json:"parentCount,omitempty"`
 	Children    []*Object `json:"children,omitempty"`
 	Fields      []*Field  `json:"fields"`
+	ListMode    string    `json:"listMode"`
 	Options     Options   `json:"options"`
 }
+
+const (
+	ListModeCreated  = "created"
+	ListModeModified = "modified"
+	ListModeOrder    = "ordered"
+	ListModeTimeline = "exif"
+)
 
 type Options struct {
 	ReadOnly     bool        `json:"readonly"`

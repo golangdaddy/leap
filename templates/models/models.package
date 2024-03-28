@@ -26,6 +26,7 @@ import (
 	"github.com/google/uuid"
 	"google.golang.org/api/iterator"
 
+	"github.com/golangdaddy/leap/models"
 	"github.com/golangdaddy/leap/sdk/assetlayer"
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
 

@@ -57,14 +57,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 
 		switch function {
 
-		case "openai":
-
-			// get openai command
-			mode, err := cloudfunc.QueryParam(r, "mode")
-			if err != nil {
-				cloudfunc.HttpError(w, err, http.StatusBadRequest)
-				return
-			}
+		case "ai":
 
 			m := map[string]interface{}{}
 			if err := cloudfunc.ParseJSON(r, &m); err != nil {
@@ -76,47 +69,81 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}S(w http.ResponseWriter, r *
 				return
 			}
 
+			model, err := cloudfunc.QueryParam(r, "model")
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
+
+			mode, err := cloudfunc.QueryParam(r, "mode")
+			if err != nil {
+				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+				return
+			}
+
 			object := &{{uppercase .Object.Name}}{}
 			if err := app.GetDocument(parent.ID, object); err != nil {
 				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 				return
 			}
 
-			switch mode {
-			case "prompt":
+			switch model {
 
-				reply, err := app.{{lowercase .Object.Name}}ChatGPTPrompt(user, object, prompt)
-				if err != nil {
-					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			case "openai":
+
+				switch mode {
+				case "prompt":
+	
+					reply, err := app.{{lowercase .Object.Name}}ChatGPTPrompt(user, object, prompt)
+					if err != nil {
+						cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+						return
+					}
+	
+					if err := cloudfunc.ServeJSON(w, reply); err != nil {
+						cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+						return
+					}
+	
+				case "create":
+	
+					if err := app.{{lowercase .Object.Name}}ChatGPTCreate(user, object, prompt); err != nil {
+						cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+						return
+					}
+	
+				case "modify":
+	
+					if err := app.{{lowercase .Object.Name}}ChatGPTModify(user, object, prompt); err != nil {
+						cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+						return
+					}
+	
+				default:
+					err := fmt.Errorf("openapi mode not found: %s", mode)
+					cloudfunc.HttpError(w, err, http.StatusBadRequest)
 					return
 				}
 
-				if err := cloudfunc.ServeJSON(w, reply); err != nil {
-					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			case "vertex":
+	
+				switch mode {
+	
+				case "create":
+	
+					if err := app.{{lowercase .Object.Name}}VertexCreate(user, object, prompt); err != nil {
+						cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+						return
+					}
+	
+				default:
+					err := fmt.Errorf("vertex mode not found: %s", mode)
+					cloudfunc.HttpError(w, err, http.StatusBadRequest)
 					return
 				}
 
-			case "create":
-
-				if err := app.{{lowercase .Object.Name}}ChatGPTCreate(user, object, prompt); err != nil {
-					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-					return
-				}
-
-			case "modify":
-
-				if err := app.{{lowercase .Object.Name}}ChatGPTModify(user, object, prompt); err != nil {
-					cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-					return
-				}
-
-			default:
-				
-				panic("openai")
-			}
-
-			return
-
+				return
+		}
 		case "init":
 
 			m := map[string]interface{}{}
