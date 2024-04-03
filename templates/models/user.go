@@ -7,7 +7,7 @@ type UserRef struct {
 }
 
 func DemoUser() *User {
-	return NewUser("demo", "john@doe.com", "john doe")
+	return NewUser("demo", "john@doe.com", "john_doe")
 }
 
 func NewUser(mode string, email, username string) *User {
