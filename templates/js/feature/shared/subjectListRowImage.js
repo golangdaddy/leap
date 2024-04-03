@@ -26,17 +26,12 @@ export function {{titlecase .Object.Name}}ListRowImage(props) {
 			{{if .Object.Options.Image}}
 			<div  id={props.item.Meta.ID} onClick={selectItem} className="cursor-pointer"><img src={props.item.Meta.Media.Preview}/></div>
 			{{end}}
-			<div className='flex flex-row w-full items-center px-4'>
-				{
-					{{if .Object.Options.Photo}}false && {{end}}props.item.Meta.Name?.length && <>
-						<div className='text-sm font-bold' title="Name">{ props.item.Meta.Name }</div>
-					</>
-				}
+			<div className='flex flex-col w-full justify-center items-center m-4'>
 				<div className="px-4"></div>
 				{{range $item, $key := .Object.Fields}}{
 					("{{lowercase $key.Name}}" != "name") && !Array.isArray(props.item.fields["{{lowercase $key.Name}}"]) &&  !(typeof props.item.fields["{{lowercase $key.Name}}"] === 'object')  && <>
-						<div className='text-sm font-bold' title="{{lowercase $key.Name}}">
-							{ props.item.fields["{{lowercase $key.Name}}"] }
+						<div className='text-base font-bold' title="{{lowercase $key.Name}}">
+							"{ props.item.fields["{{lowercase $key.Name}}"] }"
 						</div>
 						<div className="px-4"></div>
 					</>

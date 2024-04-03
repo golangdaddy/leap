@@ -114,22 +114,23 @@ func Prepare(tree *Stack) error {
 			if app.jsonObjects[name] == nil {
 				return errors.New("OBJECT NOT FOUND " + name)
 			}
+
 			f := *app.jsonObjects[name]
-			if f.Name == "" {
+
+			if len(f.Name) == 0 {
 				f.Name = tree.Objects[n].Name
-				if tree.Objects[n].Plural == "" {
-					f.Plural = tree.Objects[n].Name + "s"
+				if len(f.Name) == 0 {
+					panic("f name")
 				}
-			} else if f.Plural == "" {
-				if tree.Objects[n].Plural == "" {
-					f.Plural = tree.Objects[n].Name + "s"
-				} else {
+			} else {
+				if len(f.Plural) == 0 {
 					f.Plural = tree.Objects[n].Plural
 				}
+				if len(f.Plural) == 0 {
+					f.Plural = f.Name + "s"
+				}
 			}
-			if len(f.Plural) == 0 {
-				panic("plural")
-			}
+
 			f.Parents = tree.Objects[n].Parents
 			tree.Objects[n] = &f
 		} else {

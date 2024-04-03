@@ -1,19 +1,19 @@
 type Users []*User
 
 type UserRef struct {
-	Account  int
+	Mode     string
 	ID       string
 	Username string
 }
 
 func DemoUser() *User {
-	return NewUser(0, "john@doe.com", "john doe")
+	return NewUser("demo", "john@doe.com", "john doe")
 }
 
-func NewUser(accountType int, email, username string) *User {
+func NewUser(mode string, email, username string) *User {
 	user := &User{
 		Meta:     (Internals{}).NewInternals("users"),
-		Account:  accountType,
+		Mode:     mode,
 		Email:    strings.ToLower(strings.TrimSpace(email)),
 		Username: strings.ToLower(strings.TrimSpace(username)),
 	}
@@ -22,14 +22,14 @@ func NewUser(accountType int, email, username string) *User {
 
 type User struct {
 	Meta     Internals
-	Account  int    `json:"account" firestore:"account"`
+	Mode     string `json:"mode" firestore:"mode"`
 	Email    string `json:"email" firestore:"email"`
 	Username string `json:"username" firestore:"username"`
 }
 
 func (user *User) Ref() UserRef {
 	return UserRef{
-		Account:  user.Account,
+		Mode:     user.Mode,
 		ID:       user.Meta.ID,
 		Username: user.Username,
 	}
@@ -46,7 +46,7 @@ func (users Users) Refs() []UserRef {
 func (user *User) IsValid() bool {
 	log.Println(user.Username)
 
-	if len(user.Username) < 6 {
+	if len(user.Username) < 3 {
 		return false
 	}
 	if len(user.Username) > 24 {

@@ -86,31 +86,27 @@ export function {{titlecase .Object.Name}}(props) {
     return (
 		<div className='flex flex-col w-full' style={ {padding:"30px 60px 30px 60px"} }>
 			{ !subject && <Loading/> }
-			<div className="flex flex-row w-full">
+			<div className='flex flex-col'>
+				<div className='flex flex-row text-base'>
+					<span className='uppercase text-base'>{ subject.Meta.ClassName }</span>
+					<div className='px-2'>/</div>
+					<span className='font-bold'>{ (subject.Meta.Name.length > 20) ? subject.Meta.Name.substr(0, 20)+"..." : subject.Meta.Name }</span>
+				</div>
 				{
-					subject?.Meta.Media.Image && <RowThumbnail source={'https://storage.googleapis.com/{{.ProjectName}}-uploads/'+subject.Meta.Media.URIs[subject.Meta.Media.URIs.length-1]}/>
+					subject?.Meta.Media.Image && <img className='m-4' src={'https://storage.googleapis.com/{{.ProjectName}}-uploads/'+subject.Meta.Media.URIs[subject.Meta.Media.URIs.length-1]}/>
 				}
-				<div className='flex flex-wrap w-full py-4'>
-					<div className='flex flex-col'>
-						<div className='flex flex-row text-base'>
-							<span className='uppercase text-base'>{ subject.Meta.ClassName }</span>
-							<div className='px-2'>/</div>
-							<span className='font-bold'>{ subject.Meta.Name }</span>
-						</div>
-						<div className='flex flex-wrap my-4'>
-							{
-								localdata.tab.subsublinks.map(function (tabname, i) {
-									if (tabname.length == 0) { return }
-									const tab = interfaces[tabname]
-									return (
-										<button id={tabname} key={i} className='text-sm m-2' onClick={updateTabEvent} style={childButtonStyle}>
-											{tab.name}
-										</button>
-									)
-								})
-							}
-						</div>
-					</div>
+				<div className='flex flex-wrap my-4'>
+					{
+						localdata.tab.subsublinks.map(function (tabname, i) {
+							if (tabname.length == 0) { return }
+							const tab = interfaces[tabname]
+							return (
+								<button id={tabname} key={i} className='text-sm m-2' onClick={updateTabEvent} style={childButtonStyle}>
+									{tab.name}
+								</button>
+							)
+						})
+					}
 				</div>
 			</div>
 			<hr/>

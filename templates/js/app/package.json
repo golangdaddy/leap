@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@alenaksu/json-viewer": "^2.0.1",
-    "@handcash/handcash-connect": "^0.7.6",
+    "@handcash/handcash-connect": "^0.7.8",
     "axios": "^1.6.2",
     "date-fns": "^3.3.1",
     "eslint-config-next": "^14.0.3",

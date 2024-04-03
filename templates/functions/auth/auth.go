@@ -146,37 +146,12 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 
 			username = strings.Replace(strings.TrimSpace(strings.Replace(username, "_", " ", -1)), " ", "_", -1)
 
-			user := NewUser(1, email, username)
-
-			if !user.IsValid() {
-				err := fmt.Errorf("username failed validation: %s", user.Username)
-				cloudfunc.HttpError(w, err, http.StatusBadRequest)
+			_, status, err := app.CreateUser("email", email, username)
+			if err != nil {
+				cloudfunc.HttpError(w, err, status)
 				return
 			}
 
-			// find if email is conflicting
-			if _, err := app.GetUserByEmail(user.Email); err == nil {
-				cloudfunc.HttpError(w, err, http.StatusConflict)
-				return
-			}
-
-			// create new user
-			if _, err := app.Firestore().Collection("users").Doc(user.Meta.ID).Set(app.Context(), user); err != nil {
-				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-				return
-			}
-
-			// fail if a conflicting username exists
-			if _, err := app.Firestore().Collection("usernames").Doc(user.Username).Get(app.Context()); err == nil {
-				cloudfunc.HttpError(w, err, http.StatusConflict)
-				return
-			}
-
-			// create username association
-			if _, err := app.Firestore().Collection("usernames").Doc(user.Username).Set(app.Context(), user.GetUsernameRef()); err != nil {
-				cloudfunc.HttpError(w, err, http.StatusInternalServerError)
-				return
-			}
 			return
 
 		case "login":

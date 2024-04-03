@@ -7,39 +7,49 @@ import AutocompleteUsername from '@/inputs/autocompleteUsername'
 import Spacer from '@/inputs/spacer'
 import VisitTab from '@/features/interfaces'
 
-import { {{titlecase .Object.Name}}ObjectGET, {{titlecase .Object.Name}}AdminPOST } from './_fetch'
+import { {{titlecase .Object.Name}}ObjectGET, {{titlecase .Object.Name}}MemberPOST } from './_fetch'
 
-import { {{titlecase .Object.Name}}Admin } from './{{lowercase .Object.Name}}Admin';
+import { {{titlecase .Object.Name}}Member } from './{{lowercase .Object.Name}}Member';
 
-export function {{titlecase .Object.Name}}Admins(props) {
+export function {{titlecase .Object.Name}}Members(props) {
 
     const [ userdata, setUserdata] = useUserContext()
     const [ localdata, setLocaldata] = useLocalContext()
 
-    const [object, setObject] = useState(localdata.tab.context.object)
+    const [project, setProject] = useState(localdata.tab.context.object)
 
 	const [newAdmins, setNewAdmins] = useState()
 
-	function updateObject() {
-		ObjectObjectGET(userdata, object.Meta.ID)
+    console.log("FEATURES >> PROJECTS >> ADMINS", localdata)
+
+	function updateProject() {
+		ProjectObjectGET(userdata, project.Meta.ID)
 		.then((res) => res.json())
 		.then((data) => {
 			console.log(data)
-			setObject(data)
+			setProject(data)
 		})
 		.catch((e) => {
 			console.error(e)
 		})
 	}
 
+    // update tabs handles the updated context and sends the user to a new interface
+    function updateTabEvent(e) {
+        const id = e.target.id
+        console.log("SELECT PROJECT", id)
+        const next = projects[id.split("_")[1]]
+        const context = {
+            "_": next.name,
+            "object": next
+        }
+        setLocaldata(VisitTab(localdata, "project", context))
+    }
+
 	function deleteAdmin(id) {
-		const adminID = object.Meta.Moderation.Admins[id]
-		{{titlecase .Object.Name}}AdminPOST(userdata, object.Meta.ID, "remove", adminID)
-		.then(function () {
-			updateObject()
-		}).error(function (e) {
-			console.error(e)
-		})
+		const adminID = project.Meta.Moderation.Admins[id]
+		{{titlecase .Object.Name}}MemberPOST(userdata, project.Meta.ID, "remove", adminID)
+		.then(updateProject)
 	}
 
 	function inputChange(obj) {
@@ -49,18 +59,14 @@ export function {{titlecase .Object.Name}}Admins(props) {
 
 	function addAdmins() {
 		newAdmins.forEach(function (admin, i) {
-			{{titlecase .Object.Name}}AdminPOST(userdata, object.Meta.ID, "add", admin)
-			.then(function () {
-				updateObject()
-			}).error(function (e) {
-				console.error(e)
-			})
+			{{titlecase .Object.Name}}MemberPOST(userdata, project.Meta.ID, "add", admin)
+			.then(updateProject)
 		})
 	}
 
     return (
 		<div style={ {padding:"30px 60px 30px 60px"} } className='flex flex-col'>
-			<div className='text-xl'>Add Admin</div>
+			<div className='text-xl'>Add Member</div>
 			<AutocompleteUsername inputChange={inputChange} />
 			{
 				newAdmins && <div>
@@ -79,11 +85,11 @@ export function {{titlecase .Object.Name}}Admins(props) {
 				</div>
 			}
 			<Spacer/>
-			<div className='text-base'>Existing Administrators:</div>
+			<div className='text-base'>Existing Members:</div>
 			<Spacer/>
 			<div className='flex flex-col'>
 				{
-					object.Meta.Moderation.Admins.map(function (adminID, i) {
+					project.Meta.Moderation.Admins.map(function (adminID, i) {
 						return (
 							<{{titlecase .Object.Name}}Admin key={adminID} id={i} admin={adminID} delete={deleteAdmin}/>
 						)

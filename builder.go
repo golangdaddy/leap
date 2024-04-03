@@ -62,6 +62,9 @@ func Build(stack *models.Stack) error {
 	if err := doTemplate("build/app/pages/register.js", stack); err != nil {
 		return err
 	}
+	if err := doTemplate("build/app/pages/handcash.js", stack); err != nil {
+		return err
+	}
 
 	// create models lib and file
 	if err := copyFile("templates/models/models.main", "build/models.go"); err != nil {
@@ -241,13 +244,19 @@ func Build(stack *models.Stack) error {
 		}
 
 		// boilerplater functions
-		if err := execTemplate("functions/user", "user.go", "api_"+"user.go", container); err != nil {
+		if err := execTemplate("functions/user", "user.go", "api_user.go", container); err != nil {
 			return err
 		}
-		if err := execTemplate("functions/user", "users.go", "api_"+"users.go", container); err != nil {
+		if err := execTemplate("functions/user", "users.go", "api_users.go", container); err != nil {
 			return err
 		}
-		if err := execTemplate("functions/auth", "auth.go", "api_"+"auth.go", container); err != nil {
+		if err := execTemplate("functions/auth", "utils.go", "utils_auth.go", container); err != nil {
+			return err
+		}
+		if err := execTemplate("functions/auth", "auth.go", "api_auth.go", container); err != nil {
+			return err
+		}
+		if err := execTemplate("functions/auth", "handcash.go", "api_handcash.go", container); err != nil {
 			return err
 		}
 		/*
@@ -521,6 +530,34 @@ func Build(stack *models.Stack) error {
 			)
 			copyFile(
 				"templates/js/feature/subjectAdmins.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				return err
+			}
+		}
+		{
+			path := fmt.Sprintf(
+				"build/app/features/%ss/%sMember.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Lower(language.English).String(object.Name),
+			)
+			copyFile(
+				"templates/js/feature/subjectMember.js",
+				path,
+			)
+			if err := doTemplate(path, container); err != nil {
+				return err
+			}
+		}
+		{
+			path := fmt.Sprintf(
+				"build/app/features/%ss/%sMembers.js",
+				cases.Lower(language.English).String(object.Name),
+				cases.Lower(language.English).String(object.Name),
+			)
+			copyFile(
+				"templates/js/feature/subjectMembers.js",
 				path,
 			)
 			if err := doTemplate(path, container); err != nil {

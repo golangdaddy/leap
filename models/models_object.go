@@ -25,6 +25,7 @@ const (
 type Options struct {
 	ReadOnly     bool        `json:"readonly"`
 	Admin        bool        `json:"admin"`
+	Member       *Member     `json:"member"`
 	Job          bool        `json:"job"`
 	Comment      bool        `json:"comment"`
 	Order        bool        `json:"order"`
@@ -39,6 +40,11 @@ type Options struct {
 	Pusher       bool        `json:"pusher"`
 	Permissions  Permissions `json:"permissions"`
 	FilterFields []*Field    `json:"filterFields"`
+}
+
+type Member struct {
+	View bool `json:"view"`
+	Edit bool `json:"edit"`
 }
 
 type JobTopic struct {

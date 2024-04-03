@@ -17,15 +17,21 @@ func main() {
 	}
 
 	app := NewApp()
+
+	// init asset layer
 	app.UseAssetlayer(
 		os.Getenv("ASSETLAYERAPPID"),
 		os.Getenv("ASSETLAYERSECRET"),
 		os.Getenv("DIDTOKEN"),
 	)
+
+	// init openai
 	{{if .Options.ChatGPT}}
 	app.UseVertex("{{.ProjectRegion}}")
 	app.UseChatGPT(os.Getenv("OPENAI_KEY"))
 	{{end}}
+
+	// init pusher
 	{{if .Options.Pusher}}
 	app.UsePusher(
 		os.Getenv("PUSHER_APP_ID"),
@@ -34,6 +40,13 @@ func main() {
 		os.Getenv("PUSHER_CLUSTER"),
 	)
 	{{end}}
+
+	// init handcash
+	{{if ne nil .Options.Handcash}}
+	http.HandleFunc("/handcash/success", app.HandcashEntrypointSuccess)
+	{{end}}
+
+	/*
 	{{if .Options.Assetlayer}}
 	slotID, err := app.Assetlayer().EnsureSlotExists("{{.ProjectName}}-models", "description...", "")
 	if err != nil {
@@ -48,11 +61,14 @@ func main() {
 		}
 		os.Setenv("MODEL_{{uppercase .Name}}S", collectionID)
 	}{{end}}
+
 	{{range .Wallets}}
 	if _, err := app.Assetlayer().NewAppWallet("{{.}}"); err != nil {
 		log.Println(err)
 	}{{end}}
 	{{end}}
+	*/
+
 	http.HandleFunc("/api/user", app.UserEntrypoint)
 	http.HandleFunc("/api/users", app.UsersEntrypoint)
 	http.HandleFunc("/api/auth", app.AuthEntrypoint)

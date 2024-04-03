@@ -20,6 +20,7 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 	}
 
 	object.Meta.ClassName = "{{lowercase .Plural}}"
+	object.Meta.Context.User = user.Meta.ID
 
 	colors, err := gamut.Generate(8, gamut.PastelGenerator{})
 	if err != nil {

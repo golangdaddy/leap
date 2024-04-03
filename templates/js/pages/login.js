@@ -10,6 +10,7 @@ export default function PageLogin({ data }) {
 	const router = useRouter();
 	const [input, setInput] = useState(data.email)
 
+
 	const [emailState, setEmailState] = useState(0);
 
 	function checkEmail() {
@@ -43,7 +44,7 @@ export default function PageLogin({ data }) {
 	<Layout>
 		<div className="flex flex-col m-10 p-5 bg-gray-200 text-black">
 			<div className='font-xl'>
-				Get a 1 time password delivered to your email.
+				Get a 1 time password delivered to your email, or login with <b><a href='/handcash'>Handcash</a></b>
 			</div>
 			<div className='font-xl'>
 				If you are already registered a button will appear when you type your email...
@@ -73,14 +74,14 @@ export default function PageLogin({ data }) {
 // This gets called on every request
 export async function getServerSideProps(context) {
 
-  console.log(context)
+	console.log(context)
 
-  const email = context.query.email
-  const data = {}
-  if (email != undefined) {
-	data["email"] = email
-  }
- 
-  // Pass data to the page via props
-  return { props: { data } }
+	const email = context.query.email
+	const data = {}
+	if (email != undefined) {
+		data["email"] = email
+	}
+
+	// Pass data to the page via props
+	return { props: { data } }
 }

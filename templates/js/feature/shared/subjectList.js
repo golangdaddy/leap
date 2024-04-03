@@ -172,7 +172,9 @@ export function {{titlecase .Object.Name}}List(props) {
 			props.title && <hr/>
 		}
 		{
-			!list && <Loading/>
+			!list && <div className="p-4">
+				<Loading/>
+			</div>
 		}
 		{{if .Object.Options.Image}}
 		<div className='flex flex-wrap'>

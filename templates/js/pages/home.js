@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation'
 
 import Layout from '@/app/layout';
@@ -10,7 +11,7 @@ export default function HomePage({ payload }) {
 
 	if (payload.redirect) {
 		useEffect(() => {
-		router.replace("/dashboard/otp")
+		router.replace("/login")
 	}, [])
 	}
 

@@ -22,6 +22,8 @@ export function AI(props) {
 	console.log("AI SUBJECT", props.subject)
 
 	const [toggle, setToggle] = useState(false)
+	const [prompts, setPrompts] = useState(false)
+
 
 	function toggleState() {
 		setToggle(!toggle)

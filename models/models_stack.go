@@ -20,15 +20,28 @@ type Stack struct {
 }
 
 type StackOptions struct {
-	Sidebar             bool     `json:"sidebar"`
-	Pusher              bool     `json:"pusher"`
-	ChatGPT             bool     `json:"chatgpt"`
-	Assetlayer          bool     `json:"assetlayer"`
-	Wallets             []string `json:"wallets"`
-	WhitelistDomains    bool     `json:"whitelistDomains"`
-	RegistrationDomains []string `json:"registrationDomains"`
-	WhitelistEmails     bool     `json:"whitelistEmails"`
-	RegistrationEmails  []string `json:"registrationEmails"`
+	Sidebar             bool             `json:"sidebar"`
+	ChatGPT             bool             `json:"chatgpt"`
+	Assetlayer          bool             `json:"assetlayer"`
+	Wallets             []string         `json:"wallets"`
+	WhitelistDomains    bool             `json:"whitelistDomains"`
+	RegistrationDomains []string         `json:"registrationDomains"`
+	WhitelistEmails     bool             `json:"whitelistEmails"`
+	RegistrationEmails  []string         `json:"registrationEmails"`
+	Pusher              *OptionsPusher   `json:"pusher"`
+	Handcash            *OptionsHandcash `json:"handcash"`
+}
+
+type OptionsHandcash struct {
+	AppID     string `json:"appId"`
+	AppSecret string `json:"appSecret"`
+}
+
+type OptionsPusher struct {
+	AppID   string `json:"appId"`
+	Key     string `json:"key"`
+	Secret  string `json:"secret"`
+	Cluster string `json:"cluster"`
 }
 
 func (stack *Stack) NewObject(parent *Object, name string) *Object {

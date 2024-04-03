@@ -11,6 +11,7 @@ import (
 	"github.com/golangdaddy/leap/sdk/assetlayer"
 	"github.com/pusher/pusher-http-go/v5"
 	"github.com/sashabaranov/go-openai"
+	"github.com/tonicpow/go-handcash-connect"
 )
 
 func (app *App) newClients() Clients {
@@ -27,6 +28,7 @@ type Clients struct {
 	algolia    *search.Client
 	assetlayer *assetlayer.Client
 	openai     *openai.Client
+	handcash   *handcash.Client
 	sync.RWMutex
 }
 
@@ -88,4 +90,19 @@ func (clients *Clients) ChatGPT() *openai.Client {
 
 func (clients *Clients) Pusher() *pusher.Client {
 	return clients.pusher
+}
+
+func (clients *Clients) Handcash() *handcash.Client {
+	clients.RLock()
+	client := clients.handcash
+	clients.RUnlock()
+
+	if client == nil {
+		clients.Lock()
+		defer clients.Unlock()
+		clients.handcash = handcash.NewClient(nil, clients.HTTP(), handcash.EnvironmentProduction)
+		return clients.handcash
+	}
+
+	return client
 }
