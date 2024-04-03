@@ -41,9 +41,9 @@ func (self *Clients) Gin() *gin.Engine {
 
 	if client == nil {
 		self.Lock()
+		defer self.Unlock()
 		gin.SetMode(gin.ReleaseMode)
 		self.gin = gin.Default()
-		defer self.Unlock()
 		return self.gin
 	}
 
@@ -58,6 +58,7 @@ func (self *Clients) HTTP() *http.Client {
 
 	if client == nil {
 		self.Lock()
+		defer self.Unlock()
 		self.httpClient = &http.Client{
 			Transport: &http.Transport{
 				Dial: (&net.Dialer{
@@ -69,7 +70,6 @@ func (self *Clients) HTTP() *http.Client {
 				ExpectContinueTimeout: 1 * time.Second,
 			},
 		}
-		defer self.Unlock()
 		return self.httpClient
 	}
 
@@ -100,7 +100,10 @@ func (clients *Clients) Handcash() *handcash.Client {
 	if client == nil {
 		clients.Lock()
 		defer clients.Unlock()
-		clients.handcash = handcash.NewClient(nil, clients.HTTP(), handcash.EnvironmentProduction)
+		println("setting hc client 1")
+		clients.handcash = handcash.NewClient(nil, http.DefaultClient, handcash.EnvironmentProduction)
+		println("setting hc client 2")
+
 		return clients.handcash
 	}
 

@@ -1,12 +1,11 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
+	"github.com/kr/pretty"
 )
 
 // handcash-success
@@ -26,16 +25,25 @@ func (app *App) HandcashEntrypointSuccess(w http.ResponseWriter, r *http.Request
 			return
 		}
 
-		// manage internal user
+		println("getting handcash data 1")
 
-		// Get the current user's profile (Auth token was from oAuth callback)
-		profile, err := app.Handcash().GetProfile(context.Background(), authToken)
+		hc := app.Handcash()
+
+		println("getting handcash data 2")
+
+		// manage internal user
+		profile, err := hc.GetProfile(app.Context(), authToken)
 		if err != nil {
-			log.Fatalln("error: ", err)
+			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
+			return
 		}
 
+		pretty.Println(profile)
+
+		println("making handcash user")
+
 		username := profile.PublicProfile.Handle
-		email := profile.PrivateProfile.Email
+		email := profile.PublicProfile.Paymail
 
 		user, status, err := app.CreateUser("handcash", email, username, "@")
 		if err != nil {
