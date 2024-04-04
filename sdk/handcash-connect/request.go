@@ -74,6 +74,7 @@ func httpRequest(ctx context.Context, client *Client,
 	request.Header.Set("oauth-signature", signedRequest.Headers.OauthSignature)
 	request.Header.Set("oauth-timestamp", signedRequest.Headers.OauthTimestamp)
 
+	println("adding app: " + client.appId)
 	request.Header.Set("app-id", client.appId)
 	request.Header.Set("app-secret", client.appSecret)
 
