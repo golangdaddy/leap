@@ -100,10 +100,7 @@ func (clients *Clients) Handcash() *handcash.Client {
 	if client == nil {
 		clients.Lock()
 		defer clients.Unlock()
-		println("setting hc client 1")
 		clients.handcash = handcash.NewClient(nil, http.DefaultClient, handcash.EnvironmentProduction)
-		println("setting hc client 2")
-
 		return clients.handcash
 	}
 
