@@ -74,6 +74,9 @@ func httpRequest(ctx context.Context, client *Client,
 	request.Header.Set("oauth-signature", signedRequest.Headers.OauthSignature)
 	request.Header.Set("oauth-timestamp", signedRequest.Headers.OauthTimestamp)
 
+	request.Header.Set("app-id", client.appId)
+	request.Header.Set("app-secret", client.appSecret)
+
 	// Fire the http request
 	var resp *http.Response
 	if resp, response.Error = client.httpClient.Do(request); response.Error != nil {
