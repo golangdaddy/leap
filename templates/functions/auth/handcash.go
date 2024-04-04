@@ -25,14 +25,8 @@ func (app *App) HandcashEntrypointSuccess(w http.ResponseWriter, r *http.Request
 			return
 		}
 
-		println("getting handcash data 1")
-
-		hc := app.Handcash()
-
-		println("getting handcash data 2")
-
 		// manage internal user
-		profile, err := hc.GetProfile(app.Context(), authToken)
+		profile, err := app.Handcash().GetProfile(app.Context(), authToken)
 		if err != nil {
 			cloudfunc.HttpError(w, err, http.StatusInternalServerError)
 			return
