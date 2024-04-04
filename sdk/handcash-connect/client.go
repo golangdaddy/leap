@@ -19,6 +19,8 @@ type Client struct {
 	Environment *Environment   // Current environment for the client
 	httpClient  httpInterface  // Interface for all HTTP requests
 	Options     *ClientOptions // Client options config
+	appId       string
+	appSecret   string
 }
 
 // ClientOptions holds all the configuration for connection, dialer and transport
@@ -68,10 +70,12 @@ type Environment struct {
 // NewClient creates a new client for requests
 // If no environment is set, production is used as the default
 func NewClient(options *ClientOptions, customHTTPClient *http.Client,
-	customEnvironment string) (c *Client) {
+	customEnvironment string, appId, appSecret string) (c *Client) {
 
 	// Create a client
 	c = new(Client)
+	c.appId = appId
+	c.appSecret = appSecret
 
 	// Set options (either default or user modified)
 	if options == nil {

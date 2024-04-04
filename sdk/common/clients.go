@@ -3,15 +3,16 @@ package common
 import (
 	"net"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/gin-gonic/gin"
 	"github.com/golangdaddy/leap/sdk/assetlayer"
+	"github.com/golangdaddy/leap/sdk/handcash-connect"
 	"github.com/pusher/pusher-http-go/v5"
 	"github.com/sashabaranov/go-openai"
-	"github.com/tonicpow/go-handcash-connect"
 )
 
 func (app *App) newClients() Clients {
@@ -100,7 +101,13 @@ func (clients *Clients) Handcash() *handcash.Client {
 	if client == nil {
 		clients.Lock()
 		defer clients.Unlock()
-		clients.handcash = handcash.NewClient(nil, http.DefaultClient, handcash.EnvironmentProduction)
+		clients.handcash = handcash.NewClient(
+			nil,
+			http.DefaultClient,
+			handcash.EnvironmentProduction,
+			os.Getenv("HANDCASH_APP_ID"),
+			os.Getenv("HANDCASH_APP_SECRET"),
+		)
 		return clients.handcash
 	}
 
