@@ -21,6 +21,7 @@ func (app *App) CreateUser(mode, email, username string, prefix ...string) (user
 	}
 	// find if email is conflicting
 	if _, err = app.GetUserByEmail(user.Email); err == nil {
+		err = fmt.Errorf("email already exists: %s", user.Email)
 		status = http.StatusConflict
 		return
 	}
@@ -33,6 +34,7 @@ func (app *App) CreateUser(mode, email, username string, prefix ...string) (user
 
 	// fail if a conflicting username exists
 	if _, err = app.Firestore().Collection("usernames").Doc(user.Username).Get(app.Context()); err == nil {
+		err = fmt.Errorf("username already exists: %s", user.Email)
 		status = http.StatusConflict
 		return
 	}

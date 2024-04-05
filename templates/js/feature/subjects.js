@@ -54,7 +54,7 @@ export function {{titlecase .Object.Name}}s(props) {
 						</button>
 					</div>
 					{{else}}
-					<button id={'new{{lowercase .Object.Name}}'} onClick={updateTabEvent} className="flex flex-col justify-center items-center m-2 cursor-pointer" style={buttonStyle}>
+					<button id={'new{{lowercase .Object.Name}}'} onClick={updateTabEvent} className="flex flex-col justify-center items-center cursor-pointer" style={buttonStyle}>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" style={ {pointerEvents:"none"} }>
 						<path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 						</svg>
@@ -62,6 +62,7 @@ export function {{titlecase .Object.Name}}s(props) {
 					{{end}}
 				</div>
 			</div>
+			<div className='py-1'></div>
 			<AI subject={subject} updateList={updateList} collection="{{lowercase .Object.Name}}s"/>
 			{
 				!promptToggle && <Loading/>

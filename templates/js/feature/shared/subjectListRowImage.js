@@ -29,7 +29,7 @@ export function {{titlecase .Object.Name}}ListRowImage(props) {
 			<div className='flex flex-col w-full justify-center items-center m-4'>
 				<div className="px-4"></div>
 				{{range $item, $key := .Object.Fields}}{
-					("{{lowercase $key.Name}}" != "name") && !Array.isArray(props.item.fields["{{lowercase $key.Name}}"]) &&  !(typeof props.item.fields["{{lowercase $key.Name}}"] === 'object')  && <>
+					("{{lowercase $key.Name}}" != "name") && !Array.isArray(props.item.fields["{{lowercase $key.Name}}"]) &&  !(typeof props.item.fields["{{lowercase $key.Name}}"] === 'object')  && (props.item.fields["{{lowercase $key.Name}}"].length > 0) && <>
 						<div className='text-base font-bold' title="{{lowercase $key.Name}}">
 							"{ props.item.fields["{{lowercase $key.Name}}"] }"
 						</div>

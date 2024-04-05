@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/golangdaddy/leap/sdk/cloudfunc"
-	"github.com/kr/pretty"
 )
 
 // handcash-success
@@ -32,17 +31,22 @@ func (app *App) HandcashEntrypointSuccess(w http.ResponseWriter, r *http.Request
 			return
 		}
 
-		pretty.Println(profile)
-
-		println("making handcash user")
-
 		username := profile.PublicProfile.Handle
 		email := profile.PublicProfile.Paymail
 
-		user, status, err := app.CreateUser("handcash", email, username, "@")
+		// find if email is conflicting
+		user, err := app.GetUserByEmail(email)
 		if err != nil {
-			cloudfunc.HttpError(w, err, status)
-			return
+
+			println("making handcash user")
+
+			var status int
+			user, status, err = app.CreateUser("handcash", email, username, "$")
+			if err != nil {
+				cloudfunc.HttpError(w, err, status)
+				return
+			}
+
 		}
 
 		secret := app.Token256()
@@ -60,7 +64,7 @@ func (app *App) HandcashEntrypointSuccess(w http.ResponseWriter, r *http.Request
 		http.Redirect(
 			w,
 			r,
-			fmt.Sprintf("%shome?otp=%s", "{{.WebAPI}}", secret),
+			fmt.Sprintf("%shome?otp=%s&authToken=%s", "{{.WebAPI}}", secret, authToken),
 			http.StatusTemporaryRedirect,
 		)
 

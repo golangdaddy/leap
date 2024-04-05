@@ -38,7 +38,11 @@ type Internals struct {
 	Created    int64
 	Deleted    int64 `json:",omitempty"`
 	Modified   int64
-	Stats      map[string]float64 `json:",omitempty"`
+	Price      struct {
+		Currency string `json:",omitempty"`
+		Units    int64  `json:",omitempty"`
+	} `json:",omitempty"`
+	Stats map[string]float64 `json:",omitempty"`
 }
 
 func RegExp(exp, matchString string) bool {

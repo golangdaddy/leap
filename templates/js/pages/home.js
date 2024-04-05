@@ -17,7 +17,7 @@ export default function HomePage({ payload }) {
 
 	return (
 		<Layout className="flex flex-col items-center h-full">
-			<Dashboard otp={payload.otp} region={payload.region}/>
+			<Dashboard otp={payload.otp} handcashToken={payload.handcashToken} region={payload.region}/>
 		</Layout>
 	)
 }
@@ -28,6 +28,7 @@ export async function getServerSideProps(context) {
 	var payload = {}
 	if (context.query.otp) {
 		payload["otp"] = context.query.otp
+		payload["handcashToken"] = context.query.authToken
 	} else {
 		payload["redirect"] = true
 	}

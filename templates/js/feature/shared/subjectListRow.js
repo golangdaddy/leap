@@ -7,6 +7,7 @@ import { RowThumbnail } from "@/components/rowThumbnail"
 import { RowDelete } from "@/components/rowDelete"
 import { RowEdit } from "@/components/rowEdit"
 import { RowOrder } from "@/components/rowOrder"
+import { RowPay } from "@/components/rowPay"
 import { titlecase } from "../_interfaces"
 
 export function {{titlecase .Object.Name}}ListRow(props) {
@@ -42,6 +43,8 @@ export function {{titlecase .Object.Name}}ListRow(props) {
 					</>
 				}{{end}}
 			</div>
+			<RowPay id={props.id}/>
+
 			{{if .Object.Options.Order}}<RowOrder id={props.id} listLength={props.listLength} moveUp={props.moveUp} moveDown={props.moveDown}/>{{end}}
 			<RowEdit object={props.item} editInterface="edit{{lowercase .Object.Name}}"/>
 			<RowDelete id={props.id} delete={deleteItem}/>

@@ -25,7 +25,13 @@ export function {{titlecase .Object.Name}}List(props) {
 	const [topics, setTopics] = useState([{{range .Object.Options.Topics}}{"name":"{{.Name}}","topic":"{{.Topic}}"},{{end}}])
 
 	const [ list, setList ] = useState(null)
+
+	{{if .Object.Options.Admin}}
+	const [ listMode, setListMode ] = useState("admin")
+	{{end}}
+	{{if eq false .Object.Options.Admin}}
 	const [ listMode, setListMode ] = useState("modified")
+	{{end}}
 
 	function updateListMode(e) {
 		const mode = e.target.value
@@ -136,12 +142,14 @@ export function {{titlecase .Object.Name}}List(props) {
 			props.title && <div className="flex flex-row justify-between items-center">
 				<div className="flex flex-row">
 					<div className='py-4 my-4 text-xl font-bold'>{props.title}:</div>
+					{{if eq false .Object.Options.Admin}}
 					<select onChange={updateListMode}>
 						<option value="created">Created</option>
 						<option value="modified">Modified</option>
 						<option value="order">Ordered</option>
 						<option value="exif">EXIF</option>
 					</select>
+					{{end}}
 				</div>
 				{
 					(topics.length > 0) && <div className='flex flex-row'>

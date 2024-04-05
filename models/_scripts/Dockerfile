@@ -7,9 +7,9 @@ COPY ./go.sum /app/
 COPY ./build/* /app/
 RUN rm -r /app/app
 
-RUN GONOPROXY=github.com/golangdaddy go get -d
+RUN GONOPROXY=github.com/golangdaddy go get -u github.com/golangdaddy/leap
 
-RUN GOPROXY=direct CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /main .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /main .
 
 FROM scratch
 

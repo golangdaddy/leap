@@ -49,6 +49,19 @@ export function AI(props) {
 
 		switch (mode) {
 		case "prompt":
+
+			{{titlecase .Object.Name}}sModelsPOST(userdata, props.subject.Meta.ID, model, mode, payload)
+			.then((res) => {
+				console.log(res)
+				props.updateList(true)
+				
+			}) 
+			.catch((e) => {
+				console.error(e)
+				props.updateList(true)
+			})
+			break
+
 		case "create":
 
 			{{titlecase .Object.Name}}sModelsPOST(userdata, props.subject.Meta.ID, model, mode, payload)
@@ -81,7 +94,6 @@ export function AI(props) {
 		backgroundColor: "rgb(96, 165, 250)",
 		border: "solid 0px",
 		color: "white",
-		padding: "6px 10px"
 	}
 
 	const buttonStyleSelected = {
@@ -97,7 +109,7 @@ export function AI(props) {
 			{
 				!toggle && <div className="flex flex-col justify-center rounded-l-lg bg-gray-400" onClick={toggleState}>
 					<div>
-						<button style={buttonStyle} className='flex flex-row items-center'>
+						<button style={buttonStyle} className='flex flex-row items-center p-2'>
 							<div id="home" className="flex flex-col justify-center items-center cursor-pointer" style={ {width:"36px",height:"36px"} }>
 								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6" style={ {pointerEvents:"none"} }>
 								<path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />
@@ -124,7 +136,7 @@ export function AI(props) {
 								<option value="modify">modify</option>
 							</select>
 						</div>
-						<button onClick={sendPrompt} style={buttonStyle}>Send</button>
+						<button onClick={sendPrompt} style={buttonStyle} className='p-2'>Send</button>
 					</div>
 					<textarea id='textinput' placeholder={"Your "+mode+" prompt..."} className='border p-2'></textarea>
 				</>

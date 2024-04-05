@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { HandCashConnect } from '@handcash/handcash-connect';
 
-export default function PageHandcash({ data }) {
+export default function PaymentPage({ data }) {
 
 	const router = useRouter();
 	useEffect(() => {
-		router.push(data.redirect)
+//		router.push(data.redirect)
 	}, [])
 
 	return (
@@ -23,11 +23,21 @@ export async function getServerSideProps(context) {
 		appSecret: process.env.HANDCASH_APP_SECRET,
 	}
 
+	console.log(creds)
+	
 	const handCashConnect = new HandCashConnect(creds);
 
-	var data = {
-		'redirect': handCashConnect.getRedirectionUrl(),
-	}
+	const account = handCashConnect.getAccountFromAuthToken(context.query.authToken);
+	const paymentParameters = {
+		description: "Hold my beer!🍺",
+		payments: [
+			{ currencyCode: 'USD', sendAmount: 0.05, destination: '$gopher' },
+		]
+	};
+	const paymentResult = await account.wallet.pay(paymentParameters);
+	console.log(paymentResult)
+
+	var data = {}
 
 	// Pass data to the page via props
 	return { props: { data } }

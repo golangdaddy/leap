@@ -178,15 +178,6 @@ func Prepare(tree *Stack) error {
 	}
 
 	{
-		b, err := f.ReadFile("_scripts/build.sh")
-		if err != nil {
-			return err
-		}
-		if err := os.WriteFile("build.sh", b, 0775); err != nil {
-			return err
-		}
-	}
-	{
 		b, err := f.ReadFile("_scripts/dev.sh")
 		if err != nil {
 			return err

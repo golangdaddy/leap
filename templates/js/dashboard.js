@@ -39,6 +39,7 @@ export default function Dashboard(props) {
 				console.log("DOWNLOADED USERDATA", user)
 				var user = data.user
 				user.headers = {"Authorization": data.secret}
+				user.handcashToken = props.handcashToken
 				setUserdata(user)
 				// init websocket
 				messaging.pusher = new Pusher('818e55ca022763d940aa', {
