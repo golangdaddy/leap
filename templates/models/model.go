@@ -47,6 +47,20 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 		object.Meta.Moderation.Admins,
 		user.Meta.ID,
 	){{end}}
+
+	{{if .Options.Handcash}}
+	{{if eq "pay" .Options.Handcash.Type}}
+	{{range .Options.Handcash.Payments}}
+	object.Meta.Payment.Destinations = append(
+		object.Meta.Payment.Destinations,
+		&models.PaymentDestination{
+			To: "{{.To}}",
+			CurrencyCode: "{{.CurrencyCode}}",
+			Amount: "{{.Amount}}",
+		},
+	)
+	{{end}}{{end}}{{end}}
+
 	// add children to context
 	object.Meta.Context.Children = []string{
 		{{range .Children}}"{{.Name}}",{{end}}

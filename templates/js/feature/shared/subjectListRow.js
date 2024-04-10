@@ -43,7 +43,7 @@ export function {{titlecase .Object.Name}}ListRow(props) {
 					</>
 				}{{end}}
 			</div>
-			<RowPay id={props.id}/>
+			<RowPay id={props.id} item={props.item}/>
 
 			{{if .Object.Options.Order}}<RowOrder id={props.id} listLength={props.listLength} moveUp={props.moveUp} moveDown={props.moveDown}/>{{end}}
 			<RowEdit object={props.item} editInterface="edit{{lowercase .Object.Name}}"/>

@@ -7,6 +7,7 @@ import Home from '@/features/home'
 import Account from '@/features/account/account'
 import AccountInbox from '@/features/account/accountInbox'
 import AccountInboxMessages from '@/features/account/accountInboxMessages'
+import PaymentConfirmation from '@/components/paymentConfirmation'
 
 export var Interfaces = {
 	"home": {
@@ -28,6 +29,11 @@ export var Interfaces = {
 		level: 3,
 		name: "Conversation",
 		component: (<AccountInboxMessages/>),
+	},
+	"paymentconfirmation": {
+		level: 3,
+		name: "Confirm Payment",
+		component: (<PaymentConfirmation/>),
 	}
 }
 

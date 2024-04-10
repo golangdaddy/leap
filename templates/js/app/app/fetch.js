@@ -116,3 +116,9 @@ export function InboxMessagesGET(user, conversation) {
 export function InboxSendMessage(user, msg) {
 	return SessionFetch(user, "POST", "api/mail?", msg)
 }
+
+// handcash
+
+export function HandcashPaymentPOST(payment) {
+    return PublicFetch("POST", "/handcash/payment?", payment)
+}

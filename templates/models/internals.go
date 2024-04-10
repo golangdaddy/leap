@@ -34,15 +34,12 @@ type Internals struct {
 	Context    Context
 	Moderation Moderation
 	Media      Media
+	Payment    Payment
 	Updated    bool
 	Created    int64
 	Deleted    int64 `json:",omitempty"`
 	Modified   int64
-	Price      struct {
-		Currency string `json:",omitempty"`
-		Units    int64  `json:",omitempty"`
-	} `json:",omitempty"`
-	Stats map[string]float64 `json:",omitempty"`
+	Stats      map[string]float64 `json:",omitempty"`
 }
 
 func RegExp(exp, matchString string) bool {
@@ -232,3 +229,15 @@ type Moderation struct {
 	ApprovedTime int64    `json:",omitempty"`
 	ApprovedBy   string   `json:",omitempty"`
 }
+
+type Payment struct {
+	Mint         bool
+	Destinations []*PaymentDestination
+}
+
+type PaymentDestination struct {
+	To           string  `json:"to"`
+	Amount       float64 `json:"amount"`
+	CurrencyCode string  `json:"currencyCode"`
+}
+

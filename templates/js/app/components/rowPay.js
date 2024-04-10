@@ -2,16 +2,22 @@ import { useLocalContext } from '@/context/local';
 import { useUserContext } from '@/context/user';
 import { useRouter } from 'next/router';
 
+import VisitTab from '@/features/interfaces'
+
 export function RowPay(props) {
     
 	const [localdata, setLocaldata] = useLocalContext()
 	const [userdata, setUserdata] = useUserContext()
 
-	const router = useRouter();
-    function triggerPayment() {
-		const uri = "/payment?apiToken="+userdata.handcashToken
-		console.log(uri)
-		router.push(uri)
+    function triggerPayment() {	
+		const context = {
+			"payment": {
+				"destination": "gopher",
+				"amount": "0.01",
+				"note": "heyyy",
+			}
+		}
+		setLocaldata(VisitTab(localdata, "paymentconfirmation", context))
     }
 
     const iconStyle = {width:"30px",height:"30px"}

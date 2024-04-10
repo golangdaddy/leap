@@ -37,9 +37,22 @@ type Options struct {
 	TopicCreate  *string     `json:"topicCreate"`
 	Topics       []*JobTopic `json:"topics"`
 	Assetlayer   *Assetlayer `json:"assetlayer"`
+	Handcash     *Handcash   `json:"handcash"`
 	Pusher       bool        `json:"pusher"`
 	Permissions  Permissions `json:"permissions"`
 	FilterFields []*Field    `json:"filterFields"`
+}
+
+type Handcash struct {
+	Type     string
+	Payments []HandcashPayment
+	Mint     struct{}
+}
+
+type HandcashPayment struct {
+	CurrencyCode string
+	To           string
+	Amount       float64
 }
 
 type Member struct {
