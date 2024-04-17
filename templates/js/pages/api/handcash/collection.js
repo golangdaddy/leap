@@ -19,22 +19,19 @@ export default async(req, res) => {
 
 	const handCashMinter = HandCashMinter.fromAppCredentials(creds);
 
-	(async () => {
-		const creationOrder = await handCashMinter.createCollection({
-			name: 'HandCash Team Caricatures',
-			description: 'A unique collection of caricatures of the HandCash team',
-			mediaDetails: {
-			  image: {
-				url: 'https://res.cloudinary.com/handcash-iae/image/upload/v1685141160/round-handcash-logo_cj47fp_xnteyo_oy3nbd.png',
-				contentType: 'image/png'
-			  }
-			}
-		  });
-	   
-		console.log(`Items order created, items are being created asynchronously`);
-		const items = await handCashMinter.getOrderItems(creationOrder.id);
-		console.log(`Collection Created, collectionId: ${items[0].id}`);
-	  })();
+	const creationOrder = await handCashMinter.createCollection({
+		name: 'My first collection',
+		description: 'This is my first collection. Do not judge me.',
+		mediaDetails: {
+		  image: {
+			url: 'https://res.cloudinary.com/handcash-iae/image/upload/v1685141160/round-handcash-logo_cj47fp_xnteyo_oy3nbd.png',
+			contentType: 'image/png'
+		  }
+		}
+	});
+	
+	const items = await handCashMinter.getOrderItems(creationOrder.id);
+	console.log(`Collection Created, collectionId: ${items[0].id}`);
 
-    res.status(200).json([])
+    res.status(200).json(items)
 }
