@@ -2,6 +2,20 @@ import axios, {isCancel, AxiosError} from 'axios';
 
 export const host = "{{.HostAPI}}"
 
+export function WebFetch(method, url, body) {
+
+	console.log("PublicFetch >>>", method, url, body);
+	console.log(url)
+
+	return fetch(
+		"{{.WebAPI}}" + url,
+		{
+			method: method,
+			body: JSON.stringify(body),
+		}
+	)
+}
+
 export function PublicFetch(method, url, body) {
 
 	console.log("PublicFetch >>>", method, url, body);
@@ -119,6 +133,6 @@ export function InboxSendMessage(user, msg) {
 
 // handcash
 
-export function HandcashPaymentPOST(payment) {
-    return PublicFetch("POST", "/handcash/payment?", payment)
+export function HandcashPaymentPOST(authToken, payment) {
+    return WebFetch("POST", "api/handcash/payment?authToken="+authToken, payment)
 }

@@ -12,9 +12,8 @@ export function RowPay(props) {
     function triggerPayment() {	
 		const context = {
 			"payment": {
-				"destination": "gopher",
-				"amount": "0.01",
-				"note": "heyyy",
+				"description": "heyyy",
+				"payments": props.item.Meta.Payment.Destinations,
 			}
 		}
 		setLocaldata(VisitTab(localdata, "paymentconfirmation", context))

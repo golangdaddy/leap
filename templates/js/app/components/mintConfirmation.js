@@ -8,7 +8,7 @@ import { HandcashPaymentPOST } from '@/app/fetch';
 import { GoBack } from '@/features/interfaces'
 import Loading from '@/app/loading';
 
-export default function PaymemtConfirmation() {
+export default function MintConfirmation() {
 
 	const [localdata, setLocaldata] = useLocalContext()
 	const [userdata, setUserdata] = useUserContext()

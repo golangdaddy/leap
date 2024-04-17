@@ -53,10 +53,10 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 	{{range .Options.Handcash.Payments}}
 	object.Meta.Payment.Destinations = append(
 		object.Meta.Payment.Destinations,
-		&models.PaymentDestination{
+		&PaymentDestination{
 			To: "{{.To}}",
 			CurrencyCode: "{{.CurrencyCode}}",
-			Amount: "{{.Amount}}",
+			Amount: {{.Amount}},
 		},
 	)
 	{{end}}{{end}}{{end}}
