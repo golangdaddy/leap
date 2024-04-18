@@ -19,7 +19,7 @@ export default async(req, res) => {
 
 	const handCashMinter = HandCashMinter.fromAppCredentials(creds);
 
-	const creationOrder = await handCashMinter.createCollectionOrder({
+	const creationOrder = await handCashMinter.createCollection({
 		name: 'My first collection',
 		description: 'This is my first collection. Do not judge me.',
 		mediaDetails: {
