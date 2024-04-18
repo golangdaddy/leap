@@ -29,9 +29,6 @@ export default async(req, res) => {
 		  }
 		}
 	});
-	
-	const items = await handCashMinter.getOrderItems(creationOrder.id);
-	console.log(`Collection Created, collectionId: ${items[0].id}`);
 
-    res.status(200).json(items)
+    res.status(200).json(creationOrder)
 }
