@@ -90,7 +90,7 @@ export function {{titlecase .Object.Name}}(props) {
 				<div className='flex flex-row text-base'>
 					<span className='uppercase text-base'>{ subject.Meta.ClassName }</span>
 					<div className='px-2'>/</div>
-					<span className='font-bold'>{ (subject.Meta.Name.length > 20) ? subject.Meta.Name.substr(0, 20)+"..." : subject.Meta.Name }</span>
+					<span className='font-bold'>{ (subject.Meta.Name?.length > 20) ? subject.Meta.Name.substr(0, 20)+"..." : subject.Meta.Name }</span>
 				</div>
 				{
 					subject?.Meta.Media.Image && <img className='m-4' src={'https://storage.googleapis.com/{{.ProjectName}}-uploads/'+subject.Meta.Media.URIs[subject.Meta.Media.URIs.length-1]}/>

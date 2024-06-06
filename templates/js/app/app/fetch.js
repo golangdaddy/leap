@@ -1,6 +1,7 @@
 import axios, {isCancel, AxiosError} from 'axios';
 
-export const host = "{{.HostAPI}}"
+export const hostApi = (process.env.ENVIRONMENT == undefined) ? "http://localhost:8080/" : "{{.HostAPI}}"
+export const webApi = (process.env.ENVIRONMENT == undefined) ? "http://localhost:3000/" : "{{.WebAPI}}"
 
 export function WebFetch(method, url, body) {
 
@@ -8,7 +9,7 @@ export function WebFetch(method, url, body) {
 	console.log(url)
 
 	return fetch(
-		"{{.WebAPI}}" + url,
+		webApi + url,
 		{
 			method: method,
 			body: JSON.stringify(body),
@@ -22,7 +23,7 @@ export function PublicFetch(method, url, body) {
 	console.log(url)
 
 	return fetch(
-		host + url,
+		hostApi + url,
 		{
 			method: method,
 			body: JSON.stringify(body),
@@ -43,7 +44,7 @@ export function AxiosPOST(user, url, formData) {
 
 export default function SessionFetch(user, method, url, body) {
 
-	console.log("SessionFetch >>>", method, url, body);
+	console.log("SessionFetch", process.env.HANDCASH_APP_ID, process.env.ENVIRONMENT, ">>>", method, url, body);
 	console.log(url)
 
 	if (user == null) {
@@ -52,7 +53,7 @@ export default function SessionFetch(user, method, url, body) {
 	}
 
 	return fetch(
-		host + url,
+		hostApi + url,
 		{
 			method: method,
 			body: JSON.stringify(body),
@@ -66,7 +67,7 @@ export function OTPFetch(url) {
 	console.log("OTPFetch >>>", url);
 	console.log(url)
 
-	return fetch(host + url, {"method":"POST"})
+	return fetch(hostApi + url, {"method":"POST"})
 }
 
 export function UserAutocompleteGET(user, query) {

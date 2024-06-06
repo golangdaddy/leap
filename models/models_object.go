@@ -1,18 +1,20 @@
 package models
 
 type Object struct {
-	Name        string    `json:"name"`
-	Names       []string  `json:"names"`
-	Plural      string    `json:"plural"`
-	JSON        string    `json:"json"`
-	Mode        string    `json:"mode"`
-	Context     string    `json:"context"`
-	Parents     []string  `json:"parents,omitempty"`
-	ParentCount int       `json:"parentCount,omitempty"`
-	Children    []*Object `json:"children,omitempty"`
-	Fields      []*Field  `json:"fields"`
-	ListMode    string    `json:"listMode"`
-	Options     Options   `json:"options"`
+	Name        string         `json:"name"`
+	Names       []string       `json:"names"`
+	Plural      string         `json:"plural"`
+	JSON        string         `json:"json"`
+	Mode        string         `json:"mode"`
+	Context     string         `json:"context"`
+	Parents     []string       `json:"parents,omitempty"`
+	ParentCount int            `json:"parentCount,omitempty"`
+	Children    []*Object      `json:"children,omitempty"`
+	Fields      []*Field       `json:"fields"`
+	ListMode    string         `json:"listMode"`
+	Options     Options        `json:"options"`
+	Tags        []string       `json:"tags"`
+	ChildTags   map[int]string `json:"childTags"`
 }
 
 const (

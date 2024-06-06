@@ -28,7 +28,7 @@ export async function getServerSideProps(context) {
 	var payload = {}
 	if (context.query.otp) {
 		payload["otp"] = context.query.otp
-		payload["handcashToken"] = context.query.authToken
+		payload["handcashToken"] = context.query.authToken ? context.query.authToken : ''
 	} else {
 		payload["redirect"] = true
 	}

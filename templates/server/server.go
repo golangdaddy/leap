@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"net/http"
+	"html/template"
 	"os"
 	"log"
 )
@@ -13,17 +14,10 @@ func main() {
 
 	// handle local dev
 	if os.Getenv("ENVIRONMENT") != "production" {
-		os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", "../../../npg-generic-d0985a6033b3.json")
+		os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", "/Users/"+os.Getenv("USER")+"/npg-generic-d0985a6033b3.json")
 	}
 
 	app := NewApp()
-
-	// init asset layer
-	app.UseAssetlayer(
-		os.Getenv("ASSETLAYERAPPID"),
-		os.Getenv("ASSETLAYERSECRET"),
-		os.Getenv("DIDTOKEN"),
-	)
 
 	// init openai
 	{{if .Options.ChatGPT}}
@@ -79,6 +73,9 @@ func main() {
 	http.HandleFunc("/api/{{lowercase .Name}}s", app.Entrypoint{{uppercase .Name}}S)
 	println("registering handlers for {{lowercase .Name}}s"){{end}}
 
+	http.HandleFunc("/htmx/hello", htmx_hello)
+	http.HandleFunc("/htmx/world", htmx_world)
+
 	port, err := strconv.Atoi(os.Getenv("PORT"))
 	if err != nil {
 		port = 8080
@@ -90,4 +87,48 @@ func main() {
 	}
 }
 
+func htmx_hello(w http.ResponseWriter, r *http.Request) {
+	htmlTemplate := `
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Hello World</title>
+		<script src="https://cdn.jsdelivr.net/npm/htmx.org/dist/htmx.js"></script>
+	</head>
+	<body>
+		<h1 id="hello" hx-put="/htmx/world" hx-target="this" hx-swap="outerHTML"></h1>
+		<button hx-get="/world" hx-trigger="click" hx-swap="outerHTML">Refresh</button>
+	</body>
+	</html>
+	`
 
+	// Parse the HTML template
+	tmpl, err := template.New("hello").Parse(htmlTemplate)
+	if err != nil {
+		log.Fatal("Error parsing template:", err)
+	}
+
+	// Execute the template and write the output to os.Stdout
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		log.Fatal("Error executing template:", err)
+	}
+}
+
+func htmx_world(w http.ResponseWriter, r *http.Request) {
+	htmlTemplate := `
+		<h1 id="hello">hello the world</h1>
+`
+
+	// Parse the HTML template
+	tmpl, err := template.New("hello").Parse(htmlTemplate)
+	if err != nil {
+		log.Fatal("Error parsing template:", err)
+	}
+
+	// Execute the template and write the output to os.Stdout
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		log.Fatal("Error executing template:", err)
+	}
+}

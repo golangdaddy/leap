@@ -7,13 +7,15 @@ export default async(req, res) => {
 
 	const { authToken } = req.query;
 
-	const handCashMinter = HandCashMinter.fromAppCredentials(
-		{ 
-			"authToken": authToken,
-			"appId": process.env.HANDCASH_APP_ID,
-			"appSecret": process.env.HANDCASH_APP_SECRET,
-		}
-	);
+	const creds = { 
+		"authToken": authToken,
+		"appId": process.env.HANDCASH_APP_ID,
+		"appSecret": process.env.HANDCASH_APP_SECRET,
+	}
+
+	console.log(creds)
+
+	const handCashMinter = HandCashMinter.fromAppCredentials(creds);
 
 	(async () => {
 		console.log('creating collection')
