@@ -48,5 +48,27 @@ func (self *GCPClients) ListObjectsGCS(ctx context.Context, bucketName, prefix s
 		}
 		names = append(names, attrs.Name)
 	}
-	return
+	return names, nil
+}
+
+// WriteObjectGCS uploads a file to a bucket
+func (self *GCPClients) WriteObjectGCS(ctx context.Context, bucket *storage.BucketHandle, objectName string, b []byte) error {
+
+	obj := bucket.Object(objectName)
+
+	// Create a writer for the object
+	wc := obj.NewWriter(ctx)
+	defer wc.Close()
+
+	// Write content to the object
+	if _, err := wc.Write(b); err != nil {
+		return fmt.Errorf("failed to write to object: %v", err)
+	}
+
+	// Check for errors during the close operation
+	if err := wc.Close(); err != nil {
+		return fmt.Errorf("failed to close object writer: %v", err)
+	}
+
+	return nil
 }
