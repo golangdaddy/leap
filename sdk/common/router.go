@@ -89,6 +89,9 @@ func (app *App) Serve() error {
 		}
 	}
 	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 	s := &http.Server{
 		Addr:           "0.0.0.0:" + port,
 		Handler:        app.Gin(),

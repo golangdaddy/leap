@@ -42,12 +42,17 @@ func (app *App) UseCBOR() {
 }
 
 // UseAlgolia initialises the algolia client
-func (app *App) UseAlgolia(appID, secretPath string) {
+func (app *App) UseAlgoliaWithVolumeSecret(appID, secretPath string) {
 	secretBytes, err := os.ReadFile(secretPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 	app.Clients.algolia = search.NewClient(appID, string(secretBytes))
+}
+
+// UseAlgolia initialises the algolia client
+func (app *App) UseAlgoliaWithEnvSecret(appID, secret string) {
+	app.Clients.algolia = search.NewClient(appID, secret)
 }
 
 // UsePusher initialises the pusher client
