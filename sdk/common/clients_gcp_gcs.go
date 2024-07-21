@@ -34,9 +34,14 @@ func (self *GCPClients) GetObjectGCS(ctx context.Context, bucket *storage.Bucket
 }
 
 // ListObjectGCS returns the contents of the directory with the given prefix
-func (self *GCPClients) ListObjectsGCS(ctx context.Context, bucketName, prefix string) (names []string, err error) {
+func (self *GCPClients) ListObjectsGCS(ctx context.Context, bucketName string, prefix *string) (names []string, err error) {
 
-	it := self.GCS().Bucket(bucketName).Objects(ctx, &storage.Query{Prefix: prefix})
+	var q *storage.Query
+	if prefix != nil {
+		q = &storage.Query{Prefix: *prefix}
+	}
+
+	it := self.GCS().Bucket(bucketName).Objects(ctx, q)
 	for {
 		var attrs *storage.ObjectAttrs
 		attrs, err = it.Next()
