@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"net/http"
-	"html/template"
 	"os"
 	"log"
 )
