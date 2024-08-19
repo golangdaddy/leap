@@ -1,8 +1,5 @@
 import axios, {isCancel, AxiosError} from 'axios';
 
-export const hostApi = (process.env.ENVIRONMENT == undefined) ? "http://localhost:8080/" : "{{.HostAPI}}"
-export const webApi = (process.env.ENVIRONMENT == undefined) ? "http://localhost:3000/" : "{{.WebAPI}}"
-
 export function WebFetch(method, url, body) {
 
 	console.log("PublicFetch >>>", method, url, body);

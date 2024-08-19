@@ -36,7 +36,7 @@ func main() {
 	{{end}}
 
 	// init handcash
-	{{if ne nil .Options.Handcash}}
+	{{if .Options.Handcash}}
 	http.HandleFunc("/handcash/success", app.HandcashEntrypointSuccess)
 	{{end}}
 
