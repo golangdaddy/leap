@@ -1,5 +1,8 @@
 import axios, {isCancel, AxiosError} from 'axios';
 
+export const hostApi = "{{.HostAPI}}"
+export const webApi = "{{.WebAPI}}"
+
 export function WebFetch(method, url, body) {
 
 	console.log("PublicFetch >>>", method, url, body);
