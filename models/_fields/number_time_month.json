@@ -1,0 +1,8 @@
+{
+    "type": "int",
+    "input": "number",
+    "range": {
+        "min": 1,
+        "max": 12
+    }
+}

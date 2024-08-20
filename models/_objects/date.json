@@ -1,0 +1,24 @@
+{
+	"mode": "primary",
+	"primary": "day",
+	"name": "date",
+	"title": "Date",
+	"fields": [
+		{
+			"name": "date_day",
+			"required": true,
+			"json": "number_int"
+		},
+		{
+			"name": "date_month",
+			"required": true,
+			"json": "number_time_month"
+		},
+		{
+			"name": "date_year",
+			"required": true,
+			"json": "number_int"
+		}
+	],
+	"children": []
+}

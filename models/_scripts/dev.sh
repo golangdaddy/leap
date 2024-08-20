@@ -1,5 +1,7 @@
 #!/bin/bash
 
+GONOPROXY=github.com/golangdaddy go get github.com/golangdaddy/leap
+
 go run . $1 || exit 10
 chmod -R 775 build/ || exit 10
 (cd build && go build . errors) || exit 10
