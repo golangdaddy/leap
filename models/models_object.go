@@ -39,7 +39,7 @@ type Options struct {
 	TopicCreate  *string     `json:"topicCreate"`
 	Topics       []*JobTopic `json:"topics"`
 	Assetlayer   *Assetlayer `json:"assetlayer"`
-	Handcash     *Handcash   `json:"handcash"`
+	Handcash     Handcash    `json:"handcash"`
 	Pusher       bool        `json:"pusher"`
 	Permissions  Permissions `json:"permissions"`
 	FilterFields []*Field    `json:"filterFields"`
@@ -48,13 +48,17 @@ type Options struct {
 type Handcash struct {
 	Type     string
 	Payments []HandcashPayment
-	Mint     struct{}
+	Mint     []HandcashMint
 }
 
 type HandcashPayment struct {
 	CurrencyCode string
 	To           string
 	Amount       float64
+}
+
+type HandcashMint struct {
+	Data map[string]interface{}
 }
 
 type Member struct {

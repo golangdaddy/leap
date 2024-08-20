@@ -137,3 +137,7 @@ export function InboxSendMessage(user, msg) {
 export function HandcashPaymentPOST(authToken, payment) {
     return WebFetch("POST", "api/handcash/payment?authToken="+authToken, payment)
 }
+
+export function HandcashMintPOST(authToken, data) {
+    return WebFetch("POST", "api/handcash/mint?authToken="+authToken, data)
+}

@@ -9,7 +9,9 @@ export default function HomePage({ payload }) {
 
 	return (
 		<Layout className="flex flex-col items-center h-full">
-			Hello World
+			<div class="flex flex-col items-center py-10">
+				Welcome to this website
+			</div>
 		</Layout>
 	)
 }
