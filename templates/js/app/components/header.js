@@ -18,7 +18,7 @@ export default function Header() {
     <header className='w-full'>
         <div className='bg-black text-white flex flex-row justify-between p-2 px-6'>
             <div className='flex flex-col justify-center'>
-                <div className='text-2xl font-bold'>{{.SiteName}}</div>
+                <div className='text-2xl font-bold'>{{.Config.SiteName}}</div>
             </div>
             {
             userdata && <div className='flex flex-row items-center text-sm'>
