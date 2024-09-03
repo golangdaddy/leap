@@ -1,5 +1,7 @@
 #!/bin/bash
 
+go mod tidy
+
 GONOPROXY=github.com/golangdaddy go get -u github.com/golangdaddy/leap
 
 go test || exit 10
