@@ -64,7 +64,7 @@ func (app *App) HandcashEntrypointSuccess(w http.ResponseWriter, r *http.Request
 		http.Redirect(
 			w,
 			r,
-			fmt.Sprintf("%shome?otp=%s&authToken=%s", "{{.WebAPI}}", secret, authToken),
+			fmt.Sprintf("%shome?otp=%s&authToken=%s", "{{.Config.WebAPI}}", secret, authToken),
 			http.StatusTemporaryRedirect,
 		)
 
