@@ -1,7 +1,7 @@
 import axios, {isCancel, AxiosError} from 'axios';
 
-export const hostApi = "{{.HostAPI}}"
-export const webApi = "{{.WebAPI}}"
+export const hostApi = "{{.Config.HostAPI}}"
+export const webApi = "{{.Config.WebAPI}}"
 
 export function WebFetch(method, url, body) {
 
