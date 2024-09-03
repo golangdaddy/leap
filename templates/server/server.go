@@ -9,10 +9,10 @@ import (
 )
 
 func main() {
-	log.Println("Starting Application", "{{.ProjectID}}", "{{.ProjectName}}")
+	log.Println("Starting Application", "{{.Config.ProjectID}}", "{{.Config.ProjectName}}")
 
 	// handle local dev
-	if os.Getenv("ENVIRONMENT") != "production" {
+	if strings.ToLower(os.Getenv("ENVIRONMENT")) != "production" {
 		os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", "/Users/"+os.Getenv("USER")+"/npg-generic-d0985a6033b3.json")
 	}
 
@@ -20,7 +20,7 @@ func main() {
 
 	// init openai
 	{{if .Options.ChatGPT}}
-	app.UseVertex("{{.ProjectRegion}}")
+	app.UseVertex("{{.Config.ProjectRegion}}")
 	app.UseChatGPT(os.Getenv("OPENAI_KEY"))
 	{{end}}
 

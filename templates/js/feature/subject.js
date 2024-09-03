@@ -44,7 +44,7 @@ export function {{titlecase .Object.Name}}(props) {
 			setJdata(JSON.stringify(data.fields))
 			{{if .Object.Options.Image}}
 			if (data.Meta.URIs?.length > 0) {
-				setImage("https://storage.googleapis.com/{{.ProjectName}}-uploads/" + data.Meta.URIs[data.Meta.URIs.length - 1])
+				setImage("https://storage.googleapis.com/{{.Config.ProjectName}}-uploads/" + data.Meta.URIs[data.Meta.URIs.length - 1])
 			}{{end}}
 			console.log("IMAGE? src:", image)
 		}) 
@@ -93,7 +93,7 @@ export function {{titlecase .Object.Name}}(props) {
 					<span className='font-bold'>{ (subject.Meta.Name?.length > 20) ? subject.Meta.Name.substr(0, 20)+"..." : subject.Meta.Name }</span>
 				</div>
 				{
-					subject?.Meta.Media.Image && <img className='m-4' src={'https://storage.googleapis.com/{{.ProjectName}}-uploads/'+subject.Meta.Media.URIs[subject.Meta.Media.URIs.length-1]}/>
+					subject?.Meta.Media.Image && <img className='m-4' src={'https://storage.googleapis.com/{{.Config.ProjectName}}-uploads/'+subject.Meta.Media.URIs[subject.Meta.Media.URIs.length-1]}/>
 				}
 				<div className='flex flex-wrap my-4'>
 					{

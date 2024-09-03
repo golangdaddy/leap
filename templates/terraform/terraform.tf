@@ -4,7 +4,7 @@ provider "google" {
 }
 
 resource "google_storage_bucket" "primarybucket" {
-  name          = "{{.ProjectName}}-uploads"
+  name          = "{{.Config.ProjectName}}-uploads"
   location      = "EU"
 }
 
