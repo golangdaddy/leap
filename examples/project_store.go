@@ -17,7 +17,6 @@ func buildStructure(config models.Config) *models.Stack {
 	// Define product categories
 	category := &models.Object{
 		Context: "Category to which products are assigned (e.g., Dairy, Produce)",
-		Mode:    "root",
 		Parents: []string{},
 		Name:    "category",
 		Fields: []*models.Field{
@@ -40,7 +39,6 @@ func buildStructure(config models.Config) *models.Stack {
 	// Define products under each category
 	product := &models.Object{
 		Context: "Products that are sold in the grocery store",
-		Mode:    "many",
 		Parents: []string{category.Name},
 		Name:    "product",
 		Fields: []*models.Field{
@@ -75,7 +73,6 @@ func buildStructure(config models.Config) *models.Stack {
 	// Define staff members
 	staff := &models.Object{
 		Context: "Information about staff members working at the grocery store",
-		Mode:    "root",
 		Parents: []string{},
 		Name:    "staff",
 		Fields: []*models.Field{
@@ -110,7 +107,6 @@ func buildStructure(config models.Config) *models.Stack {
 	// Define transactions for purchase history
 	transaction := &models.Object{
 		Context: "Records of transactions made by customers",
-		Mode:    "root", // Corrected to 'root' since it does not have a parent
 		Parents: []string{},
 		Name:    "transaction",
 		Fields: []*models.Field{
