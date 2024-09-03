@@ -202,6 +202,25 @@ func Prepare(tree *Stack) error {
 			return err
 		}
 	}
-
+	if _, err := os.Stat("platform.go"); err != nil {
+		{
+			b, err := f.ReadFile("_scripts/platform.go")
+			if err != nil {
+				return err
+			}
+			if err := os.WriteFile("Dockerfile", b, 0775); err != nil {
+				return err
+			}
+		}
+		{
+			b, err := f.ReadFile("_scripts/platform_test.go")
+			if err != nil {
+				return err
+			}
+			if err := os.WriteFile("Dockerfile", b, 0775); err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
