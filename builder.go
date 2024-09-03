@@ -628,7 +628,7 @@ func Build(stack *models.Stack) error {
 				return err
 			}
 		}
-		if object.Mode == "root" {
+		if len(object.Parents) == 0 {
 			stack.Entrypoints = append(stack.Entrypoints, object)
 		}
 
