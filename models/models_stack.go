@@ -10,8 +10,6 @@ type Config struct {
 	HostAPI       string `json:"hostAPI"`
 	WebsocketHost string `json:"websocketHost"`
 	RepoURI       string `json:"repoURI"`
-	// the display name of the site
-	SiteName string `json:"siteName"`
 	// project info
 	ProjectID     string `json:"projectID"`
 	ProjectName   string `json:"projectName"`
@@ -19,6 +17,8 @@ type Config struct {
 }
 
 type Stack struct {
+	// the display name of the site
+	WebsiteName string `json:"siteName"`
 	Config      Config
 	Objects     []*Object    `json:"objects"`
 	Entrypoints []*Object    `json:"entrypoints"`
