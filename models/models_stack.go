@@ -5,18 +5,22 @@ import (
 	"os"
 )
 
+type Config struct {
+	WebAPI        string `json:"webAPI"`
+	HostAPI       string `json:"hostAPI"`
+	WebsocketHost string `json:"websocketHost"`
+	RepoURI       string `json:"repoURI"`
+	SiteName      string `json:"siteName"`
+	ProjectID     string `json:"projectID"`
+	ProjectName   string `json:"projectName"`
+	ProjectRegion string `json:"projectRegion"`
+}
+
 type Stack struct {
-	WebAPI        string       `json:"webAPI"`
-	HostAPI       string       `json:"hostAPI"`
-	WebsocketHost string       `json:"websocketHost"`
-	RepoURI       string       `json:"repoURI"`
-	SiteName      string       `json:"siteName"`
-	ProjectID     string       `json:"projectID"`
-	ProjectName   string       `json:"projectName"`
-	ProjectRegion string       `json:"projectRegion"`
-	Objects       []*Object    `json:"objects"`
-	Entrypoints   []*Object    `json:"entrypoints"`
-	Options       StackOptions `json:"options"`
+	Config      Config
+	Objects     []*Object    `json:"objects"`
+	Entrypoints []*Object    `json:"entrypoints"`
+	Options     StackOptions `json:"options"`
 }
 
 type StackOptions struct {
