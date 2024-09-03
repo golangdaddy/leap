@@ -1,6 +1,6 @@
 provider "google" {
-  project = "{{.ProjectName}}"
-  region  = "{{.ProjectRegion}}"
+  project = "{{.Config.ProjectName}}"
+  region  = "{{.Config.ProjectRegion}}"
 }
 
 resource "google_storage_bucket" "primarybucket" {
