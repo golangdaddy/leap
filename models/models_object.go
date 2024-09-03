@@ -5,7 +5,6 @@ type Object struct {
 	Names       []string       `json:"names"`
 	Plural      string         `json:"plural"`
 	JSON        string         `json:"json"`
-	Mode        string         `json:"mode"`
 	Context     string         `json:"context"`
 	Parents     []string       `json:"parents,omitempty"`
 	ParentCount int            `json:"parentCount,omitempty"`
