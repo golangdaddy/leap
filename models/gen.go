@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-
-	"github.com/kr/pretty"
 )
 
 //go:embed _scripts/*
@@ -142,7 +140,9 @@ func Prepare(tree *Stack) error {
 		log.Println("SETTING INDEX", tree.Objects[n].Name, n)
 		objectIndex[tree.Objects[n].Name] = tree.Objects[n]
 
-		for x, field := range tree.Objects[n].Fields {
+		for x := 0; x < len(tree.Objects[n].Fields); x++ {
+
+			field := tree.Objects[n].Fields[x]
 
 			if len(field.JSON) == 0 {
 				continue
@@ -153,10 +153,17 @@ func Prepare(tree *Stack) error {
 			}
 
 			name := field.JSON + ".json"
-			if app.jsonFields[name] == nil {
-				pretty.Println(app.jsonFields)
-				return errors.New("FIELD NOT FOUND " + name)
+
+			if _, ok := app.jsonFields[name]; !ok {
+				obj, ok := app.jsonObjects[name]
+				if !ok {
+					return errors.New("FIELD NOT FOUND " + name)
+				}
+				println("found object")
+				tree.Objects[n].Fields = append(tree.Objects[n].Fields, obj.Fields...)
+				continue
 			}
+
 			f := *app.jsonFields[name]
 			f.Context = field.Context
 			f.Name = field.Name

@@ -1,6 +1,6 @@
 {
 	"mode": "primary",
-	"primary": "day",
+	"primary": "date_day",
 	"name": "date",
 	"title": "Date",
 	"fields": [

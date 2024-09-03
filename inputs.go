@@ -48,8 +48,12 @@ func getInputs(object *models.Object, field *models.Field) (string, error) {
 		const s = `<Object id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange} />`
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
+	case "date":
+		const s = `<Input id="{{lowercase .Name}}" type='number' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
+		output = fmt.Sprintf(s, object.Name)
+		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	default:
-		return "", fmt.Errorf("missing input for %s %s %s:", object.Name, field.Name, field.Input)
+		return "", fmt.Errorf("missing input for %s %s '%s':", object.Name, field.Name, field.Input)
 	}
 	if err != nil {
 		return "", err
@@ -102,6 +106,10 @@ func getEditInputs(object *models.Object, field *models.Field) (string, error) {
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "arraystring":
 		const s = `<Object id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
+		output = fmt.Sprintf(s, object.Name)
+		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
+	case "date":
+		const s = `<Input id="{{lowercase .Name}}" type='number' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	default:
