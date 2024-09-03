@@ -21,14 +21,10 @@ import (
 )
 
 type Container struct {
-	WebAPI        string
-	SiteName      string
-	ProjectID     string
-	ProjectName   string
-	ProjectRegion string
-	Object        *models.Object
-	Inputs        []string
-	EditInputs    []string
+	Config     models.Config
+	Object     *models.Object
+	Inputs     []string
+	EditInputs []string
 }
 
 //go:embed templates/*
@@ -152,11 +148,7 @@ func Build(stack *models.Stack) error {
 		}
 
 		container := Container{
-			stack.WebAPI,
-			stack.SiteName,
-			stack.ProjectID,
-			stack.ProjectName,
-			stack.ProjectRegion,
+			stack.Config,
 			object,
 			[]string{},
 			[]string{},
