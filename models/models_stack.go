@@ -10,7 +10,9 @@ type Config struct {
 	HostAPI       string `json:"hostAPI"`
 	WebsocketHost string `json:"websocketHost"`
 	RepoURI       string `json:"repoURI"`
-	SiteName      string `json:"siteName"`
+	// the display name of the site
+	SiteName string `json:"siteName"`
+	// project info
 	ProjectID     string `json:"projectID"`
 	ProjectName   string `json:"projectName"`
 	ProjectRegion string `json:"projectRegion"`
