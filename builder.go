@@ -38,7 +38,7 @@ var f embed.FS
 
 func Build(stack *models.Stack) error {
 
-	if stack.ProjectName == "" {
+	if stack.Config.ProjectName == "" {
 		panic("set a projectName")
 	}
 
