@@ -301,7 +301,7 @@ func (app *App) Entrypoint{{uppercase .Object.Name}}(w http.ResponseWriter, r *h
 
 			// prepare upload with a new URI
 			objectName := object.Meta.NewURI()
-			writer := app.GCPClients.GCS().Bucket("{{.ProjectID}}-uploads").Object(objectName).NewWriter(app.Context())
+			writer := app.GCPClients.GCS().Bucket("{{.Config.ProjectID}}-uploads").Object(objectName).NewWriter(app.Context())
 			//writer.ObjectAttrs.CacheControl = "no-store"
 			defer writer.Close()
 		

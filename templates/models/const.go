@@ -1,7 +1,7 @@
 const (
-	CONST_PROJECT_ID   = "{{.ProjectID}}"
-	CONST_FIRESTORE_DB = "{{.ProjectName}}"
+	CONST_PROJECT_ID   = "{{.Config.ProjectID}}"
+	CONST_FIRESTORE_DB = "{{.Config.ProjectName}}"
 
-	CONST_BUCKET_UPLOADS = "{{.ProjectName}}-uploads"
-	CONST_BUCKET_JOBS    = "{{.ProjectName}}-jobs"
+	CONST_BUCKET_UPLOADS = "{{.Config.ProjectName}}-uploads"
+	CONST_BUCKET_JOBS    = "{{.Config.ProjectName}}-jobs"
 )
