@@ -85,7 +85,7 @@ func (app *App) AuthEntrypoint(w http.ResponseWriter, r *http.Request) {
 			subject := "MAGIC LINK for {{.Config.SiteName}}"
 			plainTextContent := fmt.Sprintf(
 				"one time password link: %shome?otp=%s",
-				"{{.WebAPI}}",
+				"{{.Config.WebAPI}}",
 				secret,
 			)
 
