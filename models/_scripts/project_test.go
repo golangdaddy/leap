@@ -1,4 +1,4 @@
-package structure
+package project
 
 import (
 	"encoding/json"

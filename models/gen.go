@@ -202,22 +202,22 @@ func Prepare(tree *Stack) error {
 			return err
 		}
 	}
-	if _, err := os.Stat("platform.go"); err != nil {
+	if _, err := os.Stat("project.go"); err != nil {
 		{
-			b, err := f.ReadFile("_scripts/platform.go")
+			b, err := f.ReadFile("_scripts/project.go")
 			if err != nil {
 				return err
 			}
-			if err := os.WriteFile("Dockerfile", b, 0775); err != nil {
+			if err := os.WriteFile("project.go", b, 0775); err != nil {
 				return err
 			}
 		}
 		{
-			b, err := f.ReadFile("_scripts/platform_test.go")
+			b, err := f.ReadFile("_scripts/project_test.go")
 			if err != nil {
 				return err
 			}
-			if err := os.WriteFile("Dockerfile", b, 0775); err != nil {
+			if err := os.WriteFile("project_test.go", b, 0775); err != nil {
 				return err
 			}
 		}

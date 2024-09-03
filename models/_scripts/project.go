@@ -1,4 +1,4 @@
-package structure
+package project
 
 import (
 	"github.com/golangdaddy/leap/models"
