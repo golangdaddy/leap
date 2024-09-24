@@ -20,10 +20,11 @@ func getInputs(object *models.Object, field *models.Field) (string, error) {
 		for _, input := range field.Inputs {
 			s, err := getEditInputs(object, input)
 			if err != nil {
-				panic(err)
+				return "", err
 			}
 			output += s
 		}
+		return output, nil
 	case "select":
 		const s = `<Select id="{{lowercase .Name}}" type='text' required={ {{.Required}} } reference={ "{{.InputReference}}" } referenceParent={ subject } title="%s {{lowercase .Name}}" options={ {{json .InputOptions}} } placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name, object.Name)
@@ -92,10 +93,11 @@ func getEditInputs(object *models.Object, field *models.Field) (string, error) {
 		for _, input := range field.Inputs {
 			s, err := getEditInputs(object, input)
 			if err != nil {
-				panic(err)
+				return "", err
 			}
 			output += s
 		}
+		return output, nil
 	case "select":
 		const s = `<Select id="{{lowercase .Name}}" type='text' required={ {{.Required}} } reference={ "{{.InputReference}}" } referenceParent={ subject } title="%s {{lowercase .Name}}" options={ {{json .InputOptions}} } placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
 		output = fmt.Sprintf(s, object.Name, object.Name)

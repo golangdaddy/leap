@@ -178,6 +178,7 @@ func Get(name string, args ...string) (f *Field) {
 			Get("address").SetName("company address"),
 		}
 	case "color", "colour":
+		f.Element = "colour"
 		f.Context = "pick a colour"
 	case "phone":
 		f.Context = "enter an international phone number"
