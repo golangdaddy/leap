@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/hex"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -17,6 +18,7 @@ const (
 )
 
 type Field struct {
+	ID      string `json:"id"`
 	Context string `json:"context"`
 	Name    string `json:"name"`
 	// go primative types
@@ -235,6 +237,8 @@ func Get(name string, args ...string) (f *Field) {
 		panic("invalid name command")
 	}
 
+	f.Name = strings.TrimSpace(strings.ToLower(f.Name))
+	f.ID = strings.Replace(f.Name, " ", "-", -1)
 	f.RegexpHex = hex.EncodeToString([]byte(f.Regexp))
 
 	return
