@@ -239,6 +239,9 @@ func Get(name string, args ...string) (f *Field) {
 
 	f.Name = strings.TrimSpace(strings.ToLower(f.Name))
 	f.ID = strings.Replace(f.Name, " ", "-", -1)
+	if len(f.ID) == 0 {
+		panic("invalid id")
+	}
 	f.RegexpHex = hex.EncodeToString([]byte(f.Regexp))
 
 	return
