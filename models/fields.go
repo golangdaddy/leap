@@ -46,7 +46,7 @@ type Range struct {
 }
 
 func (f *Field) SetName(s string) *Field {
-	f.Name = s
+	f.Name, f.ID = cleanName(s)
 	return f
 }
 
@@ -84,11 +84,11 @@ func Get(name string, args ...string) (f *Field) {
 	case "address":
 		f.Context = "An address of a location"
 		f.Inputs = []*Field{
-			Required("int").SetName("building number").SetCtx("the number of the building on the street"),
-			Get("int").SetName("apartment number").SetCtx("if applicable, the number of the unit or apartment in the building"),
-			Required("string", "75").SetName("street").SetCtx("the street where the building is"),
-			Required("string", "50").SetName("town or city").SetCtx("the town or city where the street is"),
-			Required("string", "50").SetName("country").SetCtx("the country where the town or city is"),
+			f.Require("int").SetName("building number").SetCtx("the number of the building on the street"),
+			f.Use("int").SetName("apartment number").SetCtx("if applicable, the number of the unit or apartment in the building"),
+			f.Require("string", "75").SetName("street").SetCtx("the street where the building is"),
+			f.Require("string", "50").SetName("town or city").SetCtx("the town or city where the street is"),
+			f.Require("string", "50").SetName("country").SetCtx("the country where the town or city is"),
 		}
 	case "float64":
 		f.Context = "64-bit floating-point number"
@@ -164,41 +164,41 @@ func Get(name string, args ...string) (f *Field) {
 	case "name.person", "person.name":
 		f.Context = "A full legal name of a person"
 		f.Inputs = []*Field{
-			Required("name").SetName("first-name"),
-			Get("name").SetName("middle-names"),
-			Required("name").SetName("last-name"),
+			f.Require("name").SetName("first-name"),
+			f.Use("name").SetName("middle-names"),
+			f.Require("name").SetName("last-name"),
 		}
 	case "person.details":
 		f.Context = "The details of a person"
 		f.Inputs = []*Field{
-			Get("person.name").SetName("name"),
-			Get("address").SetName("address"),
+			f.Use("person.name").SetName("name"),
+			f.Use("address").SetName("address"),
 		}
 	case "name.company", "company.name":
 		f.Context = "A full legal name of a company"
 		f.Inputs = []*Field{
-			Get("string", "160").SetName("registered-name"),
+			f.Use("string", "160").SetName("registered-name"),
 		}
 	case "contact.details", "details.contact":
 		f.Context = "A full definition of a company"
 		f.Inputs = []*Field{
-			Get("phone").SetName("phone number"),
-			Get("email").SetName("email address"),
-			Get("social").SetName("social account"),
+			f.Use("phone").SetName("phone number"),
+			f.Use("email").SetName("email address"),
+			f.Use("social").SetName("social account"),
 		}
 	case "company.details", "details.company":
 		f.Context = "A full definition of a company"
 		f.Inputs = []*Field{
-			Get("company.name").SetName("company name"),
-			Get("address").SetName("company address"),
+			f.Use("company.name").SetName("company name"),
+			f.Use("address").SetName("company address"),
 		}
 	case "dimensions":
 		f.Context = "the dimensions of the object"
 		f.Inputs = []*Field{
-			Required("select", "centimeters", "meters", "inches", "feet").SetName("unit").SetCtx("the unit of measurement"),
-			Get("float64").SetName("width").SetCtx("the width of an object"),
-			Get("float64").SetName("depth").SetCtx("the depth of an object"),
-			Get("float64").SetName("height").SetCtx("the height of an object"),
+			f.Require("select", "centimeters", "meters", "inches", "feet").SetName("unit").SetCtx("the unit of measurement"),
+			f.Use("float64").SetName("width").SetCtx("the width of an object"),
+			f.Use("float64").SetName("depth").SetCtx("the depth of an object"),
+			f.Use("float64").SetName("height").SetCtx("the height of an object"),
 		}
 	case "color", "colour":
 		f.Element = "colour"
@@ -214,8 +214,8 @@ func Get(name string, args ...string) (f *Field) {
 	case "social.account", "account.social":
 		f.Context = "Social media account"
 		f.Inputs = []*Field{
-			Required("select", args...).SetName("social platform").SetCtx("list of social platforms"),
-			Required("social").SetName("your handle"),
+			f.Require("select", args...).SetName("social platform").SetCtx("list of social platforms"),
+			f.Require("social").SetName("your handle"),
 		}
 	case "checkbox":
 		f.Context = "a checkbox"
@@ -258,12 +258,18 @@ func Get(name string, args ...string) (f *Field) {
 		panic("invalid name command")
 	}
 
-	f.Name = strings.TrimSpace(strings.ToLower(f.Name))
-	f.ID = strings.Replace(f.Name, " ", "-", -1)
-	if len(f.ID) == 0 {
-		panic("invalid id")
-	}
+	f.Name, f.ID = cleanName(f.Name)
+
 	f.RegexpHex = hex.EncodeToString([]byte(f.Regexp))
 
 	return
+}
+
+func cleanName(s string) (string, string) {
+	name := strings.TrimSpace(strings.ToLower(s))
+	id := strings.Replace(name, " ", "-", -1)
+	if len(id) == 0 {
+		//panic("invalid id: " + s)
+	}
+	return name, id
 }

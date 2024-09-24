@@ -66,7 +66,7 @@ func getInputs(object *models.Object, field *models.Field) (string, error) {
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "date":
-		const s = `<Input id="{{lowercase .Name}}" type='number' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
+		const s = `<Input id="{{lowercase .Name}}" type='date' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	default:
@@ -143,7 +143,7 @@ func getEditInputs(object *models.Object, field *models.Field) (string, error) {
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "date":
-		const s = `<Input id="{{lowercase .Name}}" type='number' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
+		const s = `<Input id="{{lowercase .Name}}" type='date' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	default:

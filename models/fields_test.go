@@ -18,6 +18,13 @@ func TestFields(t *testing.T) {
 		assert.Equal(float64(250), f.Range.Max)
 	}
 	{
+		f := Get("string").SetName("hello")
+		pretty.Println(f)
+		assert.Equal("hello", f.ID)
+		assert.Equal(float64(1), f.Range.Min)
+		assert.Equal(float64(250), f.Range.Max)
+	}
+	{
 		f := Get("string", "250", "750")
 		pretty.Println(f)
 		assert.Equal(float64(250), f.Range.Min)

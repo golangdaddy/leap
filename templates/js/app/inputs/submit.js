@@ -40,6 +40,7 @@ export default function Submit(props) {
 						setValid++
 						break
 					case "int":
+					case "date":
 					case "number":
 						if (parseInt(i.value) < 0) {
 							isValid = false
