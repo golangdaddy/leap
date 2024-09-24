@@ -102,6 +102,7 @@ func Get(name string, args ...string) (f *Field) {
 			panic("invalid arg length: " + f.Type)
 		}
 	case "uint":
+		f.Element = NUMBER
 		f.Range = &Range{}
 		f.Range.Min = 0.0
 		f.Range.Max = -1.0
