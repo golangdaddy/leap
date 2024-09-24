@@ -95,7 +95,9 @@ func TestFields(t *testing.T) {
 		assert.Equal(3, len(f.Inputs[0].InputOptions))
 		assert.True(f.Inputs[0].Required)
 		assert.True(f.Inputs[1].Required)
-		assert.Equal("google", f.Inputs[0].InputOptions[2])
+		assert.Equal("twitter", f.Inputs[0].InputOptions[2])
+		assert.Equal("facebook", f.Inputs[1].InputOptions[2])
+		assert.Equal("google", f.Inputs[2].InputOptions[2])
 	}
 
 	{
