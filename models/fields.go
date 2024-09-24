@@ -271,5 +271,5 @@ func cleanName(s string) (string, string) {
 	if len(id) == 0 {
 		//panic("invalid id: " + s)
 	}
-	return name, id
+	return name, strings.Replace(strings.ToUpper(id), "-", "", -1)
 }
