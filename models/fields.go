@@ -1,16 +1,19 @@
 package models
 
 import (
+	"encoding/hex"
 	"strconv"
 )
 
 const (
-	STRING = "input"
-	TEXT   = "textarea"
-	NUMBER = "number"
-	DATE   = "date"
-	PHONE  = "phone"
-	EMAIL  = "email"
+	STRING   = "input"
+	TEXT     = "textarea"
+	NUMBER   = "number"
+	DATE     = "date"
+	PHONE    = "phone"
+	EMAIL    = "email"
+	CHECKBOX = "checkbox"
+	SELECT   = "select"
 )
 
 type Field struct {
@@ -179,6 +182,13 @@ func Get(name string, args ...string) (f *Field) {
 		f.Context = "Social media handle"
 		f.Element = STRING
 		f.Regexp = `@(\w){1,15}$`
+	case "select":
+		f.Context = "'dropdown' list"
+		f.Element = SELECT
+		f.InputOptions = args
+		if len(args) == 0 {
+			panic("select has no args")
+		}
 	case "string":
 		f.Context = "any string"
 		f.Element = STRING
@@ -209,6 +219,8 @@ func Get(name string, args ...string) (f *Field) {
 	default:
 		panic("invalid name command")
 	}
+
+	f.RegexpHex = hex.EncodeToString([]byte(f.Regexp))
 
 	return
 }

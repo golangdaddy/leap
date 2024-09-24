@@ -15,12 +15,12 @@ func getInputs(object *models.Object, field *models.Field) (string, error) {
 
 	var output string
 
-	switch field.Input {
+	switch field.Element {
 	case "select":
 		const s = `<Select id="{{lowercase .Name}}" type='text' required={ {{.Required}} } reference={ "{{.InputReference}}" } referenceParent={ subject } title="%s {{lowercase .Name}}" options={ {{json .InputOptions}} } placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
-	case "text":
+	case "input":
 		const s = `<Input id="{{lowercase .Name}}" type='text' required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
@@ -75,12 +75,12 @@ func getEditInputs(object *models.Object, field *models.Field) (string, error) {
 
 	var output string
 
-	switch field.Input {
+	switch field.Element {
 	case "select":
 		const s = `<Select id="{{lowercase .Name}}" type='text' required={ {{.Required}} } reference={ "{{.InputReference}}" } referenceParent={ subject } title="%s {{lowercase .Name}}" options={ {{json .InputOptions}} } placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
 		output = fmt.Sprintf(s, object.Name, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
-	case "text":
+	case "input":
 		const s = `<Input id="{{lowercase .Name}}" type='text' required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
 		output = fmt.Sprintf(s, object.Name, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
