@@ -80,11 +80,22 @@ func TestFields(t *testing.T) {
 
 	{
 		f := Get("name.person")
+		pretty.Println(f)
 		assert.Equal(3, len(f.Inputs))
 		assert.True(f.Inputs[0].Required)
 		assert.False(f.Inputs[1].Required)
 		assert.True(f.Inputs[2].Required)
+	}
+
+	{
+		f := Get("social.account", "twitter", "facebook", "google")
 		pretty.Println(f)
+		assert.NotNil(f.Inputs)
+		assert.Equal(2, len(f.Inputs))
+		assert.Equal(3, len(f.Inputs[0].InputOptions))
+		assert.True(f.Inputs[0].Required)
+		assert.True(f.Inputs[1].Required)
+		assert.Equal("google", f.Inputs[0].InputOptions[2])
 	}
 
 	{

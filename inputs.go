@@ -53,7 +53,7 @@ func getInputs(object *models.Object, field *models.Field) (string, error) {
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	default:
-		return "", fmt.Errorf("missing input for %s %s '%s':", object.Name, field.Name, field.Input)
+		return "", fmt.Errorf("missing input for %s %s '%s':", object.Name, field.Name, field.Element)
 	}
 	if err != nil {
 		return "", err
@@ -113,7 +113,7 @@ func getEditInputs(object *models.Object, field *models.Field) (string, error) {
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	default:
-		return "", fmt.Errorf("missing input for %s", field.Input)
+		return "", fmt.Errorf("missing input for %s", field.Element)
 	}
 	if err != nil {
 		return "", err

@@ -104,6 +104,7 @@ func Get(name string, args ...string) (f *Field) {
 	case "uint":
 		f.Range = &Range{}
 		f.Range.Min = 0.0
+		f.Range.Max = -1.0
 	case "int":
 		f.Context = "any integer"
 		f.Element = NUMBER
@@ -174,14 +175,25 @@ func Get(name string, args ...string) (f *Field) {
 			Get("company.name").SetName("company name"),
 			Get("address").SetName("company address"),
 		}
+	case "color", "colour":
+		f.Context = "pick a colour"
 	case "phone":
-		f.Context = "A phone number"
+		f.Context = "enter an international phone number"
 		f.Element = PHONE
 		f.Regexp = `^\+?[1-9]\d{1,14}$` // International phone number format (E.164)
 	case "social":
 		f.Context = "Social media handle"
 		f.Element = STRING
 		f.Regexp = `@(\w){1,15}$`
+	case "social.account", "account.social":
+		f.Context = "Social media account"
+		f.Inputs = []*Field{
+			Required("select", args...).SetName("social platform").SetCtx("list of social platforms"),
+			Required("social").SetName("your handle"),
+		}
+	case "checkbox":
+		f.Context = "a checkbox"
+		f.Element = CHECKBOX
 	case "select":
 		f.Context = "'dropdown' list"
 		f.Element = SELECT
