@@ -61,7 +61,8 @@ func Required(name string, args ...string) (f *Field) {
 func Get(name string, args ...string) (f *Field) {
 
 	f = &Field{
-		Type: name,
+		Type:    name,
+		Element: "none",
 	}
 
 	switch f.Type {
