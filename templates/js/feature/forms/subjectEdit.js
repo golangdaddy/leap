@@ -28,7 +28,7 @@ export function {{titlecase .Object.Name}}Edit(props) {
 
 	const [inputs, setInputs] = useState({
 		{{range .Object.Fields}}
-		"{{lowercase .Name}}": {
+		"{{lowercase .ID}}": {
 			id: "{{lowercase .ID}}",
 			type: "{{lowercase .Type}}",
 			{{if eq "name" (lowercase .ID)}}
