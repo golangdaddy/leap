@@ -84,11 +84,11 @@ func Get(name string, args ...string) (f *Field) {
 	case "address":
 		f.Context = "An address of a location"
 		f.Inputs = []*Field{
-			Required("int").SetName("building number"),
-			Get("int").SetName("apartment number"),
-			Required("string", "75").SetName("street"),
-			Required("string", "50").SetName("town or city"),
-			Required("string", "50").SetName("country"),
+			Required("int").SetName("building number").SetCtx("the number of the building on the street"),
+			Get("int").SetName("apartment number").SetCtx("if applicable, the number of the unit or apartment in the building"),
+			Required("string", "75").SetName("street").SetCtx("the street where the building is"),
+			Required("string", "50").SetName("town or city").SetCtx("the town or city where the street is"),
+			Required("string", "50").SetName("country").SetCtx("the country where the town or city is"),
 		}
 	case "float64":
 		f.Context = "64-bit floating-point number"
