@@ -1,8 +1,0 @@
-{
-    "type": "string",
-    "input": "text",
-    "range": {
-        "min": 1,
-        "max": 60
-    }
-}

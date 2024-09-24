@@ -1,18 +1,23 @@
 package models
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 type Field struct {
 	Context string `json:"context"`
-	JSON    string `json:"json"`
 	Name    string `json:"name"`
 	// go primative types
 	Type string `json:"type"`
 	// define frontend options
-	Input          string   `json:"input"`
+	Element        string   `json:"element"`
+	Inputs         []*Field `json:"inputs,omitempty"`
 	InputReference string   `json:"inputReference"`
 	InputOptions   []string `json:"inputOptions,omitempty"`
 	Required       bool     `json:"required"`
 	Filter         bool     `json:"filter"`
-	Range          *Range   `json:"range"`
+	Range          *Range   `json:"range,omitempty"`
 	Regexp         string   `json:"regexp"`
 	RegexpHex      string   `json:"regexpHex"`
 }
@@ -24,4 +29,17 @@ func (object *Object) NewField() *Field {
 type Range struct {
 	Min float64 `json:"min"`
 	Max float64 `json:"max"`
+}
+
+func (f *Field) SetName(s string) *Field {
+	f.Name = s
+	return f
+}
+
+func (f *Field) ToJSON() {
+	b, err := json.Marshal(f)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
 }
