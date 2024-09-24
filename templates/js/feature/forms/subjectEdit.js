@@ -29,12 +29,12 @@ export function {{titlecase .Object.Name}}Edit(props) {
 	const [inputs, setInputs] = useState({
 		{{range .Object.Fields}}
 		"{{lowercase .Name}}": {
-			id: "{{lowercase .Name}}",
+			id: "{{lowercase .ID}}",
 			type: "{{lowercase .Type}}",
-			{{if eq "name" (lowercase .Name)}}
+			{{if eq "name" (lowercase .ID)}}
 			value: subject.Meta.Name,
 			{{else}}
-			value: subject.fields.{{lowercase .Name}},
+			value: subject.fields.{{lowercase .ID}},
 			{{end}}
 			required: {{.Required}},
 		},
