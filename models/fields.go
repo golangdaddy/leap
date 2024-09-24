@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/hex"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -52,6 +53,18 @@ func (f *Field) SetName(s string) *Field {
 func (f *Field) SetCtx(s string) *Field {
 	f.Context = s
 	return f
+}
+
+func (f *Field) Require(name string, args ...string) (g *Field) {
+	g = Required(name, args...)
+	g.ID = fmt.Sprintf("%s.%s", f.ID, g.ID)
+	return
+}
+
+func (f *Field) Use(name string, args ...string) (g *Field) {
+	g = Get(name, args...)
+	g.ID = fmt.Sprintf("%s.%s", f.ID, g.ID)
+	return
 }
 
 func Required(name string, args ...string) (f *Field) {
@@ -178,6 +191,14 @@ func Get(name string, args ...string) (f *Field) {
 		f.Inputs = []*Field{
 			Get("company.name").SetName("company name"),
 			Get("address").SetName("company address"),
+		}
+	case "dimensions":
+		f.Context = "the dimensions of the object"
+		f.Inputs = []*Field{
+			Required("select", "centimeters", "meters", "inches", "feet").SetName("unit").SetCtx("the unit of measurement"),
+			Get("float64").SetName("width").SetCtx("the width of an object"),
+			Get("float64").SetName("depth").SetCtx("the depth of an object"),
+			Get("float64").SetName("height").SetCtx("the height of an object"),
 		}
 	case "color", "colour":
 		f.Element = "colour"
