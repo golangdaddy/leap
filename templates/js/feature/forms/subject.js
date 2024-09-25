@@ -29,7 +29,6 @@ export function {{titlecase .Object.Name}}Form(props) {
 		<div className='flex flex-col'>
 			{{range .Inputs}}
 			{{.}}
-			<Spacer/>
 			{{end}}
 		</div>
 	);
