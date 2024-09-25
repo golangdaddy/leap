@@ -93,12 +93,12 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 	var exists bool
 	{{range .Fields}}
 
-	_, exists = m["{{lowercase .Name}}"]
+	_, exists = m["{{.ID}}"]
 	if {{.Required}} && !exists {
-		return errors.New("required field '{{lowercase .Name}}' not supplied")
+		return errors.New("required field '{{.ID}}' not supplied")
 	}
 	if exists {
-		x.Fields.{{.ID}}, err = assert{{tidy .Type}}(m, "{{lowercase .Name}}")
+		x.Fields.{{.ID}}, err = assert{{tidy .Type}}(m, "{{.ID}}")
 		if err != nil {
 			return errors.New(err.Error())
 		}
