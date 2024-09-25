@@ -69,7 +69,7 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 }
 
 type Fields{{uppercase .Name}} struct {
-	{{range .Fields}}{{.ID}} {{.Element.Go}} `json:"{{lowercase .ID}}" firestore:"{{lowercase .ID}}"`
+	{{range $index, $field := .Fields}}{{$field.ID}} {{.Element.Go}} `json:"{{lowercase .ID}}" firestore:"{{lowercase .ID}}"`
 	{{end}}
 }
 
