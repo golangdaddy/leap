@@ -69,7 +69,7 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 }
 
 type Fields{{uppercase .Name}} struct {
-	{{range .Fields}}{{.ID}} {{.Type}} `json:"{{lowercase .Name}}" firestore:"{{lowercase .Name}}"`
+	{{range .Fields}}{{.ID}} {{.Type}} `json:"{{lowercase .ID}}" firestore:"{{lowercase .ID}}"`
 	{{end}}
 }
 
@@ -91,49 +91,25 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 
 	var err error
 	var exists bool
-	{{range .Fields}}
+	{{range $i, $field := .Fields}}
 
 	_, exists = m["{{.ID}}"]
 	if {{.Required}} && !exists {
 		return errors.New("required field '{{.ID}}' not supplied")
 	}
 	if exists {
-		x.Fields.{{.ID}}, err = assert{{uppercase .Element.Go}}(m, "{{.ID}}")
-		if err != nil {
-			return errors.New(err.Error())
-		}
-		{
-			exp := "{{.Regexp}}"
-			if len(exp) > 0 {
-				if !RegExp(exp, fmt.Sprintf("%v", x.Fields.{{.ID}})) {
-					return fmt.Errorf("failed to regexp: %s >> %s", exp, x.Fields.{{.ID}})
-				}
+		{{if neq nil .Element}}
+		{{range $index, $subfield := $field.Inputs}}
+			if err := doaAssert(x.Fields[{{$i}}].Inputs[{{$index}}]); err != nil {
+				return err
 			}
-		}
-		{
-			exp := "{{.RegexpHex}}"
-			if len(exp) > 0 {
-				log.Println("EXPR", exp)
-				b, err := hex.DecodeString(exp)
-				if err != nil {
-					log.Println(err)
-				}
-				if !RegExp(string(b), fmt.Sprintf("%v", x.Fields.{{.ID}})) {
-					return fmt.Errorf("failed to regexpHex: %s >> %s", string(b), x.Fields.{{.ID}})
-				}
-			}
-		}
-		{{if .Range}}
-		if err := assertRangeMin({{.Range.Min}}, x.Fields.{{.ID}}); err != nil {
-			{{if .Required}}
-			return err
-			{{end}}
-		}
-		if err := assertRangeMax({{.Range.Max}}, x.Fields.{{.ID}}); err != nil {
-			return err
-		}
 		{{end}}
-	}
+		{{else}}
+			if err := doaAssert(x.Fields[$i]); err != nil {
+
+			}
+		{{end}}
+	}	
 	{{end}}
 
 	// extract name field if exists
@@ -150,6 +126,37 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 
 	x.Meta.Modify()
 
+	return nil
+}
+
+func doAssert(x *{{uppercase .Name}}, field *models.Field) error {
+	x.Fields.{{.ID}}, err = assert{{uppercase .Element.Go}}(m, "{{.ID}}")
+	if err != nil {
+		return errors.New(err.Error())
+	}
+	{
+		exp := "{{.RegexpHex}}"
+		if len(exp) > 0 {
+			log.Println("EXPR", exp)
+			b, err := hex.DecodeString(exp)
+			if err != nil {
+				log.Println(err)
+			}
+			if !RegExp(string(b), fmt.Sprintf("%v", x.Fields.{{.ID}})) {
+				return fmt.Errorf("failed to regexpHex: %s >> %s", string(b), x.Fields.{{.ID}})
+			}
+		}
+	}
+	{{if .Range}}
+	if err := assertRangeMin({{.Range.Min}}, x.Fields.{{.ID}}); err != nil {
+		{{if .Required}}
+		return err
+		{{end}}
+	}
+	if err := assertRangeMax({{.Range.Max}}, x.Fields.{{.ID}}); err != nil {
+		return err
+	}
+	{{end}}
 	return nil
 }
 
