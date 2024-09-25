@@ -20,7 +20,7 @@ export default function Submit(props) {
 	var isValid = true
 	for (var input in props.inputs) {
 		var i = props.inputs[input]
-		console.log("VALIDATE INPUTS", input, props.inputs)
+		console.log("VALIDATE INPUTS", input, props.inputs, props.assert)
 		if (requiredIndex[i.id]) {
 			if (i.required) {
 				switch (i.type) {
@@ -73,7 +73,7 @@ export default function Submit(props) {
 		if (Object.keys(props.inputs).length == 0) {
 			isValid = false
 		}
-		if (setValid != props.assert?.length) {
+		if (setValid < props.assert?.length) {
 			isValid = false
 		}
 	} else {

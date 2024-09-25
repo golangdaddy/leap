@@ -16,6 +16,37 @@ type Object struct {
 	ChildTags   map[int]string `json:"childTags"`
 }
 
+func (object *Object) GetInputs() []*Field {
+
+	var fields []*Field
+	for _, field := range object.Fields {
+		if field.Element == nil {
+			for _, input := range field.Inputs {
+				if input.Element == nil {
+					for _, one := range input.Inputs {
+						if one.Element == nil {
+							for _, two := range one.Inputs {
+								if one.Element == nil {
+
+								} else {
+									fields = append(fields, two)
+								}
+							}
+						} else {
+							fields = append(fields, one)
+						}
+					}
+				} else {
+					fields = append(fields, input)
+				}
+			}
+		} else {
+			fields = append(fields, field)
+		}
+	}
+	return object.Fields
+}
+
 const (
 	ListModeCreated  = "created"
 	ListModeModified = "modified"
