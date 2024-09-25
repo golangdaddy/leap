@@ -32,33 +32,25 @@ func getInputs(object *models.Object, field *models.Field) (string, error) {
 		const s = `<Select id="{{lowercase .Name}}" type='text' required={ {{.Required}} } reference={ "{{.InputReference}}" } referenceParent={ subject } title="%s {{lowercase .Name}}" options={ {{json .InputOptions}} } placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
-	case "input":
-		const s = `<Input id="{{lowercase .Name}}" type='text' required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
+	case "string", "date", "week", "month", "time":
+		const s = `<Input id="{{lowercase .Name}}" type='{{.Type}}' required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "uint":
 		const s = `<Input id="{{lowercase .Name}}" type='number' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
-	case "phone":
-		const s = `<Input id="{{lowercase .Name}}" type='phone' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
-		output = fmt.Sprintf(s, object.Name)
-		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "number":
 		const s = `<Input id="{{lowercase .Name}}" type='number' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
-	case "textarea":
+	case "text":
 		const s = `<Textarea id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "checkbox":
 		const s = `<Checkbox id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
 		output = fmt.Sprintf(s, object.Name, object.Name)
-		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
-	case "color":
-		const s = `<Color id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange} />`
-		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "object":
 		const s = `<Object id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange} />`
@@ -68,12 +60,8 @@ func getInputs(object *models.Object, field *models.Field) (string, error) {
 		const s = `<Object id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange} />`
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
-	case "date":
-		const s = `<Input id="{{lowercase .Name}}" type='date' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
-		output = fmt.Sprintf(s, object.Name)
-		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	default:
-		return "", fmt.Errorf("missing input for %s %s '%s':", object.Name, field.Name, field.Element)
+		return "", fmt.Errorf("missing input for %s %s '%s':", object.Name, field.Name, field.Element.Name)
 	}
 	if err != nil {
 		return "", err
@@ -111,33 +99,25 @@ func getEditInputs(object *models.Object, field *models.Field) (string, error) {
 		const s = `<Select id="{{lowercase .Name}}" type='text' required={ {{.Required}} } reference={ "{{.InputReference}}" } referenceParent={ subject } title="%s {{lowercase .Name}}" options={ {{json .InputOptions}} } placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
 		output = fmt.Sprintf(s, object.Name, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
-	case "input":
-		const s = `<Input id="{{lowercase .Name}}" type='text' required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
+	case "string", "date", "week", "month", "time":
+		const s = `<Input id="{{lowercase .Name}}" type='{{.Type}}' required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
 		output = fmt.Sprintf(s, object.Name, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "uint":
 		const s = `<Input id="{{lowercase .Name}}" type='number' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
-	case "phone":
-		const s = `<Input id="{{lowercase .Name}}" type='phone' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
-		output = fmt.Sprintf(s, object.Name)
-		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "number":
 		const s = `<Input id="{{lowercase .Name}}" type='number' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
-	case "textarea":
+	case "text":
 		const s = `<Textarea id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
 		output = fmt.Sprintf(s, object.Name, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "checkbox":
 		const s = `<Checkbox id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" placeholder="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
 		output = fmt.Sprintf(s, object.Name, object.Name)
-		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
-	case "color":
-		const s = `<Color id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
-		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	case "object":
 		const s = `<Object id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
@@ -147,12 +127,8 @@ func getEditInputs(object *models.Object, field *models.Field) (string, error) {
 		const s = `<Object id="{{lowercase .Name}}" required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange} value={ inputs["{{lowercase .Name}}"].value } />`
 		output = fmt.Sprintf(s, object.Name)
 		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
-	case "date":
-		const s = `<Input id="{{lowercase .Name}}" type='date' required={ {{.Required}} } title="%s {{lowercase .Name}}" inputChange={handleInputChange}/>`
-		output = fmt.Sprintf(s, object.Name)
-		tmp, err = template.New(object.Name + "_" + field.Name).Funcs(funcMap).Parse(output)
 	default:
-		return "", fmt.Errorf("missing input for %s", field.Element)
+		return "", fmt.Errorf("missing input for %s", field.Element.Name)
 	}
 	if err != nil {
 		return "", err
