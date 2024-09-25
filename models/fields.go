@@ -90,6 +90,7 @@ func Required(name string, args ...string) (f *Field) {
 func Get(name string, args ...string) (f *Field) {
 
 	f = &Field{
+		Name: name,
 		Type: name,
 	}
 
