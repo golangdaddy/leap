@@ -68,6 +68,7 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 	return object
 }
 
+// set the fields export tags to lowercase
 type Fields{{uppercase .Name}} struct {
 	{{range $index, $field := .Fields}}
 	{{$field.ID}} {{.Element.Go}} `json:"{{lowercase $field.ID}}" firestore:"{{lowercase $field.ID}}"`
@@ -94,20 +95,20 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 	var exists bool
 	{{range $i, $field := .Fields}}
 
-	_, exists = m["{{.ID}}"]
+	newValue, exists = m["{{lowercase $field.ID}}"]
 	if {{.Required}} && !exists {
-		return errors.New("required field '{{.ID}}' not supplied")
+		return errors.New("required field '{{$field.ID}}' not supplied")
 	}
 	if exists {
 		{{if ne nil .Element}}
 		{{range $index, $subfield := $field.Inputs}}
-			if err := doaAssert(x.Fields[{{$i}}].Inputs[{{$index}}]); err != nil {
+			if err := doaAssert(newValue); err != nil {
 				return err
 			}
 		{{end}}
 		{{else}}
-			if err := doaAssert(x.Fields[$i]); err != nil {
-
+			if err := doaAssert(newValue); err != nil {
+				return err
 			}
 		{{end}}
 	}	
