@@ -157,7 +157,7 @@ func Build(stack *models.Stack) error {
 		}
 
 		required := []string{}
-		for _, field := range object.Fields {
+		for _, field := range object.GetInputs() {
 			if field.Required {
 				required = append(required, strings.ToLower(field.Name))
 			}
