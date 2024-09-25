@@ -112,6 +112,7 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 	}
 	if exists {
 		{{if eq nil $field.Element}}
+			var exp string
 			{{range $index, $subfield := $field.Inputs}}
 				x.Fields.{{$subfield.ID}}, err = assert{{uppercase $subfield.Element.Go}}(m, "{{.ID}}")
 				if err != nil {
