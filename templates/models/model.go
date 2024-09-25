@@ -98,7 +98,7 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 		return errors.New("required field '{{.ID}}' not supplied")
 	}
 	if exists {
-		{{if neq nil .Element}}
+		{{if ne nil .Element}}
 		{{range $index, $subfield := $field.Inputs}}
 			if err := doaAssert(x.Fields[{{$i}}].Inputs[{{$index}}]); err != nil {
 				return err
