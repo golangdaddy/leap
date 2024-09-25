@@ -7,15 +7,28 @@ import (
 	"strings"
 )
 
-const (
-	STRING   = "input"
-	TEXT     = "textarea"
-	NUMBER   = "number"
-	DATE     = "date"
-	PHONE    = "phone"
-	EMAIL    = "email"
-	CHECKBOX = "checkbox"
-	SELECT   = "select"
+type FieldType struct {
+	Go    string
+	Input string
+	Type  string
+}
+
+var (
+	URL      = &FieldType{"string", "input", "url"}
+	PASSWORD = &FieldType{"string", "input", "password"}
+	STRING   = &FieldType{"string", "input", "text"}
+	TEXT     = &FieldType{"string", "textarea", ""}
+	INT      = &FieldType{"int", "input", "number"}
+	FLOAT    = &FieldType{"float64", "input", "number"}
+	DATE     = &FieldType{"string", "input", "date"}
+	TIME     = &FieldType{"string", "input", "time"}
+	MONTH    = &FieldType{"string", "input", "month"}
+	WEEK     = &FieldType{"string", "input", "week"}
+	PHONE    = &FieldType{"string", "input", "tel"}
+	EMAIL    = &FieldType{"string", "input", "email"}
+	CHECKBOX = &FieldType{"bool", "input", "checkbox"}
+	SELECT   = &FieldType{"string", "select", ""}
+	COLOR    = &FieldType{"string", "input", "color"}
 )
 
 type Field struct {
@@ -25,15 +38,15 @@ type Field struct {
 	// go primative types
 	Type string `json:"type"`
 	// define frontend options
-	Element        string   `json:"element"`
-	Inputs         []*Field `json:"inputs,omitempty"`
-	InputReference string   `json:"inputReference"`
-	InputOptions   []string `json:"inputOptions,omitempty"`
-	Required       bool     `json:"required"`
-	Filter         bool     `json:"filter"`
-	Range          *Range   `json:"range,omitempty"`
-	Regexp         string   `json:"regexp"`
-	RegexpHex      string   `json:"regexpHex"`
+	Element        *FieldType `json:"element"`
+	Inputs         []*Field   `json:"inputs,omitempty"`
+	InputReference string     `json:"inputReference"`
+	InputOptions   []string   `json:"inputOptions,omitempty"`
+	Required       bool       `json:"required"`
+	Filter         bool       `json:"filter"`
+	Range          *Range     `json:"range,omitempty"`
+	Regexp         string     `json:"regexp"`
+	RegexpHex      string     `json:"regexpHex"`
 }
 
 func (object *Object) NewField() *Field {
@@ -76,8 +89,7 @@ func Required(name string, args ...string) (f *Field) {
 func Get(name string, args ...string) (f *Field) {
 
 	f = &Field{
-		Type:    name,
-		Element: "none",
+		Type: name,
 	}
 
 	switch f.Type {
@@ -92,7 +104,7 @@ func Get(name string, args ...string) (f *Field) {
 		}
 	case "float64":
 		f.Context = "64-bit floating-point number"
-		f.Element = NUMBER
+		f.Element = FLOAT
 		switch len(args) {
 		case 0:
 		case 1:
@@ -118,13 +130,13 @@ func Get(name string, args ...string) (f *Field) {
 			panic("invalid arg length: " + f.Type)
 		}
 	case "uint":
-		f.Element = NUMBER
+		f.Element = INT
 		f.Range = &Range{}
 		f.Range.Min = 0.0
 		f.Range.Max = -1.0
 	case "int":
 		f.Context = "any integer"
-		f.Element = NUMBER
+		f.Element = INT
 		switch len(args) {
 		case 0:
 		case 1:
@@ -201,7 +213,7 @@ func Get(name string, args ...string) (f *Field) {
 			f.Use("float64").SetName("height").SetCtx("the height of an object"),
 		}
 	case "color", "colour":
-		f.Element = "colour"
+		f.Element = COLOR
 		f.Context = "pick a colour"
 	case "phone":
 		f.Context = "enter an international phone number"
