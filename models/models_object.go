@@ -44,7 +44,7 @@ func (object *Object) GetInputs() []*Field {
 			fields = append(fields, field)
 		}
 	}
-	return object.Fields
+	return fields
 }
 
 const (
