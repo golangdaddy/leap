@@ -30,23 +30,26 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 	}
 
 	{{if eq false .Options.Admin}}// this object inherits its admin permissions
-	if parent != nil {
-		log.Println("OPTIONS ADMIN IS OFF:", parent.Moderation.Object)
-		if len(parent.Moderation.Object) == 0 {
-			log.Println("USING PARENT ID AS MODERATION OBJECT")
-			object.Meta.Moderation.Object = parent.ID
-		} else {
-			log.Println("USING PARENT'S MODERATION OBJECT")
-			object.Meta.Moderation.Object = parent.Moderation.Object
+		if parent != nil {
+			log.Println("OPTIONS ADMIN IS OFF:", parent.Moderation.Object)
+			if len(parent.Moderation.Object) == 0 {
+				log.Println("USING PARENT ID AS MODERATION OBJECT")
+				object.Meta.Moderation.Object = parent.ID
+			} else {
+				log.Println("USING PARENT'S MODERATION OBJECT")
+				object.Meta.Moderation.Object = parent.Moderation.Object
+			}
 		}
-	}{{end}}
+	{{end}}
 
-	{{if .Options.Admin}}// this object is owned by the user that created it
-	log.Println("OPTIONS ADMIN IS ON:", user.Meta.ID)
-	object.Meta.Moderation.Admins = append(
-		object.Meta.Moderation.Admins,
-		user.Meta.ID,
-	){{end}}
+	{{if .Options.Admin}}
+		// this object is owned by the user that created it
+		log.Println("OPTIONS ADMIN IS ON:", user.Meta.ID)
+		object.Meta.Moderation.Admins = append(
+			object.Meta.Moderation.Admins,
+			user.Meta.ID,
+		)
+	{{end}}
 
 	{{if .Options.Handcash}}
 	{{if eq "pay" .Options.Handcash.Type}}
@@ -70,13 +73,16 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 
 // set the fields export tags to lowercase
 type Fields{{uppercase .Name}} struct {
-	{{if eq nil .Element}}
 	{{range $i, $field := .Fields}}
-		{{range $index, $input := $field.Inputs}}
-			{{$input.ID}} {{$input.Element.Go}} `json:"{{lowercase $field.ID}}" firestore:"{{lowercase $field.ID}}"`
+		{{if eq nil $field.Element}}
+			{{range $index, $input := $field.Inputs}}
+				{{if ne nil $input.Element}}
+					{{$input.ID}} {{$input.Element.Go}} `json:"{{lowercase $field.ID}}" firestore:"{{lowercase $field.ID}}"`
+				{{end}}
+			{{end}}
+		{{else}}
+			{{$field.ID}} {{$field.Element.Go}} `json:"{{lowercase $field.ID}}" firestore:"{{lowercase $field.ID}}"`
 		{{end}}
-	{{else}}
-		{{$field.ID}} {{$field.Element.Go}} `json:"{{lowercase $field.ID}}" firestore:"{{lowercase $field.ID}}"`
 	{{end}}
 }
 
@@ -105,42 +111,12 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 		return errors.New("required field '{{$field.ID}}' not supplied")
 	}
 	if exists {
-		{{if ne nil .Element}}
+		{{if eq nil $field.Element}}
 			{{range $index, $subfield := $field.Inputs}}
-				newValue, err = assert{{uppercase $subfield.Element.Go}}(m, "{{.ID}}")
+				x.Fields.{{$subfield.ID}}, err = assert{{uppercase $subfield.Element.Go}}(m, "{{.ID}}")
 				if err != nil {
 					return errors.New(err.Error())
 				}
-				{
-					exp := "{{.RegexpHex}}"
-					if len(exp) > 0 {
-						log.Println("EXPR", exp)
-						b, err := hex.DecodeString(exp)
-						if err != nil {
-							log.Println(err)
-						}
-						if !RegExp(string(b), fmt.Sprintf("%v", x.Fields.{{.ID}})) {
-							return fmt.Errorf("failed to regexpHex: %s >> %s", string(b), x.Fields.{{.ID}})
-						}
-					}
-				}
-				{{if .Range}}
-				if err := assertRangeMin({{.Range.Min}}, x.Fields.{{.ID}}); err != nil {
-					{{if .Required}}
-					return err
-					{{end}}
-				}
-				if err := assertRangeMax({{.Range.Max}}, x.Fields.{{.ID}}); err != nil {
-					return err
-				}
-				{{end}}
-			{{end}}
-		{{else}}
-			newValue, err = assert{{uppercase .Element.Go}}(m, "{{.ID}}")
-			if err != nil {
-				return errors.New(err.Error())
-			}
-			{
 				exp := "{{.RegexpHex}}"
 				if len(exp) > 0 {
 					log.Println("EXPR", exp)
@@ -152,19 +128,45 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 						return fmt.Errorf("failed to regexpHex: %s >> %s", string(b), x.Fields.{{.ID}})
 					}
 				}
+				{{if .Range}}
+					if err := assertRangeMin({{.Range.Min}}, x.Fields.{{.ID}}); err != nil {
+						{{if .Required}}
+						return err
+						{{end}}
+					}
+					if err := assertRangeMax({{.Range.Max}}, x.Fields.{{.ID}}); err != nil {
+						return err
+					}
+				{{end}}
+			{{end}}
+		{{else}}
+			x.Fields.{{$field.ID}}, err = assert{{uppercase $field.Element.Go}}(m, "{{$field.ID}}")
+			if err != nil {
+				return errors.New(err.Error())
+			}
+			exp := "{{.RegexpHex}}"
+			if len(exp) > 0 {
+				log.Println("EXPR", exp)
+				b, err := hex.DecodeString(exp)
+				if err != nil {
+					log.Println(err)
+				}
+				if !RegExp(string(b), fmt.Sprintf("%v", x.Fields.{{.ID}})) {
+					return fmt.Errorf("failed to regexpHex: %s >> %s", string(b), x.Fields.{{.ID}})
+				}
 			}
 			{{if .Range}}
-			if err := assertRangeMin({{.Range.Min}}, x.Fields.{{.ID}}); err != nil {
-				{{if .Required}}
-				return err
-				{{end}}
-			}
-			if err := assertRangeMax({{.Range.Max}}, x.Fields.{{.ID}}); err != nil {
-				return err
-			}
+				if err := assertRangeMin({{.Range.Min}}, x.Fields.{{.ID}}); err != nil {
+					{{if .Required}}
+					return err
+					{{end}}
+				}
+				if err := assertRangeMax({{.Range.Max}}, x.Fields.{{.ID}}); err != nil {
+					return err
+				}
 			{{end}}
 		{{end}}
-	}	
+	}
 	{{end}}
 
 	// extract name field if exists
@@ -174,7 +176,8 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 	} else {
 		log.Println("trying to composite object name")
 		var names []string
-		{{range .Names}}names = append(names, m["{{.}}"].(string))
+		{{range .Names}}
+			names = append(names, m["{{.}}"].(string))
 		{{end}}
 		x.Meta.Name = strings.Join(names, " ")
 	}
