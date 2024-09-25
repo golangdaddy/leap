@@ -8,27 +8,28 @@ import (
 )
 
 type FieldType struct {
+	Name  string
 	Go    string
 	Input string
 	Type  string
 }
 
 var (
-	URL      = &FieldType{"string", "input", "url"}
-	PASSWORD = &FieldType{"string", "input", "password"}
-	STRING   = &FieldType{"string", "input", "text"}
-	TEXT     = &FieldType{"string", "textarea", ""}
-	INT      = &FieldType{"int", "input", "number"}
-	FLOAT    = &FieldType{"float64", "input", "number"}
-	DATE     = &FieldType{"string", "input", "date"}
-	TIME     = &FieldType{"string", "input", "time"}
-	MONTH    = &FieldType{"string", "input", "month"}
-	WEEK     = &FieldType{"string", "input", "week"}
-	PHONE    = &FieldType{"string", "input", "tel"}
-	EMAIL    = &FieldType{"string", "input", "email"}
-	CHECKBOX = &FieldType{"bool", "input", "checkbox"}
-	SELECT   = &FieldType{"string", "select", ""}
-	COLOR    = &FieldType{"string", "input", "color"}
+	URL      = &FieldType{"URL", "string", "input", "url"}
+	PASSWORD = &FieldType{"PASSWORD", "string", "input", "password"}
+	STRING   = &FieldType{"STRING", "string", "input", "text"}
+	TEXT     = &FieldType{"TEXT", "string", "textarea", ""}
+	INT      = &FieldType{"INT", "int", "input", "number"}
+	FLOAT    = &FieldType{"FLOAT", "float64", "input", "number"}
+	DATE     = &FieldType{"DATE", "string", "input", "date"}
+	TIME     = &FieldType{"TIME", "string", "input", "time"}
+	MONTH    = &FieldType{"MONTH", "string", "input", "month"}
+	WEEK     = &FieldType{"WEEK", "string", "input", "week"}
+	PHONE    = &FieldType{"PHONE", "string", "input", "tel"}
+	EMAIL    = &FieldType{"EMAIL", "string", "input", "email"}
+	CHECKBOX = &FieldType{"CHECKBOX", "bool", "input", "checkbox"}
+	SELECT   = &FieldType{"SELECT", "string", "select", ""}
+	COLOR    = &FieldType{"COLOR", "string", "input", "color"}
 )
 
 type Field struct {
