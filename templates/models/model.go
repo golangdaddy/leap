@@ -118,7 +118,7 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 				if err != nil {
 					return errors.New(err.Error())
 				}
-				exp := "{{.RegexpHex}}"
+				exp = "{{.RegexpHex}}"
 				if len(exp) > 0 {
 					log.Println("EXPR", exp)
 					b, err := hex.DecodeString(exp)
@@ -145,7 +145,7 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 			if err != nil {
 				return errors.New(err.Error())
 			}
-			exp := "{{.RegexpHex}}"
+			exp = "{{.RegexpHex}}"
 			if len(exp) > 0 {
 				log.Println("EXPR", exp)
 				b, err := hex.DecodeString(exp)
