@@ -106,17 +106,44 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 	var exists bool
 	{{range $i, $field := .Fields}}
 
-	{{if ne nil $field.Element}}
-	_, exists = m["{{$field.ID}}"]
-	if {{.Required}} && !exists {
-		return errors.New("required field '{{$field.ID}}' not supplied")
-	}
-	{{end}}
+		{{if ne nil $field.Element}}
+		_, exists = m["{{$field.ID}}"]
+		if {{.Required}} && !exists {
+			return errors.New("required field '{{$field.ID}}' not supplied")
+		}
+		{{end}}
 
-	var exp string
-	{{if eq nil $field.Element}}
-		{{range $index, $subfield := $field.Inputs}}
-			x.Fields.{{$subfield.ID}}, err = assert{{uppercase $subfield.Element.Go}}(m, "{{.ID}}")
+		var exp string
+		{{if eq nil $field.Element}}
+			{{range $index, $subfield := $field.Inputs}}
+				x.Fields.{{$subfield.ID}}, err = assert{{uppercase $subfield.Element.Go}}(m, "{{.ID}}")
+				if err != nil {
+					return errors.New(err.Error())
+				}
+				exp = "{{.RegexpHex}}"
+				if len(exp) > 0 {
+					log.Println("EXPR", exp)
+					b, err := hex.DecodeString(exp)
+					if err != nil {
+						log.Println(err)
+					}
+					if !RegExp(string(b), fmt.Sprintf("%v", x.Fields.{{.ID}})) {
+						return fmt.Errorf("failed to regexpHex: %s >> %s", string(b), x.Fields.{{.ID}})
+					}
+				}
+				{{if .Range}}
+					if err := assertRangeMin({{.Range.Min}}, x.Fields.{{.ID}}); err != nil {
+						{{if .Required}}
+						return err
+						{{end}}
+					}
+					if err := assertRangeMax({{.Range.Max}}, x.Fields.{{.ID}}); err != nil {
+						return err
+					}
+				{{end}}
+			{{end}}
+		{{else}}
+			x.Fields.{{$field.ID}}, err = assert{{uppercase $field.Element.Go}}(m, "{{$field.ID}}")
 			if err != nil {
 				return errors.New(err.Error())
 			}
@@ -142,34 +169,8 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 				}
 			{{end}}
 		{{end}}
-	{{else}}
-		x.Fields.{{$field.ID}}, err = assert{{uppercase $field.Element.Go}}(m, "{{$field.ID}}")
-		if err != nil {
-			return errors.New(err.Error())
-		}
-		exp = "{{.RegexpHex}}"
-		if len(exp) > 0 {
-			log.Println("EXPR", exp)
-			b, err := hex.DecodeString(exp)
-			if err != nil {
-				log.Println(err)
-			}
-			if !RegExp(string(b), fmt.Sprintf("%v", x.Fields.{{.ID}})) {
-				return fmt.Errorf("failed to regexpHex: %s >> %s", string(b), x.Fields.{{.ID}})
-			}
-		}
-		{{if .Range}}
-			if err := assertRangeMin({{.Range.Min}}, x.Fields.{{.ID}}); err != nil {
-				{{if .Required}}
-				return err
-				{{end}}
-			}
-			if err := assertRangeMax({{.Range.Max}}, x.Fields.{{.ID}}); err != nil {
-				return err
-			}
-		{{end}}
-	{{end}}
 	}
+	{{end}}
 
 	// extract name field if exists
 	name, ok := m["name"].(string)
