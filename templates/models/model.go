@@ -113,38 +113,10 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 	}
 	{{end}}
 
-	if exists {
-		var exp string
-		{{if eq nil $field.Element}}
-			{{range $index, $subfield := $field.Inputs}}
-				x.Fields.{{$subfield.ID}}, err = assert{{uppercase $subfield.Element.Go}}(m, "{{.ID}}")
-				if err != nil {
-					return errors.New(err.Error())
-				}
-				exp = "{{.RegexpHex}}"
-				if len(exp) > 0 {
-					log.Println("EXPR", exp)
-					b, err := hex.DecodeString(exp)
-					if err != nil {
-						log.Println(err)
-					}
-					if !RegExp(string(b), fmt.Sprintf("%v", x.Fields.{{.ID}})) {
-						return fmt.Errorf("failed to regexpHex: %s >> %s", string(b), x.Fields.{{.ID}})
-					}
-				}
-				{{if .Range}}
-					if err := assertRangeMin({{.Range.Min}}, x.Fields.{{.ID}}); err != nil {
-						{{if .Required}}
-						return err
-						{{end}}
-					}
-					if err := assertRangeMax({{.Range.Max}}, x.Fields.{{.ID}}); err != nil {
-						return err
-					}
-				{{end}}
-			{{end}}
-		{{else}}
-			x.Fields.{{$field.ID}}, err = assert{{uppercase $field.Element.Go}}(m, "{{$field.ID}}")
+	var exp string
+	{{if eq nil $field.Element}}
+		{{range $index, $subfield := $field.Inputs}}
+			x.Fields.{{$subfield.ID}}, err = assert{{uppercase $subfield.Element.Go}}(m, "{{.ID}}")
 			if err != nil {
 				return errors.New(err.Error())
 			}
@@ -170,8 +142,34 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 				}
 			{{end}}
 		{{end}}
-	}
+	{{else}}
+		x.Fields.{{$field.ID}}, err = assert{{uppercase $field.Element.Go}}(m, "{{$field.ID}}")
+		if err != nil {
+			return errors.New(err.Error())
+		}
+		exp = "{{.RegexpHex}}"
+		if len(exp) > 0 {
+			log.Println("EXPR", exp)
+			b, err := hex.DecodeString(exp)
+			if err != nil {
+				log.Println(err)
+			}
+			if !RegExp(string(b), fmt.Sprintf("%v", x.Fields.{{.ID}})) {
+				return fmt.Errorf("failed to regexpHex: %s >> %s", string(b), x.Fields.{{.ID}})
+			}
+		}
+		{{if .Range}}
+			if err := assertRangeMin({{.Range.Min}}, x.Fields.{{.ID}}); err != nil {
+				{{if .Required}}
+				return err
+				{{end}}
+			}
+			if err := assertRangeMax({{.Range.Max}}, x.Fields.{{.ID}}); err != nil {
+				return err
+			}
+		{{end}}
 	{{end}}
+	}
 
 	// extract name field if exists
 	name, ok := m["name"].(string)
