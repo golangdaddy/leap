@@ -24,6 +24,7 @@ type Container struct {
 	WebsiteName string
 	Config      models.Config
 	Object      *models.Object
+	Fields      []*models.Field
 	Inputs      []string
 	EditInputs  []string
 }
@@ -152,6 +153,7 @@ func Build(stack *models.Stack) error {
 			stack.WebsiteName,
 			stack.Config,
 			object,
+			object.Inputs,
 			[]string{},
 			[]string{},
 		}
