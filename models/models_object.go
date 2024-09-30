@@ -10,6 +10,7 @@ type Object struct {
 	ParentCount int            `json:"parentCount,omitempty"`
 	Children    []*Object      `json:"children,omitempty"`
 	Fields      []*Field       `json:"fields"`
+	Inputs      []*Field       `json:"inputs"`
 	ListMode    string         `json:"listMode"`
 	Options     Options        `json:"options"`
 	Tags        []string       `json:"tags"`
