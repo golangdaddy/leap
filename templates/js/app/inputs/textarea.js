@@ -8,7 +8,7 @@ export default function Textarea(props) {
     props.inputChange(
       {
         "id": id,
-        "type": "text",
+        "ftype": props.ftype,
         "value": value,
         "required": props.required,
       }

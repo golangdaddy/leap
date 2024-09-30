@@ -11,7 +11,7 @@ export default function DatePicker(props) {
         props.inputChange(
 			{
 				"id": props.id,
-				"type": "date",
+                "ftype": props.ftype,
 				"value": date,
 				"required": props.required,
 			}

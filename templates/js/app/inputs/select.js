@@ -34,7 +34,7 @@ export default function Select(props) {
 		}
 		const data = {
 			"id": id,
-			"type": props.type,
+			"ftype": props.ftype,
 			"value": value,
 			"required": props.required,
 		}

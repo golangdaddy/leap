@@ -10,7 +10,7 @@ export default function Input(props) {
 		}
 		const data = {
 			"id": id,
-			"type": props.type,
+			"ftype": props.ftype,
 			"value": value,
 			"required": props.required,
 		}
@@ -29,7 +29,7 @@ export default function Input(props) {
 		props.inputChange(
 			{
 				"id": id,
-				"type": props.type,
+				"ftype": props.ftype,
 				"value": value,
 				"required": props.required,
 			}

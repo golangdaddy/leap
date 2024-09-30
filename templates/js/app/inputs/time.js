@@ -10,7 +10,7 @@ export default function Time(props) {
       }
       const data = {
         "id": id,
-        "type": props.type,
+        "ftype": props.ftype,
         "value": value,
         "required": props.required,
       }
@@ -26,7 +26,7 @@ export default function Time(props) {
         props.inputChange(
             {
               "id": props.id,
-              "type": "text",
+              "ftype": props.ftype,
               "value": hours+":"+minutes,
               "required": props.required,
             }

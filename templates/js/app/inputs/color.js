@@ -14,7 +14,7 @@ export default function Color(props) {
 		props.inputChange(
 			{
 				"id": props.id,
-				"type": "color",
+				"ftype": props.ftype,
 				"value": x.hex,
 				"required": props.required,
 			}

@@ -106,7 +106,7 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 	var exists bool
 	{{range $i, $field := .Fields}}
 
-	_, exists = m["{{lowercase $field.ID}}"]
+	_, exists = m["{{$field.ID}}"]
 	if {{.Required}} && !exists {
 		return errors.New("required field '{{$field.ID}}' not supplied")
 	}

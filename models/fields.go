@@ -2,7 +2,6 @@ package models
 
 import (
 	"encoding/hex"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -71,13 +70,13 @@ func (f *Field) SetCtx(s string) *Field {
 
 func (f *Field) Require(name string, args ...string) (g *Field) {
 	g = Required(name, args...)
-	g.ID = fmt.Sprintf("%s.%s", f.ID, g.ID)
+	//g.ID = fmt.Sprintf("%s.%s", f.ID, g.ID)
 	return
 }
 
 func (f *Field) Use(name string, args ...string) (g *Field) {
 	g = Get(name, args...)
-	g.ID = fmt.Sprintf("%s.%s", f.ID, g.ID)
+	//g.ID = fmt.Sprintf("%s.%s", f.ID, g.ID)
 	return
 }
 
@@ -281,9 +280,10 @@ func Get(name string, args ...string) (f *Field) {
 
 func cleanName(s string) (string, string) {
 	name := strings.TrimSpace(strings.ToLower(s))
-	id := strings.Replace(name, " ", "-", -1)
+	id := strings.Replace(name, "  ", " ", -1)
+	id = strings.Replace(id, " ", "_", -1)
 	if len(id) == 0 {
 		//panic("invalid id: " + s)
 	}
-	return name, strings.Replace(strings.ToUpper(id), "-", "", -1)
+	return name, strings.ToUpper(id)
 }

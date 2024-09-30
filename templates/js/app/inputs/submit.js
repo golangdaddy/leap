@@ -7,7 +7,7 @@ export default function Submit(props) {
 	var requiredIndex = {}
 	if (props.assert) {
 		for (var i in props.assert) {
-			requiredIndex[props.assert[i]] = true
+			requiredIndex[props.assert[i].toUpperCase()] = true
 		}
 	}
 
@@ -20,10 +20,10 @@ export default function Submit(props) {
 	var isValid = true
 	for (var input in props.inputs) {
 		var i = props.inputs[input]
-		var goType = i.go
+		var goType = i.ftype?.Go
 		console.log("VALIDATE goTypes", goType)
 		console.log("VALIDATE INPUTS", i, input, props.inputs, props.assert)
-		if (requiredIndex[goType]) {
+		if (requiredIndex[i.id]) {
 			if (i.required) {
 				switch (goType) {
 					case "color":
@@ -33,6 +33,7 @@ export default function Submit(props) {
 						}
 						setValid++
 						break
+					case "date":
 					case "text":
 					case "string":
 						if (i.value == "") {
@@ -41,21 +42,29 @@ export default function Submit(props) {
 						}
 						setValid++
 						break
-					case "int":
-					case "float":
-						if (parseInt(i.value) < 0) {
+					case "uint":
+						if (parseInt(i.value, 10) >= 0) {
+							setValid++
+						} else {
 							isValid = false
 							continue
 						}
-						setValid++
+						break
+					case "int":
+						if (parseInt(i.value, 10) !== NaN) {
+							setValid++
+						} else {
+							isValid = false
+							continue
+						}
 						break
 					case "float":
-					case "float64":
-						if (parseInt(i.value) < 0) {
+						if (parseFloat(value) !== NaN) {
+							setValid++
+						} else {
 							isValid = false
 							continue
 						}
-						setValid++
 						break
 					case "array":
 						if (i.value.length < 1) {

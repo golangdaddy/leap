@@ -9,7 +9,7 @@ export default function Checkbox(props) {
 		props.inputChange(
 			{
 				"id": id,
-				"type": "checkbox",
+				"ftype": props.ftype,
 				"value": value,
 				"required": false,
 			}
