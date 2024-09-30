@@ -106,10 +106,13 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 	var exists bool
 	{{range $i, $field := .Fields}}
 
+	{{if ne nil $field.Element}}
 	_, exists = m["{{$field.ID}}"]
 	if {{.Required}} && !exists {
 		return errors.New("required field '{{$field.ID}}' not supplied")
 	}
+	{{end}}
+
 	if exists {
 		var exp string
 		{{if eq nil $field.Element}}

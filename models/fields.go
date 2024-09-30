@@ -93,6 +93,7 @@ func Get(name string, args ...string) (f *Field) {
 		Type: name,
 	}
 
+	// make it lowercase
 	switch strings.ToLower(f.Type) {
 	case "address":
 		f.Context = "An address of a location"
