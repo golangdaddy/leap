@@ -34,7 +34,7 @@ export function {{titlecase .Object.Name}}Edit(props) {
 			{{if ne nil .Element}}
 				value: subject.fields.{{.ID}},
 			{{else}}
-				valie: "",
+				value: "",
 			{{end}}
 			required: {{.Required}},
 		},
