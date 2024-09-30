@@ -31,7 +31,11 @@ export function {{titlecase .Object.Name}}Edit(props) {
 		"{{lowercase .ID}}": {
 			id: "{{lowercase .ID}}",
 			ftype: {{json .Element}},
-			value: subject.fields.{{.ID}},
+			{{if ne nil .Element}}
+				value: subject.fields.{{.ID}},
+			{{else}}
+				valie: "",
+			{{end}}
 			required: {{.Required}},
 		},
 		{{end}}
