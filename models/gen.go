@@ -27,6 +27,9 @@ func Prepare(tree *Stack) error {
 		log.Println("SETTING INDEX", tree.Objects[n].Name, n)
 		objectIndex[tree.Objects[n].Name] = tree.Objects[n]
 
+		// set input field data
+		tree.Objects[n].Inputs = tree.Objects[n].GetInputs()
+
 		// for x := 0; x < len(tree.Objects[n].Fields); x++ {
 
 		// 	field := tree.Objects[n].Fields[x]
