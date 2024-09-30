@@ -77,11 +77,11 @@ type Fields{{uppercase .Name}} struct {
 		{{if eq nil $field.Element}}
 			{{range $index, $input := $field.Inputs}}
 				{{if ne nil $input.Element}}
-					{{$input.ID}} {{$input.Element.Go}} `json:"{{lowercase $field.ID}}" firestore:"{{lowercase $field.ID}}"`
+					{{$input.ID}} {{$input.Element.Go}}
 				{{end}}
 			{{end}}
 		{{else}}
-			{{$field.ID}} {{$field.Element.Go}} `json:"{{lowercase $field.ID}}" firestore:"{{lowercase $field.ID}}"`
+			{{$field.ID}} {{$field.Element.Go}}
 		{{end}}
 	{{end}}
 }
