@@ -30,7 +30,7 @@ export function {{titlecase .Object.Name}}Edit(props) {
 		{{range .Object.Fields}}
 		"{{lowercase .ID}}": {
 			id: "{{lowercase .ID}}",
-			ftype: "{{json .Element}}",
+			ftype: {{json .Element}},
 			value: subject.fields.{{.ID}},
 			required: {{.Required}},
 		},
