@@ -281,6 +281,7 @@ func Get(name string, args ...string) (f *Field) {
 func cleanName(s string) (string, string) {
 	name := strings.TrimSpace(strings.ToLower(s))
 	id := strings.Replace(name, "  ", " ", -1)
+	id = strings.Replace(id, "-", "_", -1)
 	id = strings.Replace(id, " ", "_", -1)
 	if len(id) == 0 {
 		//panic("invalid id: " + s)
