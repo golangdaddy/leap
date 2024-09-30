@@ -93,7 +93,7 @@ func Get(name string, args ...string) (f *Field) {
 		Type: name,
 	}
 
-	switch f.Type {
+	switch strings.ToLower(f.Type) {
 	case "address":
 		f.Context = "An address of a location"
 		f.Inputs = []*Field{
