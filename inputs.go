@@ -17,7 +17,7 @@ func getInputs(object *models.Object, field *models.Field) (string, error) {
 	var output string
 
 	if field.Element == nil {
-		for _, input := range field.Inputs {
+		for _, input := range object.GetInputs() {
 			s, err := getInputs(object, input)
 			if err != nil {
 				return "", err
@@ -88,7 +88,7 @@ func getEditInputs(object *models.Object, field *models.Field) (string, error) {
 	var output string
 
 	if field.Element == nil {
-		for _, input := range field.Inputs {
+		for _, input := range object.GetInputs() {
 			s, err := getEditInputs(object, input)
 			if err != nil {
 				return "", err

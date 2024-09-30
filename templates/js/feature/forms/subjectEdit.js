@@ -16,7 +16,7 @@ import InputChange from '@/inputs/inputChange';
 
 export function {{titlecase .Object.Name}}Edit(props) {
 
-	console.log("COLLECTION EDIT", props)
+	console.error("COLLECTION EDIT", props)
 
 	const [userdata, _] = useUserContext()
 	const [localdata, setLocaldata] = useLocalContext()
@@ -30,7 +30,11 @@ export function {{titlecase .Object.Name}}Edit(props) {
 		{{range .Object.Fields}}
 		"{{lowercase .ID}}": {
 			id: "{{lowercase .ID}}",
-			type: "{{lowercase .Type}}",
+			{{if ne nil .Element}}
+			input: "{{lowercase .Element.Input}}",
+			type: "{{lowercase .Element.Type}}",
+			go: "{{lowercase .Element.Go}}",
+			{{end}}
 			{{if eq "name" (lowercase .ID)}}
 			value: subject.Meta.Name,
 			{{else}}
