@@ -30,11 +30,7 @@ export function {{titlecase .Object.Name}}Edit(props) {
 		{{range .Object.Fields}}
 		"{{lowercase .ID}}": {
 			id: "{{lowercase .ID}}",
-			{{if ne nil .Element}}
-			input: "{{lowercase .Element.Input}}",
-			type: "{{lowercase .Element.Type}}",
-			go: "{{lowercase .Element.Go}}",
-			{{end}}
+			ftype: {{"json .Element}}",
 			{{if eq "name" (lowercase .ID)}}
 			value: subject.Meta.Name,
 			{{else}}
