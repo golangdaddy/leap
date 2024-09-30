@@ -169,7 +169,6 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 				}
 			{{end}}
 		{{end}}
-	}
 	{{end}}
 
 	// extract name field if exists
