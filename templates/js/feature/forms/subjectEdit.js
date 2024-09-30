@@ -28,8 +28,8 @@ export function {{titlecase .Object.Name}}Edit(props) {
 
 	const [inputs, setInputs] = useState({
 		{{range .Object.Fields}}
-		"{{lowercase .ID}}": {
-			id: "{{lowercase .ID}}",
+		"{{.ID}}": {
+			id: "{{.ID}}",
 			ftype: {{json .Element}},
 			{{if ne nil .Element}}
 				value: subject.fields.{{.ID}},
