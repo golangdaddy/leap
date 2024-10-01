@@ -235,9 +235,9 @@ func Build(stack *models.Stack) error {
 		}
 
 		// terraform templates
-		if err := execTemplate("terraform", "terraform.tf", "terraform.tf", container); err != nil {
-			return err
-		}
+		// if err := execTemplate("terraform", "terraform.tf", "terraform.tf", container); err != nil {
+		// 	return err
+		// }
 
 		// boilerplater functions
 		if err := execTemplate("functions/user", "user.go", "api_user.go", container); err != nil {
