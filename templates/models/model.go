@@ -105,7 +105,7 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 	var err error
 	var exists bool
 	{{range $i, $field := .Fields}}
-
+	{
 		{{if ne nil $field.Element}}
 		_, exists = m["{{$field.ID}}"]
 		if {{.Required}} && !exists {
@@ -169,8 +169,8 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 				}
 			{{end}}
 		{{end}}
+	}
 	{{end}}
-
 	// extract name field if exists
 	name, ok := m["name"].(string)
 	if ok {
