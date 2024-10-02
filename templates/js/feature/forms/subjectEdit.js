@@ -41,9 +41,7 @@ export function {{titlecase .Object.Name}}Edit(props) {
 		{{end}}
 	})
 
-	onload() {
-		console.log("NEWINPUTS", inputs)
-	}
+	console.log("NEWINPUTS", inputs)
 
 	function handleInputChange(obj) {
 		InputChange(inputs, setInputs, obj)
