@@ -26,15 +26,23 @@ export function {{titlecase .Object.Name}}Edit(props) {
 		InputChange(inputs, setInputs, obj)
 	}
 
+	{{- $obj := .Object }}
 	const [inputs, setInputs] = useState({
-		{{range .Object.Fields}}
-		"{{.ID}}": {
-			id: "{{.ID}}",
-			{{if ne nil .Object.Element}}
-			ftype: {{json .Object.Element}},
-			{{end}}
-			value: subject.fields.{{.ID}},
+		{{range $field := $obj.Fields}}
+		"{{$field.ID}}": {
+		{{if ne nil $field.Element}}
+			id: "{{$field.ID}}",
+			ftype: {{json $field.Element}},
+			value: subject.fields.{{$field.ID}},
 			required: {{.Required}},
+		{{else}}
+		{{range $f := $field.Inputs}}
+			id: "{{$field.ID}}",
+			ftype: {{json $f.Element}},
+			value: subject.fields.{{$f.ID}},
+			required: {{.Required}},
+		{{end}}
+		{{end}}
 		},
 		{{end}}
 	})

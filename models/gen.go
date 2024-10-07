@@ -4,6 +4,7 @@ import (
 	"embed"
 	"log"
 	"os"
+	"strings"
 )
 
 //go:embed _scripts/*
@@ -30,38 +31,11 @@ func Prepare(tree *Stack) error {
 		// set input field data
 		tree.Objects[n].Inputs = tree.Objects[n].GetInputs()
 
-		// for x := 0; x < len(tree.Objects[n].Fields); x++ {
+		// normalising data
+		for i, name := range tree.Objects[n].Names {
+			tree.Objects[n].Names[i] = strings.ToUpper(name)
+		}
 
-		// 	field := tree.Objects[n].Fields[x]
-
-		// 	if len(field.JSON) == 0 {
-		// 		continue
-		// 	}
-
-		// 	if field.Filter {
-		// 		tree.Objects[n].Options.FilterFields = append(tree.Objects[n].Options.FilterFields, field)
-		// 	}
-
-		// 	name := field.JSON + ".json"
-
-		// 	if _, ok := app.jsonFields[name]; !ok {
-		// 		obj, ok := app.jsonObjects[name]
-		// 		if !ok {
-		// 			return errors.New("FIELD NOT FOUND " + name)
-		// 		}
-		// 		println("found object")
-		// 		tree.Objects[n].Fields = append(tree.Objects[n].Fields, obj.Fields...)
-		// 		continue
-		// 	}
-
-		// 	f := *app.jsonFields[name]
-		// 	f.Context = field.Context
-		// 	f.Name = field.Name
-		// 	f.Required = field.Required
-
-		// 	*tree.Objects[n].Fields[x] = f
-
-		// }
 	}
 
 	for _, object := range tree.Objects {
