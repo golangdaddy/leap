@@ -54,7 +54,7 @@ func assertRangeMax(maximum float64, value interface{}) error {
 	}
 
 	err := fmt.Errorf("assertRange: value %v exceeded value of range max: %v", value, maximum)
-	if val > maximum && val != -1 {
+	if val > maximum && maximum != -1 {
 		return err
 	}
 	return nil
