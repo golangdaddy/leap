@@ -59,7 +59,8 @@ func Prepare(tree *Stack) error {
 		for i := range tree.Objects[n].Names {
 			tree.Objects[n].Names[i] = strings.ToUpper(tree.Objects[n].Names[i])
 			exists := false
-			for _, field := range tree.Objects[n].GetInputs() {
+			fields := tree.Objects[n].GetInputs()
+			for n, field := range fields {
 				field.Name = strings.ToUpper(field.Name)
 				println(">>", field.Name)
 				if field.Name == tree.Objects[n].Names[i] {
