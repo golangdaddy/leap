@@ -13,3 +13,11 @@ func NewApp() *App {
 	app.UseGCPFirestore(CONST_FIRESTORE_DB)
 	return app
 }
+
+func (app *App) PrettyPrint(data interface{}) {
+	bytes, err := json.MarshalIndent(data, "", "    ")
+	if err != nil {
+		log.Fatalf("Error pretty printing data: %s", err)
+	}
+	fmt.Println(string(bytes))
+}
