@@ -28,7 +28,19 @@ func (object *Object) GetInputs() []*Field {
 						if one.Element == nil {
 							for _, two := range one.Inputs {
 								if one.Element == nil {
+									for _, three := range two.Inputs {
+										if three.Element == nil {
+											for _, four := range three.Inputs {
+												if four.Element == nil {
 
+												} else {
+													fields = append(fields, two)
+												}
+											}
+										} else {
+											fields = append(fields, two)
+										}
+									}
 								} else {
 									fields = append(fields, two)
 								}

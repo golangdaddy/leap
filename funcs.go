@@ -19,6 +19,9 @@ var funcMap = template.FuncMap{
 	"firstparenttitle": firstparenttitle,
 	"stringslength":    stringslength,
 	"jsonmarshal":      jsonmarshal,
+	"sub":              sub,
+	"less":             less,
+	"more":             more,
 }
 
 func stringslength(a []string) int {
@@ -62,3 +65,9 @@ func tidy(s string) string {
 func parentcount(object *models.Object) int {
 	return object.ParentCount * 2
 }
+
+func sub(a, b int) int { return a - b }
+
+func less(a, b int) bool { return a < b }
+
+func more(a, b int) bool { return a > b }

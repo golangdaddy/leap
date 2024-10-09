@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	"github.com/kr/pretty"
 )
 
 //go:embed _scripts/*
@@ -23,6 +25,8 @@ func Prepare(tree *Stack) error {
 
 	objectIndex := map[string]*Object{}
 
+	pretty.Println(tree.Objects)
+
 	for n := range tree.Objects {
 
 		log.Println("SETTING INDEX", tree.Objects[n].Name, n)
@@ -32,17 +36,42 @@ func Prepare(tree *Stack) error {
 		tree.Objects[n].Inputs = tree.Objects[n].GetInputs()
 
 		// normalising data
-		for i, name := range tree.Objects[n].Names {
-			tree.Objects[n].Names[i] = strings.ToUpper(name)
+
+		// make sure all fieldnames are uppercase
+		for ii, field := range tree.Objects[n].Fields {
+			tree.Objects[n].Fields[ii].Name = strings.ToUpper(field.Name)
 		}
 
-	}
+		for i, name := range tree.Objects[n].Names {
+			tree.Objects[n].Names[i] = strings.ToUpper(name)
+			exists := false
+			for _, field := range tree.Objects[n].Fields {
+				println(">>", field.Name)
+				if field.Name == name {
+					exists = true
+				}
+			}
+			if !exists {
+				panic("can't set reference to field name: " + name)
+			}
+		}
 
-	for _, object := range tree.Objects {
-		for _, p := range object.Parents {
+		tree.Objects[n].Name = strings.ToLower(tree.Objects[n].Name)
+		if len(tree.Objects[n].Name) == 0 {
+			panic("corrupted or missing name")
+		}
+		if len(tree.Objects[n].Plural) == 0 {
+			tree.Objects[n].Plural = tree.Objects[n].Name + "s"
+		}
+		tree.Objects[n].Plural = strings.ToLower(tree.Objects[n].Plural)
+		if len(tree.Objects[n].Plural) == 0 {
+			panic("corrupted or missing plural")
+		}
+
+		for _, p := range tree.Objects[n].Parents {
 			parent := objectIndex[p]
 			log.Println(p, parent)
-			newObject := *object
+			newObject := *tree.Objects[n]
 			newObject.Fields = nil
 			parent.Children = append(parent.Children, &newObject)
 		}

@@ -28,30 +28,31 @@ export function {{titlecase .Object.Name}}Edit(props) {
 
 	{{- $obj := .Object }}
 	const [inputs, setInputs] = useState({
-		{{range $field := $obj.Fields}}
-		"{{$field.ID}}": {
+		{{range $nn, $field := $obj.Fields}}
 		{{if ne nil $field.Element}}
-			id: "{{$field.ID}}",
-			ftype: {{json $field.Element}},
-			value: subject.fields.{{$field.ID}},
-			required: {{.Required}},
+			{{if more $nn 0}},{{end}}
+			"{{$field.ID}}": {
+				id: "{{$field.ID}}",
+				ftype: {{json $field.Element}},
+				value: subject.fields.{{$field.ID}},
+				required: {{.Required}},
+			}
 		{{else}}
-		{{range $f := $field.Inputs}}
-			id: "{{$field.ID}}",
-			ftype: {{json $f.Element}},
-			value: subject.fields.{{$f.ID}},
-			required: {{.Required}},
+			{{range $n, $f := $field.Inputs}} 
+				{{if more $n 0}},{{else}}{{if more $nn 0}},{{end}}{{end}} 
+				"{{$f.ID}}": {
+					id: "{{$f.ID}}",
+					ftype: {{json $f.Element}},
+					value: subject.fields.{{$f.ID}},
+					required: {{.Required}},
+				}
+			{{end}}
 		{{end}}
 		{{end}}
-		},
-		{{end}}
-	})
+	});
+	
 
 	console.log("NEWINPUTS", inputs)
-
-	function handleInputChange(obj) {
-		InputChange(inputs, setInputs, obj)
-	}
 
 	return (
 		<div className='flex flex-col'>

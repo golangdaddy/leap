@@ -172,14 +172,14 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 	}
 	{{end}}
 	// extract name field if exists
-	name, ok := m["name"].(string)
+	name, ok := m["NAME"].(string)
 	if ok {
 		x.Meta.Name = name	
 	} else {
 		log.Println("trying to composite object name")
 		var names []string
 		{{range .Names}}
-			n, ok := m["{{.}}"].(string)
+			n, ok := m["{{uppercase .}}"].(string)
 			if !ok {
 				panic("name unable to be found")
 			}

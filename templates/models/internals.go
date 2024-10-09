@@ -28,7 +28,7 @@ type Internals struct {
 	ID         string
 	Class      string
 	ClassName  string
-	Name       string `json:",omitempty"`
+	Name       string
 	Asset      string `json:",omitempty"`
 	Wallet     string `json:",omitempty"`
 	Context    Context
