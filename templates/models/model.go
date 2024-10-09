@@ -21,6 +21,7 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 
 	object.Meta.ClassName = "{{lowercase .Plural}}"
 	object.Meta.Context.User = user.Meta.ID
+	// add the names spec to the object
 	{{range $n, $name:= .Names}}
 	object.Meta.AddSpecName("{{$name}}")
 	{{end}}
