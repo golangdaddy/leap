@@ -179,9 +179,10 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 		log.Println("trying to composite object name")
 		var names []string
 		{{range .Names}}
-			n, ok := m["{{uppercase .}}"].(string)
+			k := "{{uppercase .}}"
+			n, ok := m[k].(string)
 			if !ok {
-				panic("name unable to be found")
+				log.Panicf("name %s unable to be found")
 			}
 			names = append(names, n)
 		{{end}}

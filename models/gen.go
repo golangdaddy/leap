@@ -42,6 +42,7 @@ func Prepare(tree *Stack) error {
 
 		// normalising data
 
+		// assert or construct plural
 		if len(tree.Objects[n].Plural) == 0 {
 			tree.Objects[n].Plural = tree.Objects[n].Name + "s"
 		}
