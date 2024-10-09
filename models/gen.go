@@ -56,12 +56,16 @@ func Prepare(tree *Stack) error {
 			tree.Objects[n].Fields[ii].Name = strings.ToUpper(field.Name)
 		}
 
+		clean := func(x string) string {
+			return strings.ToUpper(strings.Replace(x, "-", "_", -1))
+		}
+
 		for i := range tree.Objects[n].Names {
-			tree.Objects[n].Names[i] = strings.ToUpper(tree.Objects[n].Names[i])
+			tree.Objects[n].Names[i] = clean(tree.Objects[n].Names[i])
 			exists := false
 			fields := tree.Objects[n].GetInputs()
 			for _, field := range fields {
-				field.Name = strings.ToUpper(field.Name)
+				field.Name = clean(field.Name)
 				println(">>", field.Name)
 				if field.Name == tree.Objects[n].Names[i] {
 					exists = true
