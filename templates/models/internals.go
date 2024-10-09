@@ -31,6 +31,7 @@ type Internals struct {
 	Name       string
 	Asset      string `json:",omitempty"`
 	Wallet     string `json:",omitempty"`
+	Spec       Spec
 	Context    Context
 	Moderation Moderation
 	Media      Media
@@ -186,6 +187,10 @@ func (i *Internals) GetParentMeta(app *common.App, dst interface{}) error {
 	return doc.DataTo(dst)
 }
 
+func (i *Internals) AddSpecName(x string) {
+	i.Spec.Name = append(i.Spec.Name, x)
+}
+
 // Modify updates the timestamp
 func (i *Internals) Modify() {
 	i.Modified = time.Now().UTC().Unix()
@@ -241,3 +246,8 @@ type PaymentDestination struct {
 	CurrencyCode string  `json:"currencyCode"`
 }
 
+type Spec struct {
+	Name []string
+	// migrating this to here
+	Payment Payment
+}
