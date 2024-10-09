@@ -57,7 +57,7 @@ func Prepare(tree *Stack) error {
 		}
 
 		clean := func(x string) string {
-			return strings.ToUpper(strings.Replace(x, "-", "_", -1))
+			return strings.TrimSpace(strings.ToUpper(strings.Replace(strings.Replace(x, " ", "_", -1), "-", "_", -1)))
 		}
 
 		for i := range tree.Objects[n].Names {
