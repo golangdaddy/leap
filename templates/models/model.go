@@ -1,3 +1,4 @@
+//
 {{range .Objects}}
 
 type {{uppercase .Name}} struct {

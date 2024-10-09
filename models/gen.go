@@ -59,7 +59,7 @@ func Prepare(tree *Stack) error {
 		for i := range tree.Objects[n].Names {
 			tree.Objects[n].Names[i] = strings.ToUpper(tree.Objects[n].Names[i])
 			exists := false
-			for _, field := range tree.Objects[n].Fields {
+			for _, field := range tree.Objects[n].GetInputs() {
 				println(">>", field.Name)
 				if field.Name == tree.Objects[n].Names[i] {
 					exists = true
