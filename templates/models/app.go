@@ -14,7 +14,7 @@ func NewApp() *App {
 	return app
 }
 
-func (app *App) PrettyPrint(data interface{}) {
+func PrettyPrint(data interface{}) {
 	bytes, err := json.MarshalIndent(data, "", "    ")
 	if err != nil {
 		log.Fatalf("Error pretty printing data: %s", err)

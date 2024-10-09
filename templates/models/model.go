@@ -186,7 +186,7 @@ func (x *{{uppercase .Name}}) ValidateObject(m map[string]interface{}) error {
 			k := "{{uppercase .}}"
 			n, ok := m[k].(string)
 			if !ok {
-				pretty.Println(m)
+				PrettyPrint(m)
 				return fmt.Errorf("name %s unable to be found", k)
 			}
 			names = append(names, n)
