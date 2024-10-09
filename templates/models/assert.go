@@ -187,5 +187,5 @@ func assertINT(m map[string]interface{}, key string) (int, error) {
 	default:
 		panic("fail assert int: " + key)
 	}
-	return v, nil
+	return v.(int), nil
 }
