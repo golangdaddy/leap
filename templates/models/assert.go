@@ -169,10 +169,23 @@ func AssertINT(w http.ResponseWriter, m map[string]interface{}, key string) (int
 }
 
 func assertINT(m map[string]interface{}, key string) (int, error) {
-	v, ok := m[key].(float64)
+	v, ok := m[key]
 	if !ok {
 		PrettyPrint(m)
 		return 0, fmt.Errorf("assertINT: '%s' is required for this request", key)
 	}
-	return int(v), nil
+	switch v := m[key].(type) {
+	case string:
+		num, err := strconv.Atoi(v)
+		if err != nil {
+			return 0, err
+		}
+		return num, nil
+	case float64:
+		return int(v), nil
+	case int:
+	default:
+		panic("fail assert int: " + key)
+	}
+	return v, nil
 }
