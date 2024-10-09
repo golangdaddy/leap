@@ -29,6 +29,11 @@ func Prepare(tree *Stack) error {
 
 	for n := range tree.Objects {
 
+		tree.Objects[n].Name = strings.ToLower(tree.Objects[n].Name)
+		if len(tree.Objects[n].Name) == 0 {
+			panic("corrupted or missing name")
+		}
+
 		log.Println("SETTING INDEX", tree.Objects[n].Name, n)
 		objectIndex[tree.Objects[n].Name] = tree.Objects[n]
 
@@ -37,10 +42,6 @@ func Prepare(tree *Stack) error {
 
 		// normalising data
 
-		tree.Objects[n].Name = strings.ToLower(tree.Objects[n].Name)
-		if len(tree.Objects[n].Name) == 0 {
-			panic("corrupted or missing name")
-		}
 		if len(tree.Objects[n].Plural) == 0 {
 			tree.Objects[n].Plural = tree.Objects[n].Name + "s"
 		}
