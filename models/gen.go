@@ -37,6 +37,18 @@ func Prepare(tree *Stack) error {
 
 		// normalising data
 
+		tree.Objects[n].Name = strings.ToLower(tree.Objects[n].Name)
+		if len(tree.Objects[n].Name) == 0 {
+			panic("corrupted or missing name")
+		}
+		if len(tree.Objects[n].Plural) == 0 {
+			tree.Objects[n].Plural = tree.Objects[n].Name + "s"
+		}
+		tree.Objects[n].Plural = strings.ToLower(tree.Objects[n].Plural)
+		if len(tree.Objects[n].Plural) == 0 {
+			panic("corrupted or missing plural")
+		}
+
 		// make sure all fieldnames are uppercase
 		for ii, field := range tree.Objects[n].Fields {
 			tree.Objects[n].Fields[ii].Name = strings.ToUpper(field.Name)
@@ -54,18 +66,6 @@ func Prepare(tree *Stack) error {
 			if !exists {
 				panic("can't set reference to field name: " + tree.Objects[n].Names[i])
 			}
-		}
-
-		tree.Objects[n].Name = strings.ToLower(tree.Objects[n].Name)
-		if len(tree.Objects[n].Name) == 0 {
-			panic("corrupted or missing name")
-		}
-		if len(tree.Objects[n].Plural) == 0 {
-			tree.Objects[n].Plural = tree.Objects[n].Name + "s"
-		}
-		tree.Objects[n].Plural = strings.ToLower(tree.Objects[n].Plural)
-		if len(tree.Objects[n].Plural) == 0 {
-			panic("corrupted or missing plural")
 		}
 
 		for _, p := range tree.Objects[n].Parents {
