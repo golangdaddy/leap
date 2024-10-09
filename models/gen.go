@@ -42,17 +42,17 @@ func Prepare(tree *Stack) error {
 			tree.Objects[n].Fields[ii].Name = strings.ToUpper(field.Name)
 		}
 
-		for i, name := range tree.Objects[n].Names {
-			tree.Objects[n].Names[i] = strings.ToUpper(name)
+		for i := range tree.Objects[n].Names {
+			tree.Objects[n].Names[i] = strings.ToUpper(tree.Objects[n].Names[i])
 			exists := false
 			for _, field := range tree.Objects[n].Fields {
 				println(">>", field.Name)
-				if field.Name == name {
+				if field.Name == tree.Objects[n].Names[i] {
 					exists = true
 				}
 			}
 			if !exists {
-				panic("can't set reference to field name: " + name)
+				panic("can't set reference to field name: " + tree.Objects[n].Names[i])
 			}
 		}
 
