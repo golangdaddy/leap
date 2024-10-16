@@ -13,6 +13,11 @@ variable "project_region" {
   default     = "{{.Config.ProjectRegion}}"
 }
 
+variable "project_region_zone" {
+  description = "The GCP region zone for resources"
+  default     = "{{.Config.ProjectRegionZone}}"
+}
+
 # Define the Google provider
 provider "google" {
   project = var.project_id

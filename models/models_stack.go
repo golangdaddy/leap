@@ -11,9 +11,10 @@ type Config struct {
 	WebsocketHost string `json:"websocketHost"`
 	RepoURI       string `json:"repoURI"`
 	// project info
-	ProjectID     string `json:"projectID"`
-	ProjectName   string `json:"projectName"`
-	ProjectRegion string `json:"projectRegion"`
+	ProjectID         string `json:"projectID"`
+	ProjectName       string `json:"projectName"`
+	ProjectRegion     string `json:"projectRegion"`
+	ProjectRegionZone string `json:"projectRegionZone"`
 }
 
 type Stack struct {
