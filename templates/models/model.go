@@ -10,12 +10,12 @@ func (user *User) New{{uppercase .Name}}(parent *Internals, fields Fields{{upper
 	var object *{{uppercase .Name}}
 	if parent == nil {
 		object = &{{uppercase .Name}}{
-			Meta: (Internals{}).NewInternals("{{.Plural}"),
+			Meta: (Internals{}).NewInternals("{{.Plural}}"),
 			Fields: fields,
 		}
 	} else {
 		object = &{{uppercase .Name}}{
-			Meta: parent.NewInternals("{{.Plural}"),
+			Meta: parent.NewInternals("{{.Plural}}"),
 			Fields: fields,
 		}
 	}

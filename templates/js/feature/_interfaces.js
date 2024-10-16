@@ -59,7 +59,7 @@ export var {{titlecase .Object.Name}}Interfaces = {
 	"{{lowercase .Object.Name}}": {
 		level: {{parentcount .Object}}+2,
 		name: "{{titlecase .Object.Name}}",
-		subsublinks: [{{ range .Object.Children }}"{{.Plural}",{{end}}{{if .Object.Options.Admin}}"{{lowercase .Object.Name}}admins"{{end}}],
+		subsublinks: [{{ range .Object.Children }}"{{.Plural}}",{{end}}{{if .Object.Options.Admin}}"{{lowercase .Object.Name}}admins"{{end}}],
 		component: (<{{titlecase .Object.Name}} />),
 		hasDeleteButton: true,
 		hasEditButton: true,

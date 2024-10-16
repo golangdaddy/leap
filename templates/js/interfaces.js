@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 {{range .Objects}}
-import { {{titlecase .Name}}Interfaces } from '@/features/{{.Plural}/_interfaces'{{end}}
+import { {{titlecase .Name}}Interfaces } from '@/features/{{.Plural}}/_interfaces'{{end}}
 
 import Home from '@/features/home'
 import Account from '@/features/account/account'
