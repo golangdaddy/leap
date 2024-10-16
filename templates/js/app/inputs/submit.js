@@ -59,7 +59,7 @@ export default function Submit(props) {
 						}
 						break
 					case "float", "float64":
-						if (parseFloat(value) !== NaN) {
+						if (parseFloat(i.value) !== NaN) {
 							setValid++
 						} else {
 							isValid = false
