@@ -135,9 +135,14 @@ func AssertFLOAT64(w http.ResponseWriter, m map[string]interface{}, key string) 
 }
 
 func assertFLOAT64(m map[string]interface{}, key string) (float64, error) {
-	f, ok := m[key].(float64)
-	if !ok {
-		return 0, fmt.Errorf("assertFLOAT64: '%s' is required for this request", key)
+	var f float64
+	switch v := m[key].(type) {
+	case string:
+		return strconv.ParseFloat(v, 64)
+	case float64, int:
+		return v, nil
+	default:
+		panic("no actual config")
 	}
 	return f, nil
 }
