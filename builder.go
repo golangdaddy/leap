@@ -78,7 +78,10 @@ func Build(stack *models.Stack) error {
 		return err
 	}
 
-	println("copying editP")
+	// curate the terraform
+	if err := execTemplate("terraform", "main.tf", "terraform/main.tf", stack); err != nil {
+		return err
+	}
 
 	if err := copyFile("templates/js/dashboard.js", "build/app/features/dashboard.js"); err != nil {
 		return err
@@ -232,10 +235,6 @@ func Build(stack *models.Stack) error {
 			if err := execTemplate("functions", "pluralNoParent.go", "api_"+strings.ToLower(object.Name)+"s.go", container); err != nil {
 				return err
 			}
-		}
-
-		if err := execTemplate("terraform", "main.tf", "terraform.tf", container); err != nil {
-			return err
 		}
 
 		// boilerplater functions

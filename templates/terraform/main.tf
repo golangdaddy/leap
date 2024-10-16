@@ -1,47 +1,56 @@
 variable "project_id" {
   description = "The GCP project ID"
-  default     = "npg-generic"
+  default     = "{{.Config.ProjectID}}"
 }
 
 variable "project_name" {
   description = "The project name"
-  default     = "alexfirstproject"
+  default     = "{{.Config.ProjectName}}"
 }
 
-variable "region" {
+variable "project_region" {
   description = "The GCP region for resources"
-  default     = "europe-west2"  # Default to the London region
+  default     = "{{.Config.ProjectRegion}}"
 }
 
 # Define the Google provider
 provider "google" {
   project = var.project_id
-  region  = var.region
+  region  = var.project_region
 }
 
 # App Engine Application - needed for Firestore
 resource "google_app_engine_application" "app" {
   project     = var.project_id
-  location_id = var.region
+  location_id = var.project_region
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Firestore Database
 resource "google_firestore_database" "firestore" {
   project     = var.project_id
-  location_id = var.region
+  name        = var.project_name
+  location_id = var.project_region
   type        = "FIRESTORE_NATIVE"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 {{range .Objects}}
-# Firestore Index for "{{.ClassName}}" collection
-resource "google_firestore_index" "{{.Name}}_index" {
-  project  = var.project_id
-  database = google_firestore_database.firestore.name
+# Firestore Index for "{{.Name}}" collection
+resource "google_firestore_index" "{{lowercase .Name}}_index" {
+  project    = var.project_id
+  database   = google_firestore_database.firestore.name
   collection = "{{lowercase .Name}}"
 
   fields {
     field_path = "Meta.Moderation.Admins"
-    order      = "ARRAY"
+    order      = "ASCENDING"
   }
   fields {
     field_path = "Meta.Modified"
@@ -52,16 +61,23 @@ resource "google_firestore_index" "{{.Name}}_index" {
     order      = "DESCENDING"
   }
 
-  # Specifies that this is a composite index for sorting
   query_scope = "COLLECTION"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 {{end}}
 
 # Google Cloud Storage Bucket
 resource "google_storage_bucket" "bucket" {
   name          = var.project_name
-  location      = var.region
+  location      = var.project_region
   force_destroy = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Google Pub/Sub Topic
@@ -69,5 +85,9 @@ resource "google_pubsub_topic" "topic" {
   name = var.project_name
   labels = {
     project = var.project_name
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
