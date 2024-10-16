@@ -11,7 +11,7 @@ import Loading from '@/app/loading'
 import Spacer from '@/inputs/spacer';
 import { RowThumbnail } from '@/components/rowThumbnail'
 
-{{range .Object.Children}}import { {{titlecase .Name}}List } from '@/features/{{lowercase .Name}}s/shared/{{lowercase .Name}}List'
+{{range .Object.Children}}import { {{titlecase .Name}}List } from '@/features/{{.Plural}/shared/{{lowercase .Name}}List'
 {{end}}
 
 import { {{titlecase .Object.Name}}ObjectGET, {{titlecase .Object.Name}}JobPOST } from './_fetch'

@@ -48,7 +48,7 @@ resource "google_firestore_database" "firestore" {
 
 {{range .Objects}}
 # Firestore Index for "{{.Name}}" collection
-resource "google_firestore_index" "{{lowercase .Name}}s_index" {
+resource "google_firestore_index" "{{.Plural}_index" {
   project    = var.project_id
   database   = google_firestore_database.firestore.name
   collection = "{{lowercase .Name}}"

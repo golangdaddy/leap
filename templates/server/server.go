@@ -48,8 +48,8 @@ func main() {
 	http.HandleFunc("/api/assetlayer", app.EntrypointASSETLAYER)
 	{{range .Objects}}
 	http.HandleFunc("/api/{{lowercase .Name}}", app.Entrypoint{{uppercase .Name}})
-	http.HandleFunc("/api/{{lowercase .Name}}s", app.Entrypoint{{uppercase .Name}}S)
-	println("registering handlers for {{lowercase .Name}}s"){{end}}
+	http.HandleFunc("/api/{{.Plural}", app.Entrypoint{{uppercase .Name}}S)
+	println("registering handlers for {{.Plural}"){{end}}
 
 	port, err := strconv.Atoi(os.Getenv("PORT"))
 	if err != nil {
