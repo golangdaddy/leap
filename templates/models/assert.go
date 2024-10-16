@@ -139,7 +139,7 @@ func assertFLOAT64(m map[string]interface{}, key string) (float64, error) {
 	switch v := m[key].(type) {
 	case string:
 		return strconv.ParseFloat(v, 64)
-	case float64, int:
+	case float64:
 		return v, nil
 	default:
 		panic("no actual config")
